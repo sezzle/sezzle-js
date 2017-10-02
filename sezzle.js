@@ -303,7 +303,7 @@ SezzleJS.prototype.getCountryCodeFromIP = function(callback) {
         callback(this.countryCode);
       }
     }
-  } 
+  };
 
   httpRequest.open('GET', this.countryFromIPRequestURL);
   httpRequest.responseType = 'json';
@@ -323,12 +323,11 @@ SezzleJS.prototype.init = function() {
     this.initWidget();
   } else {
     // get the country and show the widget if supported
-    var that = this;
     this.getCountryCodeFromIP(function(countryCode) {
-      if (that.supportedCountryCodes.indexOf(countryCode) !== -1) {
-        that.initWidget();
+      if (this.supportedCountryCodes.indexOf(countryCode) !== -1) {
+        this.initWidget();
       }
-    });
+    }.bind(this));
   }
 }
 
@@ -338,11 +337,10 @@ SezzleJS.prototype.init = function() {
 SezzleJS.prototype.initWidget = function() {
   this.loadCSS();
   var els = this.getAllPriceElements();
-  var that = this;
   els.forEach(function (el, index) {
-    that.renderAwesomeSezzle(el, index);
-    that.startObserve(el);
-  });
+    this.renderAwesomeSezzle(el, index);
+    this.startObserve(el);
+  }.bind(this));
   this.renderModal();
 }
 
