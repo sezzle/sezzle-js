@@ -16,7 +16,6 @@ var SezzleJS = function(targetXPath = '', forcedShow = false) {
   this.supportedCountryCodes = ['US'];
 
   // Variables set by the js
-  this._error = null;
   this.countryCode = null;
 }
 
@@ -294,25 +293,21 @@ SezzleJS.prototype.renderModal = function() {
  * @param callback what happens after country is received
  */
 SezzleJS.prototype.getCountryCodeFromIP = function(callback) {
-  // Request options
-  var options = {
-    method: 'GET',
-  };
   // make request
-  fetch(this.countryFromIPRequestURL, options)
-  // convert to json
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(body) {
-    // Call the callback function with the received country code
-    this.countryCode = body.country_code;
-    callback(body.country_code);
-  })
-  // set the error
-  .catch(function(error) {
-    this._error = error;
-  });
+  var httpRequest = new XMLHttpRequest();
+  httpRequest.onreadystatechange = function() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        var body = httpRequest.response;
+        this.countryCode = body.country_code;
+        callback(this.countryCode);
+      }
+    }
+  } 
+
+  httpRequest.open('GET', this.countryFromIPRequestURL);
+  httpRequest.responseType = 'json';
+  httpRequest.send();
 }
 
 /**
@@ -343,9 +338,10 @@ SezzleJS.prototype.init = function() {
 SezzleJS.prototype.initWidget = function() {
   this.loadCSS();
   var els = this.getAllPriceElements();
-  els.forEach((el, index) => {
-    this.renderAwesomeSezzle(el, index);
-    this.startObserve(el);
+  var that = this;
+  els.forEach(function (el, index) {
+    that.renderAwesomeSezzle(el, index);
+    that.startObserve(el);
   });
   this.renderModal();
 }
