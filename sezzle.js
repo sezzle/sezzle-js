@@ -4,11 +4,18 @@
  * @param targetXPath {String of path to the price tag separated by '/' (example: '.price-class/#product-price/span')}
  * @param forcedShow Show the widget even if the country is not supported
  * @param alignment Alignment of the widget [left, right] default : centre
- * @param merchantNameID This name ID is used to add to CSS classes for merchant specific CSS
+ * @param merchantID This name ID is used to add to CSS classes for merchant specific CSS
  * @param theme Widget theme - light or dark
  * @param widthType Widget font width - thin / bold. Default : bold
  */
-var SezzleJS = function(targetXPath = '', forcedShow = false, alignment = '', merchantID = '', theme = '', widthType = '') {
+var SezzleJS = function(
+    targetXPath = '',
+    forcedShow = false,
+    alignment = '',
+    merchantID = '',
+    theme = '',
+    widthType = ''
+  ) {
   // Configurable options
   this.xpath = targetXPath.split('/');
   this.forcedShow = forcedShow;
@@ -92,9 +99,11 @@ SezzleJS.prototype.isNumeric = function(n) {
 
 /**
  * This is helper function for formatPrice
+ * @param n char value
+ * @return boolean [if it's alphabet or not]
  */
 SezzleJS.prototype.isAlpha = function(n) {
-  return /^[A-Z]$/i.test(n);
+  return /^[a-zA-Z()]+$/.test(n);
 }
 
 /**
