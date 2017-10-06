@@ -388,8 +388,11 @@ SezzleJS.prototype.observer = new MutationObserver(function(mutations) {
     .filter(function(mutation) { return mutation.type === 'childList' })
     .forEach(function(mutation) {
       var priceIndex = mutation.target.dataset.sezzleindex;
+      var s = new SezzleJS(document.sezzleConfig);
+      var price = s.getFormattedPrice(mutation.target.innerText);
+      delete s;
       document.getElementsByClassName('sezzleindex-' + priceIndex)[0]
-        .innerText = ' of ' + this.getFormattedPrice(mutation.target.innerText);
+        .innerText = ' of ' + price;
     });
 });
 
