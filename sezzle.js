@@ -106,18 +106,19 @@ SezzleJS.prototype.isAlpha = function(n) {
  * @return float
  */
 SezzleJS.prototype.parsePrice = function(price) {
-  return parseFloat(this.parsePriceString(price));
+  return parseFloat(this.parsePriceString(price, false));
 }
 
 /**
  * This function will return the price string
  * @param price - string value
+ * @param includeComma - comma should be added to the string or not
  * @return string
  */
-SezzleJS.prototype.parsePriceString = function(price) {
+SezzleJS.prototype.parsePriceString = function(price, includeComma) {
   var formattedPrice = '';
   for (var i = 0; i < price.length; i++) {
-    if (this.isNumeric(price[i]) || price[i] == '.') {
+    if (this.isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
       // If current is a . and previous is a character, it can be something like Rs.
       // so ignore it
       if (i > 0 && price[i] == '.' && this.isAlpha(price[i - 1])) continue;
@@ -361,7 +362,7 @@ SezzleJS.prototype.isProductEligible = function(priceText) {
  */
 SezzleJS.prototype.getFormattedPrice = function(priceText) {
   // Get the price string - useful for formtting Eg: 120.00(string)
-  var priceString = this.parsePriceString(priceText);
+  var priceString = this.parsePriceString(priceText, true);
 
   // Get the price in float from the element - useful for calculation Eg : 120.00(float)
   var price = this.parsePrice(priceText);
