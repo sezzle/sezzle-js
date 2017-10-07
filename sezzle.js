@@ -492,6 +492,17 @@ SezzleJS.prototype.getCSSVersionForMerchant = function(callback) {
 }
 
 /**
+ * 
+ */
+SezzleJS.prototype.hideSezzleHideDivs = function() {
+  Array
+  .from(document.getElementsByClassName('sezzle-hide'))
+  .forEach(function(el) {
+    el.className += " sezzle-hidden"; 
+  });
+}
+
+/**
  * Initialise the widget if the
  * country is supported or the widget
  * is forced to be shown
@@ -506,6 +517,7 @@ SezzleJS.prototype.init = function() {
     this.getCountryCodeFromIP(function(countryCode) {
       if (this.supportedCountryCodes.indexOf(countryCode) !== -1) {
         this.initWidget();
+        this.hideSezzleHideDivs();
       }
     }.bind(this));
   }
