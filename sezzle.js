@@ -349,7 +349,7 @@ SezzleJS.prototype.insertAfter = function(el, referenceNode) {
 SezzleJS.prototype.isProductEligible = function(priceText) {
   var price = this.parsePrice(priceText);
   var priceInCents = price * 100;
-  if (price >= this.minPrice && price <= this.maxPrice) {
+  if (priceInCents >= this.minPrice && priceInCents <= this.maxPrice) {
     return true;
   } else {
     return false;
