@@ -8,7 +8,7 @@
 ```
 document.sezzleConfig = {
     targetXPath: '<path-to-price-element>',
-    renderToPath: '<path-to-element-to-which-to-render-this-widget>',
+    renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
     forcedShow: false,
     alignment: 'left',
     merchantID: '<your-sezzle-merchant-id-here>',
@@ -17,6 +17,7 @@ document.sezzleConfig = {
     widgetType: 'product-page',
     minPrice: 0,
     maxPrice: 100000,
-    imageUrl: ''
+    imageUrl: '',
+    hideClasses: ['class-to-hide']
   }
 ```
