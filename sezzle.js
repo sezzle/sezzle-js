@@ -48,6 +48,7 @@ var SezzleJS = function(options) {
   this.minPrice = options.minPrice || 0;
   this.maxPrice = options.maxPrice || 100000;
   this.imageUrl = options.imageUrl || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+  this.hideClasses = options.hideClasses || [];
 
   // Non configurable options
   this._config = { attributes: true, childList: true, characterData: true };
@@ -590,11 +591,14 @@ SezzleJS.prototype.getCSSVersionForMerchant = function(callback) {
  *
  */
 SezzleJS.prototype.hideSezzleHideDivs = function() {
-  Array
-  .from(document.getElementsByClassName('sezzle-hide'))
-  .forEach(function(el) {
-    el.className += " sezzle-hidden";
-  });
+  var toBeHiddenClasses = ['sezzle-hide'].concat(this.hideClasses);
+  toBeHiddenClasses.forEach(function(classNameToHide){
+    Array
+    .from(document.getElementsByClassName(classNameToHide))
+    .forEach(function(el) {
+      el.className += " sezzle-hidden";
+    });
+  })
 }
 
 /**
