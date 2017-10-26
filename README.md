@@ -22,6 +22,12 @@ document.sezzleConfig = {
   }
 ```
 
+Note that if you want to use a grayscale Sezzle logo put
+```
+https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-all-black-sm-100w.png
+```
+into the `imageUrl` to override the default.
+
 **When you need to update the CSS or the widget js records**
 We have a system running on redis off of our DB that keeps track of site specific js and css.
 
