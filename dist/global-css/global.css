@@ -1390,13 +1390,6 @@
 .sezzle-f47fc1f3-5efe-4f8c-b2f2-f21ebee71899.sezzle-cart-page-widget .sezzle-button-text {
   font-size: 12px;
 }
-@media screen and (max-width: 740px) {
-  .sezzle-f47fc1f3-5efe-4f8c-b2f2-f21ebee71899.sezzle-cart-page-widget .sezzle-button-text {
-    float: none !important;
-    text-align: center !important;
-    margin: auto !important;
-  }
-}
 .sezzle-f47fc1f3-5efe-4f8c-b2f2-f21ebee71899.sezzle-cart-page-widget .sezzle-checkout-button {
   font-size: 12px;
 }
