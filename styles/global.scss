@@ -2006,32 +2006,6 @@
   }
 }
 
-// smokea
-.sezzle-937dca02-2f49-453f-9e8d-cc12cc9b0e54 {
-  &.sezzle-product-page-widget {
-    color: black;
-    display: inline;
-  }
-  &.sezzle-cart-page-widget {
-    color: gray;
-    margin-top: 0px;
-    margin-bottom: -20px;
-  }
-  .sezzle-button-text {
-    @media screen and (max-width: 480px) {
-      float: none !important;
-      text-align: center !important;
-      margin: auto !important;
-    }
-  }
-  .sezzle-checkout-button {
-    @media screen and (max-width: 480px) {
-      float: none !important;
-      justify-content: center !important;
-    }
-  }
-}
-
 // Rolita Couture
 .sezzle-c3372bf5-e4e5-4252-80af-03af61ce9bb4 {
   &.sezzle-cart-page-widget {
@@ -3067,7 +3041,7 @@
     }
   }
 }
-
+/*
 // Lotus Boutique
 .sezzle-cd14eff9-49f2-4f0d-a965-7c4b29b94595 {
   &.sezzle-product-page-widget {
@@ -3086,7 +3060,7 @@
     margin-top: -30px;
     margin-bottom: 20px;
   }
-}
+} */
 
 // Paws Rest
 .sezzle-26689f8f-5240-4c87-9c33-3790ae57de8c {
@@ -6812,6 +6786,18 @@
     .sezzle-button-text {
       @media screen and (max-width: 369px) {
         max-width: 200px !important;
+      }
+    }
+  }
+}
+
+// Sezzle test (Grandmeister coffee)
+.sezzle-4e3e0bf4-4543-4171-924c-7e004f91e8de {
+  &.sezzle-product-page-widget {
+    .sezzle-button-text {
+      display: inline;
+      @media screen and (max-width: 376px) {
+        font-size: 13px !important;
       }
     }
   }
