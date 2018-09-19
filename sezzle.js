@@ -120,8 +120,8 @@ var SezzleJS = function(options) {
 
     if(this.splitPriceElementsOn) {
         this.widgetTemplate = this.widgetTemplate.map(function(subtemplate, index) {
-            if(subtemplate === '%%price%%') {
-                return '%%price-split%%';
+            if(subtemplate === 'price') {
+                return 'price-split';
             }
             return subtemplate;
         });
