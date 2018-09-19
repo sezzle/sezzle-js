@@ -714,7 +714,7 @@ SezzleJS.prototype.getPriceText = function(element) {
 
     //remove all marked elements
     Array.prototype.forEach.call(clone.getElementsByTagName("*"), function(element) {
-        if(SezzleCustomArrayFrom(element.classList).indexOf("sezzle-ignored-price-element") !== -1) {
+        if(Array.prototype.slice.call(element.classList).indexOf("sezzle-ignored-price-element") !== -1) {
             clone.removeChild(element);
         }
     });
