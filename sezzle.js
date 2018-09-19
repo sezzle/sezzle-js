@@ -271,13 +271,11 @@ SezzleJS.prototype.parsePriceString = function(price, includeComma) {
  */
 SezzleJS.prototype.loadCSS = function(callback) {
     this.getCSSVersionForMerchant(function(version) {
-        const chromeExtensionCSSGlobalVersionLink = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/sezzle-chr-x-test-6.css';
         var head = document.head;
         var link = document.createElement('link');
         link.type = 'text/css'
         link.rel = 'stylesheet'
-        //link.href = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + version;
-        link.href = chromeExtensionCSSGlobalVersionLink;
+        link.href = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + version;
         head.appendChild(link);
         link.onload = callback;
     }.bind(this));
