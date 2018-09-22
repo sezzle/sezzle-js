@@ -575,33 +575,47 @@
   font-size: 15px;
 
   .sezzle-button-text {
-    max-width: 340px;
-    width: unset;
-    line-height: 28px;
-    margin: 0 auto;
     text-align: center;
+    line-height: 23px;
+    width: unset;
+    margin: 0 auto;
     word-wrap: normal;
-    @media (max-width: 350px) {
-      font-size: 14px;
+    font-size: 12px;
+
+    .sezzle-payment-amount {
+      font-weight: 900;
     }
 
-    &.sezzle-thin {
-      max-width: 240px;
-      width: unset;
-      line-height: 28px;
+    .szl-light-image, .szl-dark-image {
+      display: inline-block;
+      height: 18px !important;
+      width: auto !important;
+      box-sizing: border-box;
+      padding-right: 2.5px;
+      margin-left: 1px;
+      margin-bottom: -4px;
+    }
 
-      &.sezzle-hide-amount {
-        max-width: 180px;
-        width: unset;
-      }
+    .sezzle-learn-more {
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 8.5px;
+    }
+
+    .sezzle-info-icon {
+      color: inherit;
+      background-color: inherit;
+    }
+
+    .sezzle-question-mark-icon {
+      height: 12px;
+      width: auto;
+      margin-bottom: -0.5px;
     }
   }
 
-  .sezzle-know-more {
-    text-decoration: underline;
+  .sezzle-modal-link {
     cursor: pointer;
-    font-size: 10px;
-    padding-top: 3px;
   }
 
   .sezzle-inline-text {
@@ -610,42 +624,6 @@
     @media (max-width: 350px) {
       font-size: 14px;
     }
-  }
-
-  .payment-amount {
-    font-weight: 900;
-  }
-
-  .sezzle-checkout-button {
-    padding-left: 0;
-    display: flex;
-    justify-content: center;
-    max-width: 320px;
-    width: unset;
-    margin: 0 auto;
-    line-height: 25px;
-
-    &.sezzle-thin {
-      max-width: 185px;
-      width: unset;
-    }
-  }
-
-  .szl-light-image, .szl-dark-image {
-    display: inline-block;
-    height: 23px !important;
-    width: auto !important;
-    box-sizing: border-box;
-    padding-right: 7px;
-    margin-top: 3px;
-  }
-
-  .sezzle-checkout-button::after {
-    display: none;
-  }
-
-  .sezzle-checkout-button::before {
-    display: none;
   }
 
   /* Center if in additional checkout buttons */
@@ -693,41 +671,6 @@
       width: auto;
     }
   }
-
-  /*
-  ========================
-  Changes for light button
-  ========================
-  */
-  // .sezzle-checkout-button.szl-light {
-  //   background-color: #fff;
-  //   height: 44px;
-  //   color: #000;
-  // }
-
-  // .sezzle-checkout-button.szl-light:hover {
-  //   background-color: #f9f9f9;
-  // }
-
-  /* Hide dark button logo */
-  .sezzle-checkout-button.szl-light .szl-dark-image {
-    display: none;
-  }
-
-  /* Show light button logo */
-  .sezzle-checkout-button.szl-light .szl-light-image {
-    display: block;
-  }
-
-  /* Hide light button logo */
-  .sezzle-checkout-button.szl-dark .szl-light-image {
-    display: none;
-  }
-
-  /* Show dark button logo */
-  .sezzle-checkout-button.szl-dark .szl-dark-image {
-    display: block;
-  }
 }
 
 // Sezzle Banner
@@ -773,13 +716,19 @@
 
 // Alignments
 .sezzle-checkout-button-wrapper {
-  &.sezzle-right {
-    text-align: right;
-  }
-
   &.sezzle-left {
     text-align: left;
-    float: left
+    float: left;
+  }
+
+  &.sezzle-center {
+    text-align: center;
+    float: none;
+  }
+
+  &.sezzle-right {
+    text-align: right;
+    float: right;
   }
 }
 
@@ -792,37 +741,6 @@
     margin: 0;
   }
 }
-
-.sezzle-checkout-button {
-  &.sezzle-right {
-    float: right;
-    clear: both;
-    justify-content: flex-end;
-  }
-
-  &.sezzle-left {
-    float: left;
-    justify-content: left;
-  }
-}
-
-/*
-
-  CSS for custom widget template
-
-*/
-.sezzle-custom-widget-wrapper {
-  line-height: 30px;
-  .sezzle-custom-logo {
-    margin-bottom: -5px;
-    margin-left: 5px;
-  }
-  .custom-sezzle-know-more {
-    display: inline-block;
-    margin-right: 5px;
-  }
-}
-
 
 // Magento styles
 .sezzle-payment {
