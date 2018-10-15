@@ -897,7 +897,7 @@ SezzleJS.prototype.renderModal = function() {
         modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
     }
 
-    // attach click event listeners to open / close modal
+    // attach click event listeners to open/close modal
     // all assets with the sezzle-modal-link class have click event listeners hooked to them
     // if the widget does not contain an element with a sezzle-modal-link, the event listener is attached to the whole widget
     Array.prototype.forEach.call(document.getElementsByClassName('sezzle-button-text'), function(el) {
@@ -931,12 +931,20 @@ SezzleJS.prototype.renderModal = function() {
     }.bind(this));
      
     // Event listener for close in modal
-    document.getElementsByClassName('close-sezzle-modal')[0].addEventListener('click', function() {
-        // Display the modal node
-        modalNode.style.display = 'none';
-        // Add hidden class hide the item
-        modalNode.getElementsByClassName('sezzle-checkout-modal')[0].className = "sezzle-checkout-modal sezzle-checkout-modal-hidden";
+    Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function(el) {
+        el.addEventListener('click', function() {
+            // Display the modal node
+            modalNode.style.display = 'none';
+            // Add hidden class hide the item
+            modalNode.getElementsByClassName('sezzle-checkout-modal')[0].className = "sezzle-checkout-modal sezzle-checkout-modal-hidden";
+        });
     });
+
+    // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
+    document.getElementsByClassName('sezzle-checkout-modal')[0].addEventListener('click', function(event) {
+        // stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
+        event.stopPropagation();
+    })
 }
 
 /**
