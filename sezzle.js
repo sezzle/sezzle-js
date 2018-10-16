@@ -66,16 +66,16 @@ var SezzleJS = function(options) {
     }
 
     this.hideElements = [];
-    if(options.hideElements) {
-        if(typeof(options.hideElements) === "string") {
+    if(options.hideClasses) {
+        if(typeof(options.hideClasses) === "string") {
             // Only one x-path is given
-            this.hideElements.push(options.hideElements.split('/').filter(function(subpath) {
+            this.hideElements.push(options.hideClasses.split('/').filter(function(subpath) {
                  return subpath !== "";
             }));
         } 
         else {
-            // options.hideElements is an array of x-paths
-            this.hideElements = options.hideElements.map(function(path){
+            // options.hideClasses is an array of x-paths
+            this.hideElements = options.hideClasses.map(function(path){
                 return path.split('/');
             }).filter(function(subpath) { 
                 return subpath !== "" ;
@@ -100,18 +100,18 @@ var SezzleJS = function(options) {
     this.marginBottom = options.marginBottom || 0; //pixels
     this.scaleFactor = options.scaleFactor || 1.1;
     this.fontFamily = options.fontFamily || "inherit";
-    this.textColor = options.textColor || "inherit";
+    this.textColor = options.color || "inherit";
     // This is used to get price of element
     this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
     // This is used to tell where to render sezzle element to
     this.sezzleWidgetContainerClass = options.sezzleWidgetContainerClass || 'sezzle-widget-container';
     // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
     this.splitPriceElementsOn = options.splitPriceElementsOn || '';
-    this.altModalHTML = options.altModalHTML || '';
+    this.altModalHTML = options.altLightboxHTML || '';
 
     this.widgetTemplate = [];
-    if(options.widgetTemplate) {
-        this.widgetTemplate = options.widgetTemplate.split('%%');
+    if(options.altVersionTemplate) {
+        this.widgetTemplate = options.altVersionTemplate.split('%%');
     } 
     else {
         const defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' payments of %%price%% with %%logo%% %%info%%';
@@ -137,11 +137,11 @@ var SezzleJS = function(options) {
 
     this.theme = options.theme || '';
     if(this.theme == 'dark') {
-        this.imageURL = options.imageURL || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
+        this.imageURL = options.imageUrl || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
         this.imageClassName = 'szl-dark-image';
     } 
     else {
-        this.imageURL = options.imageURL || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+        this.imageURL = options.imageUrl || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
         this.imageClassName = 'szl-light-image';
     }
 
