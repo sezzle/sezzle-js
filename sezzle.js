@@ -357,16 +357,6 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
  */
 
 SezzleJS.prototype.addCSSWidth = function (element) {
-	if (document.sezzleConfig.widthType != undefined) {
-		switch (document.sezzleConfig.widthType) {
-			case 'thin':
-				element.className += " sezzle-thin";
-				break;
-			case 'thick':
-				element.style.maxWidth = "300px"
-				break;
-		}
-	}
 	if (this.maxWidth) {
 		element.style.maxWidth = this.maxWidth + "px"
 	}
