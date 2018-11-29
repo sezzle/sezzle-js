@@ -1102,7 +1102,7 @@ SezzleJS.prototype.logEvent = function(eventName) {
 * Post Event
 */
 SezzleJS.prototype.postEvent = function(payload) {
-    var url = "https://widget.sezzle.com/v1/event/log";
+    var url = "http://widget.sezzle.com/v1/event/log";
 
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function() {
