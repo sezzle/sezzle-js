@@ -116,7 +116,7 @@ var SezzleJS = function(options) {
         this.widgetTemplate = options.altVersionTemplate.split('%%');
     }
     else {
-        const defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' payments of %%price%% with %%logo%% %%info%%';
+        const defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
         this.widgetTemplate = defaultWidgetTemplate.split('%%');
     }
 
@@ -507,17 +507,19 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
             case 'logo':
                 var logoNode = document.createElement("img");
                 logoNode.className = "sezzle-logo  " + this.imageClassName;
-                logoNode.src = this.imageURL;
+								logoNode.src = this.imageURL;
+								logoNode.style.verticalAlign = "top";
+								logoNode.style.marginLeft ="5px";
                 sezzleButtonText.appendChild(logoNode);
                 break;
 
             case 'learn-more':
                 var learnMoreNode = document.createElement("span");
-                learnMoreNode.className = "sezzle-modal-link sezzle-learn-more";
-                var learnMoreText = document.createTextNode(' Learn more');
+                learnMoreNode.className = "sezzle-modal-link sezzle-know-more";
+                var learnMoreText = document.createTextNode('Learn more');
                 learnMoreNode.appendChild(learnMoreText);
                 sezzleButtonText.appendChild(learnMoreNode);
-                break;
+								break;
 
             case 'info':
                 var infoIconNode = document.createElement("code");
