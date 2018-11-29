@@ -11,12 +11,12 @@ var SezzleJS = function(options) {
             this.xpath.push(options.targetXPath.split('/').filter(function(subpath) {
                  return subpath !== "";
             }));
-        } 
+        }
         else {
             // options.targetXPath is an array of x-paths
             this.xpath = options.targetXPath.map(function(path) {
                 return path.split('/');
-            }).filter(function(subpath) { 
+            }).filter(function(subpath) {
                 return subpath !== "" ;
             });
         }
@@ -27,7 +27,7 @@ var SezzleJS = function(options) {
         if(typeof(options.renderToPath) === 'string') {
             // Only one respective render location is given
             this.rendertopath.push(options.renderToPath);
-        } 
+        }
         else {
             // options.renderToPath is an array of x-paths
             this.rendertopath = options.renderToPath;
@@ -41,7 +41,7 @@ var SezzleJS = function(options) {
             this.rendertopath[index] =
             this.rendertopath[index].trim() != '' ?
             this.rendertopath[index].trim() : null;
-        } 
+        }
         else {
             this.rendertopath.push(null);
         }
@@ -54,12 +54,12 @@ var SezzleJS = function(options) {
             this.ignoredPriceElements.push(options.ignoredPriceElements.split('/').filter(function(subpath) {
                  return subpath !== "";
             }));
-        } 
+        }
         else {
             // options.ignoredPriceElements is an array of x-paths
             this.ignoredPriceElements = options.ignoredPriceElements.map(function(path){
                 return path.split('/');
-            }).filter(function(subpath) { 
+            }).filter(function(subpath) {
                 return subpath !== "" ;
             });
         }
@@ -72,12 +72,12 @@ var SezzleJS = function(options) {
             this.hideElements.push(options.hideClasses.split('/').filter(function(subpath) {
                  return subpath !== "";
             }));
-        } 
+        }
         else {
             // options.hideClasses is an array of x-paths
             this.hideElements = options.hideClasses.map(function(path){
                 return path.split('/');
-            }).filter(function(subpath) { 
+            }).filter(function(subpath) {
                 return subpath !== "" ;
             });
         }
@@ -100,7 +100,8 @@ var SezzleJS = function(options) {
     this.marginBottom = options.marginBottom || 0; //pixels
     this.scaleFactor = options.scaleFactor || 1.1;
     this.fontFamily = options.fontFamily || "inherit";
-    this.textColor = options.color || "inherit";
+		this.textColor = options.color || "inherit";
+		this.fontSize = options.fontSize || "inherit";
     // This is used to get price of element
     this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
     // This is used to tell where to render sezzle element to
@@ -112,7 +113,7 @@ var SezzleJS = function(options) {
     this.widgetTemplate = [];
     if(options.altVersionTemplate) {
         this.widgetTemplate = options.altVersionTemplate.split('%%');
-    } 
+    }
     else {
         const defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' payments of %%price%% with %%logo%% %%info%%';
         this.widgetTemplate = defaultWidgetTemplate.split('%%');
@@ -139,7 +140,7 @@ var SezzleJS = function(options) {
     if(this.theme == 'dark') {
         this.imageURL = options.imageUrl || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
         this.imageClassName = 'szl-dark-image';
-    } 
+    }
     else {
         this.imageURL = options.imageUrl || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
         this.imageClassName = 'szl-light-image';
@@ -193,7 +194,7 @@ var SezzleJS = function(options) {
         // If this is an ID
         if(xpath[xindex][0] === '#') {
             children.push(document.getElementById(xpath[xindex].substr(1)));
-        } 
+        }
         // If this is a class
         else if(xpath[xindex][0] === '.') {
             Array.prototype.forEach.call(element.getElementsByClassName(xpath[xindex].substr(1)), function(el) {
@@ -310,7 +311,7 @@ SezzleJS.prototype.addCSSAlignment = function(element) {
 }
 
 /**
- * Guesses the widget alignment based on the 
+ * Guesses the widget alignment based on the
  * @param priceElement price element to add the widgets to, the target element
  * this method is based on the belief that the widget alignment should follow the text-align property of the price element
  */
@@ -319,18 +320,18 @@ SezzleJS.prototype.guessWidgetAlignment = function(priceElement) {
         return 'left' //default
     }
     var textAlignment = window.getComputedStyle(priceElement).textAlign
-    if(textAlignment === 'start' || textAlignment === 'justify') { 
+    if(textAlignment === 'start' || textAlignment === 'justify') {
         // start is a CSS3  value for textAlign to accommodate for other languages which may be RTL (right to left), for instance Arabic
         // Since the sites we are adding to are mostly, if not all in English, it will be LTR (left to right), hence 'left' at the start
         // 'justify' will be the same as 'left'
         return 'left'
-    } 
+    }
     else if(textAlignment === 'end') {
         // end is a CSS3  value for textAlign to accommodate for other languages which may be RTL (right to left), for instance Arabic
         // Since the sites we are adding to are mostly, if not all in English, it will be LTR (left to right), hence 'right' at the end
         return 'right'
-    } 
-    return textAlignment     
+    }
+    return textAlignment
 }
 
 /**
@@ -343,7 +344,10 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
     }
     if(this.fontFamily) {
         element.style.fontFamily = this.fontFamily
-    }
+		}
+		if (this.fontSize) {
+			element.style.fontSize = this.fontSize + "px"
+		}
 }
 
 /**
@@ -546,7 +550,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
                 priceSplitNode.appendChild(priceSplitTextNode);
                 sezzleButtonText.appendChild(priceSplitNode);
                 break;
-            
+
             case 'line-break':
                 var lineBreakNode = document.createElement("br");
                 sezzleButtonText.appendChild(lineBreakNode);
@@ -598,26 +602,26 @@ SezzleJS.prototype.getElementToRender = function(element, index) {
 
             if(toRenderElement == null) {
                 break;
-            } 
+            }
             else if(p === '.') {
                 continue;
-            } 
+            }
             else if(p === '..') {
                 // One level back
                 toRenderElement = toRenderElement.parentElement;
-            } 
+            }
             else if(p[0] === '.') {
                 // The class in the element
                 toRenderElement =
                     toRenderElement.getElementsByClassName(p.substr(1)).length ?
                     toRenderElement.getElementsByClassName(p.substr(1))[0] :
                     null ;
-            } 
+            }
             else if(p[0] === '#') {
                 // The ID in the element
                 toRenderElement =
                     document.getElementById(p.substr(1));
-            } 
+            }
             else if(p === '::first-child') {
                 //rendered as first child
                 toRenderElement =
@@ -625,7 +629,7 @@ SezzleJS.prototype.getElementToRender = function(element, index) {
                     toRenderElement.firstElementChild :
                     null ;
                 this.widgetIsFirstChild = true
-            } 
+            }
             else {
                 // If this is a tag
                 // indexes are 0-indexed (e.g. span-2 means third span)
@@ -646,7 +650,7 @@ SezzleJS.prototype.getElementToRender = function(element, index) {
         // No path defined
         // return the parent elelment
         return element.parentElement;
-    } 
+    }
     return toRenderElement;
 }
 
@@ -692,7 +696,7 @@ SezzleJS.prototype.isProductEligible = function(priceText) {
 SezzleJS.prototype.getPriceText = function(element) {
     if(this.ignoredPriceElements == []){
         return element.innerText;
-    } 
+    }
     else {
         this.ignoredPriceElements.forEach(function(subpaths) {
             // get all elements pointed to by the xPath. Search is rooted at element
@@ -702,7 +706,7 @@ SezzleJS.prototype.getPriceText = function(element) {
             });
         }.bind(this));
     }
-    
+
     // if no ignored elements are found, return the whole inner text of the element
     if(!element.getElementsByClassName("sezzle-ignored-price-element").length) {
         return element.innerText;
@@ -779,7 +783,7 @@ SezzleJS.prototype.observer = new MutationObserver(function(mutations) {
         var sezzlePriceElement = document.getElementsByClassName('sezzleindex-' + priceIndex)[0];
         if(!/\d/.test(price)) {
             sezzlePriceElement.parentElement.parentElement.parentElement.classList.add('sezzle-hidden');
-        } 
+        }
         else {
             sezzlePriceElement.parentElement.parentElement.parentElement.classList.remove('sezzle-hidden');
         }
@@ -843,7 +847,7 @@ SezzleJS.prototype.deleteObserver = new MutationObserver(function(mutations) {
             var sezzlePriceElement = document.getElementsByClassName('sezzleindex-' + priceIndex)[0];
             if(!/\d/.test(price)) {
                 sezzlePriceElement.parentElement.parentElement.parentElement.classList.add('sezzle-hidden');
-            } 
+            }
             else {
                 sezzlePriceElement.parentElement.parentElement.parentElement.classList.remove('sezzle-hidden');
             }
@@ -892,7 +896,7 @@ SezzleJS.prototype.renderModal = function() {
             modalNode.innerHTML = '<div class="sezzle-checkout-modal sezzle-checkout-modal-hidden"><div class="top-content"><div class="sezzle-no-thanks close-sezzle-modal">×</div><div class="sezzle-modal-title"><div class="sezzle-title-text-center">How Sezzle Works</div></div><div class="sezzle-header-text">We have partnered with Sezzle to give you the ability to Buy Now and Pay Later.</div><div class="row point"><div class="col-xs-12 col-sm-12 col-md-2 modal-icon"><img src="https://d34uoa9py2cgca.cloudfront.net/Checkout/0interest.svg"></div><div class="col-xs-12 col-sm-12 modal-description"><h2>No interest or fees</h2><p>You only pay the purchase price with Sezzle, as long as you have the installment amount in your bank account.</p></div></div><div class="row point"><div class="col-xs-12 col-sm-12 col-md-2 modal-icon"><img src="https://d34uoa9py2cgca.cloudfront.net/Checkout/shipped-green.svg"></div><div class="col-xs-12 col-sm-12 modal-description"><h2>Your order is shipped right away</h2><p>We ship your order immediately, like we would for any other payment method.</p></div></div><div class="row point"><div class="col-xs-12 col-sm-12 col-md-2 modal-icon"><img src="https://d34uoa9py2cgca.cloudfront.net/Checkout/payments-green.svg"></div><div class="col-xs-12 col-sm-12 modal-description"><h2>Easy, automatic payments</h2><p>Sezzle splits your purchase into ' + this.numberOfPayments + ' payments, automatically deducted from your bank account every two weeks.</p></div></div></div><div class="sezzle-simply-select"><div class="sezzle-inline-text-left">Just select</div><img src="https://sezzlemedia.s3.amazonaws.com/branding/sezzle-logos/sezzle-logo.svg"><div class="sezzle-inline-text-right">at checkout.</div></div><div class="sezzle-footer-text">Subject to approval. Estimated payment amount excludes taxes and shipping fees. Your actual installment payments will be presented for confirmation in your checkout with Sezzle.</div></div>';
         }
         document.getElementsByTagName('html')[0].appendChild(modalNode);
-    } 
+    }
     else {
         modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
     }
@@ -904,7 +908,7 @@ SezzleJS.prototype.renderModal = function() {
         var modalLinks = el.getElementsByClassName('sezzle-modal-link');
         if(modalLinks.length == 0) {
             // attach event listener to sezzle-button-text
-            // add the sezzle-modal-link class to sezzle-button-text to make it appear clickable 
+            // add the sezzle-modal-link class to sezzle-button-text to make it appear clickable
             // (elements with the sezzle-modal-link class appear clickable when hovered on)
             el.classList.add("sezzle-modal-link");
             el.addEventListener('click', function() {
@@ -929,7 +933,7 @@ SezzleJS.prototype.renderModal = function() {
             }.bind(this));
         }
     }.bind(this));
-     
+
     // Event listener for close in modal
     Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function(el) {
         el.addEventListener('click', function() {
@@ -981,7 +985,7 @@ SezzleJS.prototype.getCSSVersionForMerchant = function(callback) {
     // make request
     if(document.sezzleCssVersionOverride !== undefined) {
         callback(document.sezzleCssVersionOverride);
-    } 
+    }
     else {
         var httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function() {
@@ -1024,10 +1028,10 @@ SezzleJS.prototype.replaceBanner = function() {
     var imgurl = this.bannerURL;
     var linkpath = this.bannerLink;
     var bannerClass = this.bannerClass;
-  
+
     if(bannerClass != '') {
         var element = document.getElementsByClassName(bannerClass)[0];
-  
+
         if(linkpath != '') {
             var link = element.getElementsByTagName("a");
             if(link[0] != null) {
@@ -1043,7 +1047,7 @@ SezzleJS.prototype.replaceBanner = function() {
         }
     }
 }
-  
+
 /*
 * Log Event
 */
@@ -1078,7 +1082,7 @@ SezzleJS.prototype.logEvent = function(eventName) {
         }));
     }
 }
-  
+
 /*
 * Post Event
 */
@@ -1124,7 +1128,7 @@ SezzleJS.prototype.getFingerprint = function(callback) {
             callback("");
         }
         document.getElementsByTagName("head")[0].appendChild(script);
-    } 
+    }
     else {
         new Fingerprint2().get(function(result, components){
             callback(result);
@@ -1206,7 +1210,7 @@ SezzleJS.prototype.init = function() {
                 this.insertGoogleTagManagerScripts();
             }
         }.bind(this));
-    } 
+    }
     else {
         // get the country and show the widget if supported
         this.getCountryCodeFromIP(function(countryCode) {
@@ -1233,7 +1237,7 @@ SezzleJS.prototype.initWidget = function() {
     if(this.hasPriceClassElement) {
         els.push(this.priceElements[0]);
         toRenderEls.push(this.renderElements[0]);
-    } 
+    }
     else {
         this.xpath.forEach(function(path, index) {
             this.getElementsByXPath(path).forEach(function(e) {
