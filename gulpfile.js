@@ -24,7 +24,7 @@ var gulp = require('gulp'),
     rp = require("request-promise"),
     config = { useIAM: true };
 
-var buttonUploadName = 'sezzle-widget-test-2.0.0.js';
+var buttonUploadName = 'sezzle-widget1.0.7.js';
 var bannerUploadName = 'sezzle-banner2.1.1.js';
 var globalCssUploadName = 'sezzle-styles-global2.0.000.css';
 
@@ -57,7 +57,7 @@ gulp.task("upload-widget", function() {
 gulp.task("post-button-to-widget-server", function() {
     var options = {
         method: 'POST',
-        uri: 'http://localhost:12121/v1/javascript/price-widget/version',
+        uri: 'https://widget.sezzle.com/v1/javascript/price-widget/version',
         body: {
             'version_name': buttonUploadName
         },
