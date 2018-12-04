@@ -544,6 +544,13 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
 				sezzleButtonText.appendChild(apNode);
 				break;
 
+			case 'afterpay-logo-grey':
+				var apNode = document.createElement("img");
+				apNode.className = "sezzle-afterpay-logo"
+				apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png";
+				sezzleButtonText.appendChild(apNode);
+				break;
+
 			case 'afterpay-info-icon':
 				var apInfoIconNode = document.createElement("code");
 				apInfoIconNode.className = "ap-modal-info-link";
