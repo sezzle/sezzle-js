@@ -587,15 +587,6 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
                 sezzleButtonText.appendChild(lineBreakNode);
 				break;
 
-			case 'after-pay':
-			var logoNode = document.createElement("img");
-			logoNode.className = "sezzle-logo  " + this.imageClassName;
-							logoNode.src = this.afterpayImageURL;
-							logoNode.style.verticalAlign = "top";
-							logoNode.style.marginLeft ="5px";
-			sezzleButtonText.appendChild(logoNode);
-			break;
-
             default:
                 var widgetTextNode = document.createTextNode(subtemplate);
                 sezzleButtonText.appendChild(widgetTextNode);
