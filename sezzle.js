@@ -1336,7 +1336,11 @@ SezzleJS.prototype.initWidget = function() {
         this.renderAwesomeSezzle(el, toRenderEls[index], index);
         this.startObserve(el);
     }.bind(this));
-    this.renderModal();
+	this.renderModal();
+	// only render APModal if ap-modal-link exists
+	if (document.getElementsByClassName('ap-modal-link').length > 0) {
+		this.renderAPModal();
+	}
 }
 
 // Assumes document.sezzleConfig is present
