@@ -604,13 +604,15 @@
 
     .sezzle-info-icon {
       color: inherit;
-      background-color: inherit;
+			background-color: inherit;
+			cursor: pointer;
     }
 
     .sezzle-question-mark-icon {
       height: 12px;
       width: auto;
-      margin-bottom: -0.5px;
+			margin-bottom: -0.5px;
+			cursor: pointer;
     }
   }
 
@@ -740,6 +742,21 @@
     float: right;
     margin: 0;
   }
+}
+
+.sezzle-afterpay-logo {
+	vertical-align: middle;
+	max-width: 30%;
+}
+
+.ap-modal-info-link {
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.sezzle-logo-2 {
+	margin-left: 5px;
+	margin-top: 0px !important;
 }
 
 // Magento styles
@@ -6258,7 +6275,7 @@
         font-weight: 300 !important;
         font-size: 20px !important;
       }
-    } 
+    }
   }
 }
 

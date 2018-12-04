@@ -508,7 +508,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
 
             case 'logo':
                 var logoNode = document.createElement("img");
-                logoNode.className = "sezzle-logo  " + this.imageClassName;
+                logoNode.className = "sezzle-logo-2" + this.imageClassName;
 								logoNode.src = this.imageURL;
 								logoNode.style.verticalAlign = "top";
 								logoNode.style.marginLeft ="5px";
