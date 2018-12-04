@@ -517,7 +517,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
 						// changed from learn-more to link as that is what current altVersionTemplates use
             case 'link':
                 var learnMoreNode = document.createElement("span");
-                learnMoreNode.className = "sezzle-modal-link sezzle-know-more";
+                learnMoreNode.className = "sezzle-modal-link sezzle-learn-more";
                 var learnMoreText = document.createTextNode('Learn more');
                 learnMoreNode.appendChild(learnMoreText);
                 sezzleButtonText.appendChild(learnMoreNode);
