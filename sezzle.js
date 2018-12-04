@@ -100,16 +100,18 @@ var SezzleJS = function(options) {
     this.marginBottom = options.marginBottom || 0; //pixels
     this.scaleFactor = options.scaleFactor || 1.0;
     this.fontFamily = options.fontFamily || "inherit";
-		this.textColor = options.color || "inherit";
-		this.fontSize = options.fontSize || "inherit";
-		this.maxWidth = options.maxWidth || 0; //pixels
+	this.textColor = options.color || "inherit";
+	this.fontSize = options.fontSize || "inherit";
+	this.maxWidth = options.maxWidth || 0; //pixels
     // This is used to get price of element
     this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
     // This is used to tell where to render sezzle element to
     this.sezzleWidgetContainerClass = options.sezzleWidgetContainerClass || 'sezzle-widget-container';
     // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
     this.splitPriceElementsOn = options.splitPriceElementsOn || '';
-    this.altModalHTML = options.altLightboxHTML || '';
+	this.altModalHTML = options.altLightboxHTML || '';
+	// if doing widget with both Sezzle or afterpay
+	this.afterpayModalClickURL = options.afterpayModalClickURL || 'https://www.afterpay.com/terms-of-service?soft_redirect=true'
 
     this.widgetTemplate = [];
     if(options.altVersionTemplate) {
@@ -140,7 +142,7 @@ var SezzleJS = function(options) {
     this.theme = options.theme || '';
     if(this.theme == 'dark') {
         this.imageURL = options.imageUrl || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
-        this.imageClassName = 'szl-dark-image';
+		this.imageClassName = 'szl-dark-image';
     }
     else {
         this.imageURL = options.imageUrl || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
@@ -345,10 +347,10 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
     }
     if(this.fontFamily) {
         element.style.fontFamily = this.fontFamily
-		}
-		if (this.fontSize) {
+	}
+	if (this.fontSize) {
 			element.style.fontSize = this.fontSize + "px"
-		}
+	}
 }
 
 /**
@@ -395,8 +397,8 @@ SezzleJS.prototype.addCSSCustomisation = function(element) {
     this.addCSSAlignment(element);
     this.addCSSFontStyle(element);
     this.addCSSTextColor(element);
-		this.addCSSTheme(element);
-		this.addCSSWidth(element)
+	this.addCSSTheme(element);
+	this.addCSSWidth(element)
 }
 
 /**
@@ -533,7 +535,21 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
                 questionMarkIconNode.className = "sezzle-modal-link sezzle-question-mark-icon";
                 questionMarkIconNode.src = "https://d2uyik3j5wol98.cloudfront.net/images/question_mark_black.png"
                 sezzleButtonText.appendChild(questionMarkIconNode);
-                break;
+				break;
+
+			case 'afterpay-logo':
+				var apNode = document.createElement("img");
+				apNode.className = "sezzle-afterpay-logo"
+				apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png";
+				sezzleButtonText.appendChild(apNode);
+				break;
+
+			case 'afterpay-info-icon':
+				var apInfoIconNode = document.createElement("code");
+				apInfoIconNode.className = "ap-modal-info-link";
+				apInfoIconNode.innerHTML = "&#9432;"
+				sezzleButtonText.appendChild(apInfoIconNode);
+				break;
 
             case 'price-split':
                 var priceSplitNode = document.createElement("span");
@@ -569,7 +585,16 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
             case 'line-break':
                 var lineBreakNode = document.createElement("br");
                 sezzleButtonText.appendChild(lineBreakNode);
-                break;
+				break;
+
+			case 'after-pay':
+			var logoNode = document.createElement("img");
+			logoNode.className = "sezzle-logo  " + this.imageClassName;
+							logoNode.src = this.afterpayImageURL;
+							logoNode.style.verticalAlign = "top";
+							logoNode.style.marginLeft ="5px";
+			sezzleButtonText.appendChild(logoNode);
+			break;
 
             default:
                 var widgetTextNode = document.createTextNode(subtemplate);
