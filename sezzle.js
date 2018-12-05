@@ -350,7 +350,7 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
     if(this.fontFamily) {
         element.style.fontFamily = this.fontFamily
 	}
-	if (this.fontSize != 'inherit') {
+	if (this.fontSize != ) {
 			element.style.fontSize = this.fontSize + "px"
 	}
 }
@@ -1015,7 +1015,6 @@ SezzleJS.prototype.renderAPModal = function() {
 Array.prototype.forEach.call(document.getElementsByClassName('sezzle-button-text'), function(el) {
 	var modalLinks = el.getElementsByClassName('ap-modal-info-link');
 	Array.prototype.forEach.call(modalLinks, function(modalLink) {
-		console.log(modalLinks.length)
 		modalLink.addEventListener('click', function() {
 			// Show modal node
 			modalNode.style.display = 'block';
@@ -1176,7 +1175,7 @@ SezzleJS.prototype.logEvent = function(eventName) {
 * Post Event
 */
 SezzleJS.prototype.postEvent = function(payload) {
-    var url = "http://widget.sezzle.com/v1/event/log";
+    var url = "https://widget.sezzle.com/v1/event/log";
 
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function() {
