@@ -97,7 +97,9 @@ var SezzleJS = function(options) {
     this.alignmentSwitchMinWidth = options.alignmentSwitchMinWidth; //pixels
     this.alignmentSwitchType = options.alignmentSwitchType;
     this.marginTop = options.marginTop || 0; //pixels
-    this.marginBottom = options.marginBottom || 0; //pixels
+	this.marginBottom = options.marginBottom || 0; //pixels
+	this.marginRight = options.marginRight || 0; //pixels
+	this.marginLeft = options.marginLeft || 0; //pixels
     this.scaleFactor = options.scaleFactor || 1.0;
     this.fontFamily = options.fontFamily || "inherit";
 	this.textColor = options.color || "inherit";
@@ -436,7 +438,9 @@ SezzleJS.prototype.insertWidgetTypeCSSClassInElement = function(element) {
  */
 SezzleJS.prototype.setElementMargins = function(element) {
     element.style.marginTop = this.marginTop + "px";
-    element.style.marginBottom = this.marginBottom + "px";
+	element.style.marginBottom = this.marginBottom + "px";
+	element.style.marginRight = this.marginRight + "px";
+	element.style.marginLeft = this.marginLeft + "px";
 }
 
 /*
@@ -509,9 +513,9 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
             case 'logo':
                 var logoNode = document.createElement("img");
                 logoNode.className = "sezzle-logo-2" + this.imageClassName;
-								logoNode.src = this.imageURL;
-								logoNode.style.verticalAlign = "top";
-								logoNode.style.marginLeft ="5px";
+				logoNode.src = this.imageURL;
+				logoNode.style.verticalAlign = "top";
+				logoNode.style.marginLeft ="5px";
                 sezzleButtonText.appendChild(logoNode);
                 break;
 						// changed from learn-more to link as that is what current altVersionTemplates use
@@ -521,7 +525,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
                 var learnMoreText = document.createTextNode('Learn more');
                 learnMoreNode.appendChild(learnMoreText);
                 sezzleButtonText.appendChild(learnMoreNode);
-								break;
+				break;
 
             case 'info':
                 var infoIconNode = document.createElement("code");
