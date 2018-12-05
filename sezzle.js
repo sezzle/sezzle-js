@@ -97,23 +97,23 @@ var SezzleJS = function(options) {
     this.alignmentSwitchMinWidth = options.alignmentSwitchMinWidth; //pixels
     this.alignmentSwitchType = options.alignmentSwitchType;
     this.marginTop = options.marginTop || 0; //pixels
-	this.marginBottom = options.marginBottom || 0; //pixels
-	this.marginRight = options.marginRight || 0; //pixels
-	this.marginLeft = options.marginLeft || 0; //pixels
+    this.marginBottom = options.marginBottom || 0; //pixels
+    this.marginRight = options.marginRight || 0; //pixels
+    this.marginLeft = options.marginLeft || 0; //pixels
     this.scaleFactor = options.scaleFactor || 1.0;
     this.fontFamily = options.fontFamily || "inherit";
-	this.textColor = options.color || "inherit";
-	this.fontSize = options.fontSize || "inherit";
-	this.maxWidth = options.maxWidth || 400; //pixels
+    this.textColor = options.color || "inherit";
+    this.fontSize = options.fontSize || "inherit";
+    this.maxWidth = options.maxWidth || 400; //pixels
     // This is used to get price of element
     this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
     // This is used to tell where to render sezzle element to
     this.sezzleWidgetContainerClass = options.sezzleWidgetContainerClass || 'sezzle-widget-container';
     // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
     this.splitPriceElementsOn = options.splitPriceElementsOn || '';
-	this.altModalHTML = options.altLightboxHTML || '';
-	// if doing widget with both Sezzle or afterpay
-	this.afterpayModalClickURL = options.afterpayModalClickURL || 'https://www.afterpay.com/terms-of-service?soft_redirect=true'
+    this.altModalHTML = options.altLightboxHTML || '';
+    // if doing widget with both Sezzle or afterpay
+    this.afterpayModalClickURL = options.afterpayModalClickURL || 'https://www.afterpay.com/terms-of-service?soft_redirect=true'
 
     this.widgetTemplate = [];
     if(options.altVersionTemplate) {
@@ -144,7 +144,7 @@ var SezzleJS = function(options) {
     this.theme = options.theme || '';
     if(this.theme == 'dark') {
         this.imageURL = options.imageUrl || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
-		this.imageClassName = 'szl-dark-image';
+        this.imageClassName = 'szl-dark-image';
     }
     else {
         this.imageURL = options.imageUrl || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
@@ -349,10 +349,10 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
     }
     if(this.fontFamily) {
         element.style.fontFamily = this.fontFamily
-	}
-	if (this.fontSize != ) {
-			element.style.fontSize = this.fontSize + "px"
-	}
+    }
+    if (this.fontSize != 'inherit') {
+        element.style.fontSize = this.fontSize + "px"
+    }
 }
 
 /**
@@ -361,9 +361,9 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
  */
 
 SezzleJS.prototype.addCSSWidth = function (element) {
-	if (this.maxWidth) {
-		element.style.maxWidth = this.maxWidth + "px"
-	}
+    if (this.maxWidth) {
+        element.style.maxWidth = this.maxWidth + "px"
+    }
 }
 
 /**
@@ -399,8 +399,8 @@ SezzleJS.prototype.addCSSCustomisation = function(element) {
     this.addCSSAlignment(element);
     this.addCSSFontStyle(element);
     this.addCSSTextColor(element);
-	this.addCSSTheme(element);
-	this.addCSSWidth(element)
+    this.addCSSTheme(element);
+    this.addCSSWidth(element)
 }
 
 /**
@@ -438,9 +438,9 @@ SezzleJS.prototype.insertWidgetTypeCSSClassInElement = function(element) {
  */
 SezzleJS.prototype.setElementMargins = function(element) {
     element.style.marginTop = this.marginTop + "px";
-	element.style.marginBottom = this.marginBottom + "px";
-	element.style.marginRight = this.marginRight + "px";
-	element.style.marginLeft = this.marginLeft + "px";
+    element.style.marginBottom = this.marginBottom + "px";
+    element.style.marginRight = this.marginRight + "px";
+    element.style.marginLeft = this.marginLeft + "px";
 }
 
 /*
@@ -512,20 +512,20 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
 
             case 'logo':
                 var logoNode = document.createElement("img");
-                logoNode.className = "sezzle-logo-2" + this.imageClassName;
-				logoNode.src = this.imageURL;
-				logoNode.style.verticalAlign = "top";
-				logoNode.style.marginLeft ="5px";
+                logoNode.className = "sezzle-logo " + this.imageClassName;
+                logoNode.src = this.imageURL;
+                logoNode.style.verticalAlign = "top";
+                logoNode.style.marginLeft ="5px";
                 sezzleButtonText.appendChild(logoNode);
                 break;
-						// changed from learn-more to link as that is what current altVersionTemplates use
+                        // changed from learn-more to link as that is what current altVersionTemplates use
             case 'link':
                 var learnMoreNode = document.createElement("span");
                 learnMoreNode.className = "sezzle-modal-link sezzle-learn-more";
                 var learnMoreText = document.createTextNode('Learn more');
                 learnMoreNode.appendChild(learnMoreText);
                 sezzleButtonText.appendChild(learnMoreNode);
-				break;
+                break;
 
             case 'info':
                 var infoIconNode = document.createElement("code");
@@ -539,28 +539,28 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
                 questionMarkIconNode.className = "sezzle-modal-link sezzle-question-mark-icon";
                 questionMarkIconNode.src = "https://d2uyik3j5wol98.cloudfront.net/images/question_mark_black.png"
                 sezzleButtonText.appendChild(questionMarkIconNode);
-				break;
+                break;
 
-			case 'afterpay-logo':
-				var apNode = document.createElement("img");
-				apNode.className = "sezzle-afterpay-logo"
-				apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png";
-				sezzleButtonText.appendChild(apNode);
-				break;
+            case 'afterpay-logo':
+                var apNode = document.createElement("img");
+                apNode.className = "sezzle-afterpay-logo"
+                apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png";
+                sezzleButtonText.appendChild(apNode);
+                break;
 
-			case 'afterpay-logo-grey':
-				var apNode = document.createElement("img");
-				apNode.className = "sezzle-afterpay-logo"
-				apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png";
-				sezzleButtonText.appendChild(apNode);
-				break;
+            case 'afterpay-logo-grey':
+                var apNode = document.createElement("img");
+                apNode.className = "sezzle-afterpay-logo"
+                apNode.src = "https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png";
+                sezzleButtonText.appendChild(apNode);
+                break;
 
-			case 'afterpay-info-icon':
-				var apInfoIconNode = document.createElement("code");
-				apInfoIconNode.className = "ap-modal-info-link";
-				apInfoIconNode.innerHTML = "&#9432;"
-				sezzleButtonText.appendChild(apInfoIconNode);
-				break;
+            case 'afterpay-info-icon':
+                var apInfoIconNode = document.createElement("code");
+                apInfoIconNode.className = "ap-modal-info-link";
+                apInfoIconNode.innerHTML = "&#9432;"
+                sezzleButtonText.appendChild(apInfoIconNode);
+                break;
 
             case 'price-split':
                 var priceSplitNode = document.createElement("span");
@@ -596,7 +596,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function(element, renderelement, index 
             case 'line-break':
                 var lineBreakNode = document.createElement("br");
                 sezzleButtonText.appendChild(lineBreakNode);
-				break;
+                break;
 
             default:
                 var widgetTextNode = document.createTextNode(subtemplate);
@@ -794,9 +794,9 @@ SezzleJS.prototype.getFormattedPrice = function(element) {
         "Sold Out",
     ]
 
-	// replace other strings not wanted in text
-	ignoredPriceStrings.forEach(function(ignoredString) {
-		formatter = formatter.replace(ignoredString, '');
+    // replace other strings not wanted in text
+    ignoredPriceStrings.forEach(function(ignoredString) {
+        formatter = formatter.replace(ignoredString, '');
     }.bind(this));
 
     // get the sezzle installment price
@@ -999,36 +999,36 @@ SezzleJS.prototype.renderModal = function() {
  * to respective buttons
  */
 SezzleJS.prototype.renderAPModal = function() {
-	var modalNode = document.createElement('div');
-	var modalNode = document.createElement('div');
-	modalNode.className = "sezzle-checkout-modal-lightbox close-sezzle-modal";
-	modalNode.style = "position: center"
-	modalNode.style.display = 'none';
-	if (window.matchMedia("(max-width: 700px)"))
-	modalNode.innerHTML = '<div style="position: fixed; z-index: 2147483647; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: auto;"><div style="display: flex; place-content: center; align-items: center; width: 100%; min-height: 100%; background-color: rgba(0, 0, 0, 0.8);"><div style="position: relative; background-color: rgb(255, 255, 255);"><a href="' + this.afterpayModalClickURL + '" target="_blank" style="display: block;"><img src="//cdn.shopify.com/s/files/1/0105/4102/t/53/assets/PX_S18AfterPay-Horz.jpg" style="display: block; width: 100%;"></a><a href="#" style="position: absolute; right: 8px; top: 8px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" width="32px" height="32px"><g id="surface1"><path style=" " d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 12.21875 10.78125 L 10.78125 12.21875 L 14.5625 16 L 10.78125 19.78125 L 12.21875 21.21875 L 16 17.4375 L 19.78125 21.21875 L 21.21875 19.78125 L 17.4375 16 L 21.21875 12.21875 L 19.78125 10.78125 L 16 14.5625 Z "></path></g></svg></a></div></div></div>'
-	document.getElementsByTagName('html')[0].appendChild(modalNode);
+    var modalNode = document.createElement('div');
+    var modalNode = document.createElement('div');
+    modalNode.className = "sezzle-checkout-modal-lightbox close-sezzle-modal";
+    modalNode.style = "position: center"
+    modalNode.style.display = 'none';
+    if (window.matchMedia("(max-width: 700px)"))
+    modalNode.innerHTML = '<div style="position: fixed; z-index: 2147483647; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: auto;"><div style="display: flex; place-content: center; align-items: center; width: 100%; min-height: 100%; background-color: rgba(0, 0, 0, 0.8);"><div style="position: relative; background-color: rgb(255, 255, 255);"><a href="' + this.afterpayModalClickURL + '" target="_blank" style="display: block;"><img src="//cdn.shopify.com/s/files/1/0105/4102/t/53/assets/PX_S18AfterPay-Horz.jpg" style="display: block; width: 100%;"></a><a href="#" style="position: absolute; right: 8px; top: 8px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" width="32px" height="32px"><g id="surface1"><path style=" " d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 12.21875 10.78125 L 10.78125 12.21875 L 14.5625 16 L 10.78125 19.78125 L 12.21875 21.21875 L 16 17.4375 L 19.78125 21.21875 L 21.21875 19.78125 L 17.4375 16 L 21.21875 12.21875 L 19.78125 10.78125 L 16 14.5625 Z "></path></g></svg></a></div></div></div>'
+    document.getElementsByTagName('html')[0].appendChild(modalNode);
 
 
 // attach click event listeners to open/close modal
 // all assets with the sezzle-modal-link class have click event listeners hooked to them
 // if the widget does not contain an element with a sezzle-modal-link, the event listener is attached to the whole widget
 Array.prototype.forEach.call(document.getElementsByClassName('sezzle-button-text'), function(el) {
-	var modalLinks = el.getElementsByClassName('ap-modal-info-link');
-	Array.prototype.forEach.call(modalLinks, function(modalLink) {
-		modalLink.addEventListener('click', function() {
-			// Show modal node
-			modalNode.style.display = 'block';
-			// log on click event
-			this.logEvent('onclick');
-		}.bind(this));
-	}.bind(this));
+    var modalLinks = el.getElementsByClassName('ap-modal-info-link');
+    Array.prototype.forEach.call(modalLinks, function(modalLink) {
+        modalLink.addEventListener('click', function() {
+            // Show modal node
+            modalNode.style.display = 'block';
+            // log on click event
+            this.logEvent('onclick');
+        }.bind(this));
+    }.bind(this));
 }.bind(this));
 
 // Event listener for close in modal
 Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function(el) {
 el.addEventListener('click', function() {
-	// Display the modal node
-	modalNode.style.display = 'none';
+    // Display the modal node
+    modalNode.style.display = 'none';
 });
 });
 
@@ -1338,11 +1338,11 @@ SezzleJS.prototype.initWidget = function() {
         this.renderAwesomeSezzle(el, toRenderEls[index], index);
         this.startObserve(el);
     }.bind(this));
-	this.renderModal();
-	// only render APModal if ap-modal-link exists
-	if (document.getElementsByClassName('ap-modal-link').length > 0) {
-		this.renderAPModal();
-	}
+    this.renderModal();
+    // only render APModal if ap-modal-link exists
+    if (document.getElementsByClassName('ap-modal-link').length > 0) {
+        this.renderAPModal();
+    }
 }
 
 // Assumes document.sezzleConfig is present
