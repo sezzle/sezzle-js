@@ -350,7 +350,7 @@ SezzleJS.prototype.addCSSFontStyle = function(element) {
     if(this.fontFamily) {
         element.style.fontFamily = this.fontFamily
 	}
-	if (this.fontSize) {
+	if (this.fontSize != 'inherit') {
 			element.style.fontSize = this.fontSize + "px"
 	}
 }
@@ -1014,7 +1014,6 @@ SezzleJS.prototype.renderAPModal = function() {
 // if the widget does not contain an element with a sezzle-modal-link, the event listener is attached to the whole widget
 Array.prototype.forEach.call(document.getElementsByClassName('sezzle-button-text'), function(el) {
 	var modalLinks = el.getElementsByClassName('ap-modal-info-link');
-	console.log(modalLinks.length)
 	Array.prototype.forEach.call(modalLinks, function(modalLink) {
 		console.log(modalLinks.length)
 		modalLink.addEventListener('click', function() {
