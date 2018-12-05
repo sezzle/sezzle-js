@@ -104,7 +104,7 @@ var SezzleJS = function(options) {
     this.fontFamily = options.fontFamily || "inherit";
 	this.textColor = options.color || "inherit";
 	this.fontSize = options.fontSize || "inherit";
-	this.maxWidth = options.maxWidth || 0; //pixels
+	this.maxWidth = options.maxWidth || 400; //pixels
     // This is used to get price of element
     this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
     // This is used to tell where to render sezzle element to
