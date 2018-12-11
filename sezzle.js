@@ -462,9 +462,9 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   var index = index || 0;
 
   // Do not render this product if it is not eligible
-		if (!this.isProductEligible(element.innerText)) return false;
-		// Do not render if sezzle ignored price element
-	 if (element.classList.contains('sezzle-ignored-price-element')) return false;
+  if (!this.isProductEligible(element.innerText)) return false;
+  // Do not render if sezzle ignored price element
+  if (element.classList.contains('sezzle-ignored-price-element')) return false;
   // Set data index to each price element for tracking
   element.dataset.sezzleindex = index;
   // Get element to be rendered with sezzle's widget
