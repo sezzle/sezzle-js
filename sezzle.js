@@ -1119,9 +1119,18 @@ SezzleJS.prototype.replaceBanner = function () {
 */
 SezzleJS.prototype.logEvent = function (eventName) {
     this.track_id = this.getTrackId();
-    let viewport = null
+    let viewport = {
+        width : null,
+        height : null
+    }
     try{
-        viewport = document.documentElement.clientWidth + "x" + document.documentElement.clientHeight
+        if (screen && screen.width){
+            viewport.width =  screen.width
+        }
+        if (screen && screen.height){
+            viewport.height =  screen.height
+        }
+
     }catch {
         //unable to fetch viewport dimensions
     }
