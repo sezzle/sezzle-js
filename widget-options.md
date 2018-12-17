@@ -7,7 +7,7 @@
     * Detail - You may have multiple price elements in one page. So, this option also accepts a list of paths to multiple price elements.
     * Type - `array of strings`
   * Default - `empty`
-  
+
   `renderToPath` (optional)
   * Simple
     * Detail - Path to the element in your webpage where the sezzle widget will be rendered to. This is relative to the `targetXPath`.
@@ -24,8 +24,8 @@
 
   `alignment` (optional)
   Aligns the widget in the parent div.
-  * Options - `left`, `center`, `right`.
-  * Default - `center`
+  * Options - `left`, `center`, `right`, `auto`.
+  * Default - `auto`
   * Type - `string`
 
   `merchantID`
@@ -37,12 +37,6 @@
   Dark and light theme for the widget to work with different background colors of websites.
   * Options - `dark`, `light`
   * Default - `light`
-  * Type - `string`
-
-  `widthType` (optional)
-  Number of lines the widget should be rendered on. `thin` renders to 3 lines and `thick` renders to 2 lines.
-  * Options - `thin`, `thick`
-  * Default - `thick`
   * Type - `string`
 
   `widgetType` (optional)
@@ -59,7 +53,7 @@
   `maxPrice` (optional)
   Only shows products with price less than this amount in cents.
   * Type - `number`
-  * Default - `100000`
+  * Default - `250000`
 
   `imageUrl` (optional)
   The sezzle logo can be replaced in the widget with an external image of choice.
@@ -81,13 +75,8 @@
   * Type - `string`
   * Default - `sezzle-widget-container`
 
-  `hidePrice` (optional)
-  Some websites have problems rendering the sezzle widget on variant change. This can be used to not have the price rendered in the sezzle widget and only the text and logo would be shown.
-  * Type - `boolean`
-  * Default - `false`
-
   `altVersionTemplate`(optional)
-  This is used to change the text of the widget and also change the arrangement of text, logo and the know more url within the widget. Example, `or 4 automatic, interest free payments with %%price%% %%logo%% %%link%%` will render the default widget. `price`, `logo` and `link` within `%% %%` can be put in different places in the string to change arrangement of each of them.
+  This is used to change the text of the widget and also change the arrangement of text, logo and the know more url within the widget. Example, `or 4 interest-free payments with %%price%% %%logo%% %%link%%` will render the default widget. `price`, `logo` and `link` within `%% %%` can be put in different places in the string to change arrangement of each of them.
   * Type - `string`
   * Default - `empty`
 
@@ -96,7 +85,7 @@ This sets the font size in pixels.
   * Type - `number`
   * Default - inherited from the website's stylesheet
 
-`fontWeight`(optional) 
+`fontWeight`(optional)
 This is used to set the boldness of the text. 100 is the lightest, 900 is the boldest.
   * Type - `number`
   * Default - `300`
@@ -124,14 +113,69 @@ When `alignmentSwitchMinWidth` is hit, the widget alignment changes to this. Opt
 `maxWidth` (optional)
 Maximum width of the widget element in pixels.
   * Type - `number`
-  * Default - `empty`
-  
+  * Default - `400`
+
   `marginTop` (optional)
 Amount of space above the widget in pixels.
   * Type - `number`
   * Default - `0`
-  
+
   `marginBottom` (optional)
 Amount of space below the widget in pixels.
   * Type - `number`
   * Default - `0`
+
+	`marginRight` (optional)
+Amount of space to the right of the widget in pixels.
+  * Type - `number`
+  * Default - `0`
+
+  `marginLeft` (optional)
+Amount of space to the left of the widget in pixels.
+  * Type - `number`
+  * Default - `0`
+
+  `scaleFactor` (optional)
+Scales the size of the entire widget down, keeping the same layout.
+  * Type - `number`
+  * Default - `1.0`
+
+  `alignment` (optional)
+Aligns the widget based on the rendertopath element. Options are `auto`, `left`, `right`, `center`.
+  * Type - `string`
+  * Default - `auto`
+
+  `bannerClass` (optional)
+The class name of the banner to replace.
+  * Type - `string`
+  * Default - `empty`
+
+  `bannerURL` (optional)
+The URL of the banner image.
+  * Type - `string`
+  * Default - `empty`
+
+  `bannerLink` (optional)
+The url that opens upon click of the banner.
+  * Type - `string`
+  * Default - `empty`
+
+  `splitPriceElementsOn` (optional)
+For use on variant prices, and/or when prices are separated by strings.
+  * Type - `string`
+  * Default - `empty`
+
+  `afterpayModalClickURL` (optional)
+The URL that opens in a new tab for dual installs with afterpay upon click of modal - when merchant wants just one widget showing both.
+  * Type - `string`
+  * Default - `https://www.afterpay.com/terms-of-service?soft_redirect=true`
+
+	`numberOfPayments` (optional)
+The number of payments displayed which the price is split by. Should NOT be changed unless an agreement is in place.
+  * Type - `number`
+  * Default - 4
+
+	`ignoredPriceElements` (optional)
+Price elements to ignore when displaying widgets.
+  * Type - `array of strings`
+  * Default - `[]`

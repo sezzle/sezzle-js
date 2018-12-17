@@ -119,7 +119,7 @@
 }
 
 .sezzle-checkout-modal-lightbox .sezzle-modal-title {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 35px;
   display: -ms-flexbox;
   display: flex;
@@ -128,14 +128,16 @@
 }
 
 .sezzle-checkout-modal-lightbox .sezzle-modal-title .sezzle-title-text-center {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-weight: 700;
   padding-top: 13px;
   padding-right: 6px;
   text-align: center;
 }
 @media (max-width: 450px) {
-  .sezzle-checkout-modal-lightbox .sezzle-modal-title .sezzle-title-text-center {
+  .sezzle-checkout-modal-lightbox
+    .sezzle-modal-title
+    .sezzle-title-text-center {
     padding-top: 6px;
     padding-right: 2px;
     text-align: center;
@@ -272,7 +274,9 @@
   padding-right: 6px;
 }
 
-.sezzle-checkout-modal-lightbox .sezzle-simply-select .sezzle-inline-text-right {
+.sezzle-checkout-modal-lightbox
+  .sezzle-simply-select
+  .sezzle-inline-text-right {
   padding-top: 3px;
 }
 
@@ -342,7 +346,11 @@
   margin: 0 auto;
 }
 @media (max-width: 450px) {
-  .sezzle-checkout-modal-lightbox .sezzle-checkout-modal h1 .sezzle-checkout-modal h1 {
+  .sezzle-checkout-modal-lightbox
+    .sezzle-checkout-modal
+    h1
+    .sezzle-checkout-modal
+    h1 {
     font-size: 16px;
   }
 }
@@ -389,7 +397,7 @@
   .sezzle-checkout-modal-lightbox .sezzle-checkout-modal p {
     font-size: 11pt;
     text-align: center;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     line-height: 18px;
   }
 }
@@ -471,7 +479,9 @@
   right: 50px;
 }
 
-.sezzle-checkout-modal-lightbox .sezzle-checkout-modal div.sezzle-no-thanks:hover {
+.sezzle-checkout-modal-lightbox
+  .sezzle-checkout-modal
+  div.sezzle-no-thanks:hover {
   transition: 0.15s;
   opacity: 1;
   cursor: pointer;
@@ -580,13 +590,13 @@
     width: unset;
     margin: 0 auto;
     word-wrap: normal;
-    font-size: 12px;
 
     .sezzle-payment-amount {
       font-weight: 900;
     }
 
-    .szl-light-image, .szl-dark-image {
+    .szl-light-image,
+    .szl-dark-image {
       display: inline-block;
       height: 18px !important;
       width: auto !important;
@@ -605,12 +615,14 @@
     .sezzle-info-icon {
       color: inherit;
       background-color: inherit;
+      cursor: pointer;
     }
 
     .sezzle-question-mark-icon {
       height: 12px;
       width: auto;
       margin-bottom: -0.5px;
+      cursor: pointer;
     }
   }
 
@@ -645,7 +657,7 @@
   .sezzle-checkout-text {
     transition: 0.1s;
     background: none;
-    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     width: auto;
     text-align: center;
     border: none;
@@ -740,6 +752,19 @@
     float: right;
     margin: 0;
   }
+}
+
+.sezzle-afterpay-logo {
+  vertical-align: middle !important;
+  max-height: 14px;
+  margin-bottom: -1px !important;
+}
+
+.ap-modal-info-link {
+  cursor: pointer;
+  margin-left: 3px !important;
+  color: inherit;
+  background-color: inherit;
 }
 
 // Magento styles
@@ -848,7 +873,6 @@
   }
 }
 
-
 // harvey-the-label
 .sezzle-harvey-the-label {
   &.sezzle-product-page-widget {
@@ -937,16 +961,16 @@
         }
       }
     }
-	}
+  }
 
-	.sezzle-button-text.sezzle-center {
-		text-align: center;
-		margin: none;
-	}
-	.sezzle-checkout-button.sezzle-center {
-		float: none;
-		text-align: center;
-	}
+  .sezzle-button-text.sezzle-center {
+    text-align: center;
+    margin: none;
+  }
+  .sezzle-checkout-button.sezzle-center {
+    float: none;
+    text-align: center;
+  }
 
   &.sezzle-product-page-widget {
     zoom: 0.86;
@@ -977,8 +1001,8 @@
 
         .sezzle-checkout-button {
           justify-content: center;
-					float: unset;
-					width: unset;
+          float: unset;
+          width: unset;
         }
       }
     }
@@ -1213,9 +1237,9 @@
 
 //Elle-louise
 .sezzle-7f7a0fca-1157-4a4c-99fc-a0d95fa1b436 {
-	&.sezzle-checkout-button-wrapper {
-		font-size: 14px;
-	}
+  &.sezzle-checkout-button-wrapper {
+    font-size: 14px;
+  }
 }
 
 //GlamSeamless
@@ -1224,55 +1248,55 @@
     @media screen and (max-width: 479px) {
       zoom: 0.9;
     }
-  }/*
+  } /*
   &.sezzle-short-widget-no-price {
   }*/
   &.sezzle-normal-widget {
     .sezzle-custom-widget-wrapper {
-        max-width: 320px;
+      max-width: 320px;
     }
   }
 }
 
 //OM Goth
 .sezzle-fc0f4be0-aaed-44ad-907e-2149cb23681e {
-		&.sezzle-shopify-info-button {
-			padding-top: 8px;
-		}
+  &.sezzle-shopify-info-button {
+    padding-top: 8px;
+  }
 }
 
 // FERNWEH Boutique
 .sezzle-bca5e8cd-0737-4f9b-9216-272ef313ed3f {
-		&.sezzle-shopify-info-button {
-			.sezzle-checkout-button-wrapper {
-				width: 200px
-			}
-			.sezzle-checkout-button {
-				img {
-					width: unset !important;
-				}
-			};
-		}
+  &.sezzle-shopify-info-button {
+    .sezzle-checkout-button-wrapper {
+      width: 200px;
+    }
+    .sezzle-checkout-button {
+      img {
+        width: unset !important;
+      }
+    }
+  }
 }
 
 //Gretty Rose
 .sezzle-2103d939-976a-46c0-b612-b4a43987f99b {
-	.sezzle-checkout-button-wrapper {
-		font-size: 13px;
-	}
+  .sezzle-checkout-button-wrapper {
+    font-size: 13px;
+  }
 
-	span {
-		font-size: 16px !important;
-		padding-left: 4px;
-	}
+  span {
+    font-size: 16px !important;
+    padding-left: 4px;
+  }
 
   &.sezzle-cart-page-widget {
     .sezzle-checkout-button-wrapper {
-			.sezzle-button-text {
-				width: 220px;
-			}
-		}
-	}
+      .sezzle-button-text {
+        width: 220px;
+      }
+    }
+  }
 }
 
 // Freddyshop
@@ -1287,7 +1311,7 @@
     }
   }
 
-	&.sezzle-product-preview-widget {
+  &.sezzle-product-preview-widget {
     @media screen and (min-width: 911px) {
       display: none;
     }
@@ -1296,21 +1320,21 @@
     }
   }
 
-	&.sezzle-shopify-info-button{
-		overflow: unset;
+  &.sezzle-shopify-info-button {
+    overflow: unset;
   }
 
   &.sezzle-cart-page-widget {
     @media screen and (min-width: 768px) and (max-width: 979px) {
       margin-right: -280%;
     }
-    @media screen and (max-width: 996px) and (min-width: 980px){
+    @media screen and (max-width: 996px) and (min-width: 980px) {
       margin-right: -353%;
     }
-    @media screen and (max-width: 1199px) and (min-width: 997px){
+    @media screen and (max-width: 1199px) and (min-width: 997px) {
       margin-right: -185%;
     }
-    @media screen and (min-width: 1200px){
+    @media screen and (min-width: 1200px) {
       margin-right: -250%;
     }
   }
@@ -1385,8 +1409,8 @@
     }
   }
 
-  &.sezzle-shopify-info-button{
-		overflow: visible;
+  &.sezzle-shopify-info-button {
+    overflow: visible;
   }
 
   .sezzle-button-text {
@@ -1452,27 +1476,27 @@
 
 // Joah Brown
 .sezzle-82394a65-a832-4262-a3aa-c8dd9c754709 {
-	.sezzle-button-text {
-		zoom: .86;
-		color: #5f5f5f;
-	}
+  .sezzle-button-text {
+    zoom: 0.86;
+    color: #5f5f5f;
+  }
 
-	.szl-light-image {
-		opacity: .7;
-	}
+  .szl-light-image {
+    opacity: 0.7;
+  }
 
-	.sezzle-checkout-button {
-		zoom: .86;
-		color: #5f5f5f;
-	}
+  .sezzle-checkout-button {
+    zoom: 0.86;
+    color: #5f5f5f;
+  }
 
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     overflow: unset;
-		.sezzle-checkout-button-wrapper {
+    .sezzle-checkout-button-wrapper {
       margin-top: -15px;
 
-			.payment-amount {
-				font-weight: 500;
+      .payment-amount {
+        font-weight: 500;
       }
 
       .sezzle-button-text {
@@ -1489,28 +1513,27 @@
           justify-content: center !important;
         }
       }
-		}
-	}
+    }
+  }
 
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     @media screen and (max-width: 500px) {
       margin-top: -15px !important;
       margin-bottom: 9px !important;
     }
-		.sezzle-checkout-button-wrapper {
+    .sezzle-checkout-button-wrapper {
       font-size: 13px;
 
       .sezzle-button-text {
-          max-width: 200px;
+        max-width: 200px;
       }
 
-			.payment-amount {
-				font-weight: 500;
-			}
-		}
-	}
+      .payment-amount {
+        font-weight: 500;
+      }
+    }
+  }
 }
-
 
 // Abs2b Fitness Apparel
 .sezzle-ea52483c-5f5e-4153-80fd-3055b63b49b4 {
@@ -1712,8 +1735,8 @@
 
 // multi color leds
 .sezzle-867f532a-750a-43a8-9bb6-56cc9e2ea085 {
-    margin-top: -5px;
-    margin-bottom: 10px;
+  margin-top: -5px;
+  margin-bottom: 10px;
 }
 
 // Generation Outcast Clothing
@@ -1763,7 +1786,7 @@
   &.sezzle-product-preview-widget {
     overflow: unset;
     @media screen and (min-width: 768px) {
-        display: none;
+      display: none;
     }
   }
   &.sezzle-product-page-widget {
@@ -1789,73 +1812,73 @@
 .sezzle-d7eb5afd-619a-4967-8c15-6cbd4b42e3a7 {
   &.sezzle-product-page-widget {
     margin-top: -35px;
-		margin-bottom: 15px;
-		.sezzle-checkout-button-wrapper {
-			font-size: 12px;
-		}
-	}
+    margin-bottom: 15px;
+    .sezzle-checkout-button-wrapper {
+      font-size: 12px;
+    }
+  }
 }
 
 // Truck Mount Forums
 .sezzle-98f20758-ae4f-4a67-8bb5-cecbb79cc0c3 {
   &.sezzle-product-page-widget {
     margin-top: -15px;
-		margin-bottom: 10px;
-		.sezzle-checkout-button-wrapper {
-			font-size: 12px;
-		}
-	}
+    margin-bottom: 10px;
+    .sezzle-checkout-button-wrapper {
+      font-size: 12px;
+    }
+  }
   &.sezzle-cart-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 12px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 12px;
+    }
+  }
 }
 
 // il & co
 .sezzle-baa61881-ea91-4efe-af5b-ecfe1624dd0e {
   &.sezzle-product-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 13px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 13px;
+    }
+  }
 }
 
 // swannies
 .sezzle-c93ac992-9c43-47f5-9ee1-5ce312bec110 {
   &.sezzle-product-page-widget {
-		.sezzle-checkout-button-wrapper {
-			zoom: 0.8;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      zoom: 0.8;
+    }
+  }
 }
 
 // battlebornglass
 .sezzle-0e7cda03-ac77-4038-9fc8-17db122b145b {
   &.sezzle-product-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 13px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 13px;
+    }
+  }
   &.sezzle-cart-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 10px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 10px;
+    }
+  }
 }
 
 // thesweatstore
 .sezzle-272fdb1e-11e1-47ea-8adb-17cf79013635 {
   &.sezzle-product-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 12px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 12px;
+    }
+  }
   &.sezzle-cart-page-widget {
-		.sezzle-checkout-button-wrapper {
-			font-size: 12px;
-		}
-	}
+    .sezzle-checkout-button-wrapper {
+      font-size: 12px;
+    }
+  }
 }
 // Temples and Markets
 .sezzle-be5a2115-e664-4fc6-a1bc-9d38328b33c9 {
@@ -1929,12 +1952,12 @@
     margin-top: -25px;
     margin-bottom: 10px;
     .sezzle-button-text {
-      @media screen and (max-width: 991px) and (min-width: 450px){
+      @media screen and (max-width: 991px) and (min-width: 450px) {
         max-width: 340px;
       }
     }
     .sezzle-checkout-button {
-      @media screen and (max-width: 991px) and (min-width: 450px){
+      @media screen and (max-width: 991px) and (min-width: 450px) {
         max-width: 320px;
       }
     }
@@ -1952,7 +1975,7 @@
 // Honeysuckle Clothing
 .sezzle-6abb4eb9-9a51-4baf-8ad1-43a590b5af51 {
   &.sezzle-product-page-widget {
-    @media screen and (min-width: 450px){
+    @media screen and (min-width: 450px) {
       .sezzle-button-text {
         font-size: 14px;
         max-width: 340px;
@@ -1992,7 +2015,7 @@
 }
 
 //Source Vapes
-.sezzle-fdd253ee-7262-4d31-83ed-0dac03ed61e1{
+.sezzle-fdd253ee-7262-4d31-83ed-0dac03ed61e1 {
   &.sezzle-product-page-widget {
     margin-top: -10px;
     @media screen and (max-width: 768px) {
@@ -2118,33 +2141,33 @@
         justify-content: center !important;
       }
     }
-	}
+  }
 }
 
 // BananasAtLarge
 .sezzle-3e36d099-1da3-4c10-8d2c-722704c00e90 {
-	font-weight: normal;
-	font-size: 12px;
-	.payment-amount{
-		font-weight: 900;
-	}
-	@media (max-width: 350px) {
-		.sezzle-checkout-button-wrapper .sezzle-button-text {
-			font-size: 12px;
-		}
-	}
+  font-weight: normal;
+  font-size: 12px;
+  .payment-amount {
+    font-weight: 900;
+  }
+  @media (max-width: 350px) {
+    .sezzle-checkout-button-wrapper .sezzle-button-text {
+      font-size: 12px;
+    }
+  }
 
-	&.sezzle-cart-page-widget {
-		width: 160px;
-	}
+  &.sezzle-cart-page-widget {
+    width: 160px;
+  }
 
-	@media (max-width: 320px) {
-		.sezzle-button-text{
-			width: unset;
-			max-width: 200px;
-			font-size: 14px !important;
-		}
-	}
+  @media (max-width: 320px) {
+    .sezzle-button-text {
+      width: unset;
+      max-width: 200px;
+      font-size: 14px !important;
+    }
+  }
 }
 
 // Liberated Heart
@@ -2164,7 +2187,7 @@
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     @media (min-width: 1200px) {
       zoom: 0.9;
     }
@@ -2208,7 +2231,7 @@
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -15px;
     margin-bottom: 10px;
     @media (max-width: 927px) and (min-width: 769px) {
@@ -2232,7 +2255,7 @@
 
 // Brydge
 .sezzle-3f17be05-5873-492b-ad59-92b930963218 {
-	&.sezzle-product-preview-widget {
+  &.sezzle-product-preview-widget {
     margin-top: -15px;
     margin-left: 5px;
   }
@@ -2253,7 +2276,7 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     zoom: 0.8;
     margin-top: -12px;
     margin-bottom: 15px;
@@ -2265,10 +2288,10 @@
     margin-bottom: 15px;
     margin-top: -15px;
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -20px;
     margin-bottom: 10px;
-    zoom: .9;
+    zoom: 0.9;
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -2290,10 +2313,10 @@
   &.sezzle-product-page-widget {
     .sezzle-checkout-button-wrapper {
       display: block !important;
-      margin-bottom: 15px
+      margin-bottom: 15px;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -15px;
     margin-bottom: 10px;
     .sezzle-button-text {
@@ -2314,7 +2337,7 @@
 
 // Pastel Queen
 .sezzle-7b2d458a-467e-4140-b4af-7ac5480e6f3b {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -15px;
     margin-bottom: 10px;
     .sezzle-button-text {
@@ -2337,12 +2360,12 @@
 .sezzle-a0bad0c2-e5bc-4a7c-980f-f814c455f745 {
   &.sezzle-product-page-widget {
     font-weight: 300;
-		margin-bottom: 5px;
-		.sezzle-button-text {
-			max-width: 180px;
-		}
+    margin-bottom: 5px;
+    .sezzle-button-text {
+      max-width: 180px;
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -15px;
     margin-bottom: 10px;
     .sezzle-button-text {
@@ -2369,7 +2392,7 @@
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -15px;
   }
 }
@@ -2379,7 +2402,7 @@
   &.sezzle-product-page-widget {
     margin-top: 10px;
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 15px;
     .sezzle-checkout-button-wrapper {
@@ -2406,13 +2429,13 @@
 // Hellfire Offroad Lighting
 .sezzle-4d30fa7a-70ae-454d-9943-f15645d2d345 {
   &.sezzle-cart-page-widget {
-		margin-bottom: 10px !important;
+    margin-bottom: 10px !important;
   }
 }
 
 // Zob Glass Pipes
 .sezzle-801d3b17-7a71-4005-829a-d3a8689a96f4 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -2431,7 +2454,7 @@
 
 // Lauras Little Boutique
 .sezzle-eeeab1d5-2e78-446b-af4b-1e3188ecc6bb {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 20px;
     margin-top: -10px;
   }
@@ -2446,7 +2469,7 @@
     z-index: 100;
     background: white;
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 20px;
     margin-top: -15px;
     .sezzle-button-text {
@@ -2484,11 +2507,10 @@
 
 // Two Tags
 .sezzle-6fed7fc5-6ad2-400f-8062-896675f3f6c0 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: 10px;
     @media screen and (max-width: 1219px) and (min-width: 980px) {
       zoom: 0.9;
-
     }
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
@@ -2512,7 +2534,7 @@
 
 // Alamour The Label
 .sezzle-8c73e34a-a8c3-46de-b939-6d52b8c5d8a4 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 15px;
     margin-top: -15px;
     .sezzle-button-text {
@@ -2548,7 +2570,7 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 20px;
     margin-top: -40px;
   }
@@ -2584,7 +2606,7 @@
       zoom: 0.8;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     @media screen and (max-width: 350px) {
       max-width: 230px;
     }
@@ -2611,7 +2633,7 @@
 
 // Seven-50
 .sezzle-90656b58-e15e-4b7b-a530-ac2a909f7fd7 {
-	&.sezzle-product-page-widget{
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 840px) {
         float: none !important;
@@ -2625,18 +2647,18 @@
         justify-content: center !important;
       }
     }
-	}
+  }
 }
 
 // Gear Bunch
 .sezzle-b29695e4-c74d-49c5-88a6-094ccc601fcb {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     overflow: unset;
     @media screen and (max-width: 767px) {
       display: none;
     }
   }
-	&.sezzle-product-preview-widget {
+  &.sezzle-product-preview-widget {
     overflow: unset;
     display: none;
     @media screen and (max-width: 767px) {
@@ -2650,22 +2672,22 @@
 
 // Its Crystalicious
 .sezzle-7178441d-c098-4f5d-ba4e-236183592106 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: 15px;
   }
-	&.sezzle-product-preview-widget {
+  &.sezzle-product-preview-widget {
     margin-top: 10px;
   }
 }
 
 //
 .sezzle-daa3a08d-45e8-445a-9f7d-c3aac02e1df1 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     @media screen and (min-width: 750px) and (max-width: 772px) {
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -2679,7 +2701,7 @@
         justify-content: center !important;
       }
     }
-	}
+  }
 }
 
 .sezzle-dca5cb84-d79b-4de8-970c-d7512cad1202 {
@@ -2688,13 +2710,12 @@
     .sezzle-button-text {
       padding-top: 10px;
     }
-	}
+  }
 }
 
 // m-amore.myshopify.com
 .sezzle-a95f39c2-4481-4561-b163-64f28788f53a {
   font-weight: 400;
-
 }
 // Uncle Jacks
 .sezzle-efb906ac-a703-4d3b-8f2a-37acc13ebe84 {
@@ -2722,7 +2743,7 @@
         max-width: 185px;
       }
     }
-	}
+  }
 }
 
 // Sky High Smoke Shop
@@ -2733,7 +2754,7 @@
       display: none;
     }
   }
-	&.sezzle-product-preview-widget {
+  &.sezzle-product-preview-widget {
     display: none;
     @media screen and (max-width: 480px) {
       display: block;
@@ -2778,7 +2799,6 @@
         justify-content: center !important;
       }
     }
-
   }
   &.sezzle-cart-page-widget {
     margin-bottom: 10px;
@@ -2808,14 +2828,14 @@
 // Andrea Iyamah
 .sezzle-ec3928e6-981c-499a-a42d-48d1b5404147 {
   &.sezzle-product-page-widget {
-    transform: scale(0.8,0.8);
+    transform: scale(0.8, 0.8);
     transform-origin: top left;
     .sezzle-button-text {
       max-width: 370px;
     }
   }
   &.sezzle-cart-page-widget {
-    transform: scale(0.8,0.8);
+    transform: scale(0.8, 0.8);
     transform-origin: top left;
   }
   // &.sezzle-a-widget-link {
@@ -2823,21 +2843,21 @@
   &.sezzle-a-widget-no-link {
     .sezzle-checkout-button-wrapper {
       .sezzle-custom-widget-wrapper {
-          width: 300px;
+        width: 300px;
       }
     }
   }
   &.sezzle-b-widget-link {
     .sezzle-checkout-button-wrapper {
       .sezzle-custom-widget-wrapper {
-          width: 300px;
+        width: 300px;
       }
     }
   }
   &.sezzle-b-widget-no-link {
     .sezzle-checkout-button-wrapper {
       .sezzle-custom-widget-wrapper {
-          width: 400px;
+        width: 400px;
       }
     }
   }
@@ -2863,7 +2883,6 @@
         justify-content: center !important;
       }
     }
-
   }
 }
 
@@ -2995,7 +3014,6 @@
         justify-content: center !important;
       }
     }
-
   }
 }
 
@@ -3020,8 +3038,8 @@
 // Princess & the Pea Props
 .sezzle-603582b9-4ec7-4020-a0e8-637074afdb9d {
   &.sezzle-cart-page-widget {
-		position: relative;
-		top: -25px;
+    position: relative;
+    top: -25px;
   }
 }
 
@@ -3063,8 +3081,8 @@
 .sezzle-d8c25221-15c9-4201-a285-c3026089c1fd {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
-			color: black;
+      font-weight: 400;
+      color: black;
       @media screen and (max-width: 800px) {
         float: none !important;
         text-align: center !important;
@@ -3072,15 +3090,14 @@
       }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-			color: black;
+      font-weight: 400;
+      color: black;
       @media screen and (max-width: 800px) {
         float: none !important;
-				text-align: center !important;
-				margin: auto !important;
+        text-align: center !important;
+        margin: auto !important;
       }
     }
-
   }
 }
 
@@ -3192,7 +3209,7 @@
   }
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			color: black;
+      color: black;
     }
   }
 }
@@ -3213,43 +3230,42 @@
 
 // A&N Boutique
 .sezzle-a95b0c4e-a75a-47c7-93eb-42c24720ebd5 {
-	&.sezzle-product-page-widget {
-    color:black;
+  &.sezzle-product-page-widget {
+    color: black;
   }
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			color: black;
-			@media screen and (max-width: 740px) {
+      color: black;
+      @media screen and (max-width: 740px) {
         float: none !important;
-				text-align: center !important;
-				margin: auto !important;
+        text-align: center !important;
+        margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			color: black;
-			margin-bottom: 10px;
+      color: black;
+      margin-bottom: 10px;
       @media screen and (max-width: 740px) {
         float: none !important;
-				text-align: center !important;
+        text-align: center !important;
       }
     }
   }
 }
 
-
 // DBA Michigan & Madis
 .sezzle-da50f6fa-6647-4412-82ef-cd6154cd32e8 {
-	&.sezzle-product-page-widget {
-		.sezzle-button-text {
-			color: black;
-			@media screen and (max-width: 768px) {
+  &.sezzle-product-page-widget {
+    .sezzle-button-text {
+      color: black;
+      @media screen and (max-width: 768px) {
         float: none !important;
-				text-align: center !important;
-				margin: auto !important;
+        text-align: center !important;
+        margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			color: black;
+      color: black;
       @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
@@ -3257,18 +3273,18 @@
     }
   }
   &.sezzle-cart-page-widget {
-		color: black;
-		.sezzle-checkout-button {
-			margin-bottom: 30px;
+    color: black;
+    .sezzle-checkout-button {
+      margin-bottom: 30px;
     }
-	}
-	&.subtotal {
-		margin-bottom: 0px !important;
-	}
+  }
+  &.subtotal {
+    margin-bottom: 0px !important;
+  }
 }
 
 .sezzle-63e9d716-9099-4cd9-b115-cb2ff15e7e66 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -3307,7 +3323,7 @@
 
 // 437 Swimwear
 .sezzle-1704aca7-0d48-479f-ac1f-dd6a3393aee8 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     @media screen and (min-width: 451px) {
       padding-right: 35px;
     }
@@ -3346,23 +3362,22 @@
   }
 }
 
-
 // Jess Lea
 .sezzle-77bd2529-b465-43c5-b628-96e021f380fd {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			margin-top: -8px;
-			@media screen and (max-width: 740px) {
+      margin-top: -8px;
+      @media screen and (max-width: 740px) {
         float: none !important;
-				text-align: center !important;
-				margin: auto !important;
+        text-align: center !important;
+        margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			margin-bottom: 10px;
+      margin-bottom: 10px;
       @media screen and (max-width: 740px) {
         float: none !important;
-				text-align: center !important;
+        text-align: center !important;
       }
     }
   }
@@ -3372,10 +3387,10 @@
 .sezzle-ef07c9fa-791d-47e2-8484-7e94027a8e17 {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 750px) {
+      @media screen and (max-width: 750px) {
         float: none !important;
-				text-align: center !important;
-				margin: auto !important;
+        text-align: center !important;
+        margin: auto !important;
       }
     }
     .sezzle-checkout-button {
@@ -3390,20 +3405,20 @@
 
 // Gemeli Power
 .sezzle-4eebb93e-d6e6-48b3-a6ec-4ceb68c7e5f2 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			margin-top: -5px;
+      margin-top: -5px;
       color: black;
     }
     .sezzle-checkout-button {
-			margin-bottom: 20px;
+      margin-bottom: 20px;
       color: black;
     }
   }
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			margin-top: 15px;
-      color: black
+      margin-top: 15px;
+      color: black;
     }
     .sezzle-checkout-button {
       color: black;
@@ -3433,9 +3448,9 @@
 }
 
 .sezzle-26d6d647-0ea2-441d-987a-8307c83955d9 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     @media screen and (max-width: 500px) {
-      zoom: 0.9
+      zoom: 0.9;
     }
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
@@ -3484,7 +3499,7 @@
 }
 
 .sezzle-e02b1e5d-1a9e-4900-bd3f-6d8def352104 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -3502,7 +3517,7 @@
 }
 
 .sezzle-ef900b8f-de4f-4d0e-a0d5-fccbd071767c {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: -20px;
     @media screen and (max-width: 479px) {
       zoom: 0.9;
@@ -3524,7 +3539,7 @@
 }
 
 .sezzle-4b22c5fb-ce82-41e7-a2cf-10681912c433 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 800px) {
         float: none !important;
@@ -3565,7 +3580,7 @@
 }
 
 .sezzle-bd832e84-a0a4-450b-b7b1-19a9b1a37af5 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: -15px;
     @media screen and (max-width: 959px) and (min-width: 768px) {
       zoom: 0.9;
@@ -3589,7 +3604,7 @@
 
 // Fresh Apparel
 .sezzle-14f768d6-9e76-48e1-a2de-5479957072e1 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -3601,15 +3616,15 @@
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
-			}
-			margin-bottom: 10px;
+      }
+      margin-bottom: 10px;
     }
   }
 }
 
 // Little Hooligans
 .sezzle-c3141d6b-5b0c-4916-a1af-647d4440c945 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: -15px;
     .sezzle-button-text {
       @media screen and (max-width: 1020px) and (min-width: 769px) {
@@ -3620,20 +3635,20 @@
       }
     }
     .sezzle-checkout-button {
-			margin-bottom: 10px;
-		}
+      margin-bottom: 10px;
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     .sezzle-checkout-button {
-			margin-bottom: 10px;
-		}
+      margin-bottom: 10px;
+    }
   }
 }
 
 // bali body
 .sezzle-715c8dcc-8958-418a-8e15-8005e43e41ee {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: 10px;
     .sezzle-custom-widget-wrapper {
       line-height: 5px;
@@ -3649,14 +3664,14 @@
 
 // Trilogy Design Co
 .sezzle-29cc43cc-1356-4b8b-afc3-652e7841dacc {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (min-width: 591px) and (max-width: 872px) {
         max-width: 200px;
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 10px;
     @media screen and (min-width: 769px) {
@@ -3680,7 +3695,7 @@
 
 // Antidote
 .sezzle-1df71d88-a91d-4007-981b-5cfb18713e5c {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 15px;
     margin-top: -15px;
     .sezzle-button-text {
@@ -3699,28 +3714,28 @@
   }
 }
 
-.sezzle-3195a66a-6527-4edd-82dd-c0ac7e9d856f{
-	&.sezzle-cart-page-widget {
-		margin-top: 15px;
-		.sezzle-button-text {
-			@media screen and (max-width: 750px) {
+.sezzle-3195a66a-6527-4edd-82dd-c0ac7e9d856f {
+  &.sezzle-cart-page-widget {
+    margin-top: 15px;
+    .sezzle-button-text {
+      @media screen and (max-width: 750px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
-			}
-		}
+      }
+    }
     .sezzle-checkout-button {
       @media screen and (max-width: 750px) {
-				float: none !important;
+        float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 // Nobella Grace
 .sezzle-31cb6fe7-068d-44af-8b62-c3df64832875 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -3734,8 +3749,8 @@
         justify-content: center !important;
       }
     }
-	}
-	&.sezzle-product-preview-widget{
+  }
+  &.sezzle-product-preview-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -3749,20 +3764,20 @@
         justify-content: center !important;
       }
     }
-	}
+  }
 }
 
 // Alicene and Kathryns Fashion Boutique
 .sezzle-94ce05d7-fff3-47ff-b98f-21007093c785 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       font-weight: 400;
     }
     .sezzle-checkout-button {
       font-weight: 400;
     }
-	}
-	&.sezzle-cart-page-widget{
+  }
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -3776,43 +3791,43 @@
         justify-content: center !important;
       }
     }
-	}
+  }
 }
 
 // Nimbus Glass
 .sezzle-e8e7a8cb-c4ec-4fc2-a739-6c104ce0d093 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			color: black;
-			margin-top: -8px;
+      color: black;
+      margin-top: -8px;
     }
     .sezzle-checkout-button {
-			color: black;
-			margin-bottom: 10px;
+      color: black;
+      margin-bottom: 10px;
     }
-	}
-	&.sezzle-cart-page-widget{
+  }
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			color: black;
-			margin-top: -8px;
+      color: black;
+      margin-top: -8px;
     }
     .sezzle-checkout-button {
-			color: black;
-			margin-bottom: 10px;
-		}
-	}
+      color: black;
+      margin-bottom: 10px;
+    }
+  }
 }
 
 // fivewildhearts.com
 .sezzle-5dfeb3d4-3aea-417b-8918-c260ec78c8ab {
-	&.sezzle-cart-page-widget{
-			.sezzle-button-text {
-				font-size: 11px;
-			}
-			.sezzle-checkout-button {
-				font-size: 11px;
-		}
-	}
+  &.sezzle-cart-page-widget {
+    .sezzle-button-text {
+      font-size: 11px;
+    }
+    .sezzle-checkout-button {
+      font-size: 11px;
+    }
+  }
 }
 
 // GLITTERandGLAMshop
@@ -3839,7 +3854,7 @@
 // Little Southern Swag
 .sezzle-10e469fe-d8ed-4dc8-a24e-500e3fb3f004 {
   margin-bottom: 10px;
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (min-width: 750px) and (max-width: 910px) {
         max-width: 200px;
@@ -3857,7 +3872,7 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 10px;
     .sezzle-button-text {
       @media screen and (min-width: 750px) and (max-width: 910px) {
@@ -3880,61 +3895,61 @@
 
 // valenteextensions
 .sezzle-b82ba335-b1ff-4220-81f3-0597c69191b3 {
-	&.sezzle-cart-page-widget{
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			margin-top: -8px;
-			@media screen and (max-width: 740px) {
+      margin-top: -8px;
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			margin-bottom: 10px;
-			@media screen and (max-width: 740px) {
+      margin-bottom: 10px;
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
-	}
+    }
+  }
 }
 
 // Flora & PEG
 .sezzle-560c6639-cfa6-4067-9db9-e49a96f0f086 {
-	&.sezzle-cart-page-widget{
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 800px) {
+      @media screen and (max-width: 800px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 800px) {
+      @media screen and (max-width: 800px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
-	}
+    }
+  }
 }
 
 // Morgan and Maeco
 .sezzle-2497ef79-c1ea-4cb0-a5d3-064521e1763a {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-bottom: 10px;
     margin-top: -5px;
-		@media screen and (max-width: 390px) {
+    @media screen and (max-width: 390px) {
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 15px;
     @media screen and (max-width: 390px) {
       zoom: 0.9;
     }
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
@@ -3944,17 +3959,17 @@
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Zookkie
 .sezzle-3caa76bd-321d-4e02-9ce1-64cbddb66b2c {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -3969,66 +3984,64 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
-
 
 // Gabby+Me
 .sezzle-5dce16c5-5cb2-419c-a604-adee32d18732 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
-
 // Little Sparrow
 .sezzle-bdb8eb02-6b89-4723-8463-c337357f17d4 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // imperial
 .sezzle-201e2f58-ea9f-4faf-bcb1-e1058f24c767 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         float: none !important;
@@ -4043,28 +4056,28 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			margin-top: -8px;
-			@media screen and (max-width: 749px) {
+      margin-top: -8px;
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			margin-bottom: 10px;
-			@media screen and (max-width: 749px) {
+      margin-bottom: 10px;
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Swift Fly Fishing
 .sezzle-aa34057d-5810-4bd4-b328-cb2217ca819c {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     background: #fafafa;
     @media screen and (max-width: 460px) {
       zoom: 0.8;
@@ -4076,7 +4089,7 @@
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     background: #fafafa;
     padding-bottom: 20px;
     @media screen and (min-width: 481px) {
@@ -4090,7 +4103,7 @@
       @media screen and (min-width: 481px) {
         max-width: 400px;
       }
-			@media screen and (max-width: 480px) {
+      @media screen and (max-width: 480px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
@@ -4100,17 +4113,17 @@
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 480px) {
+      @media screen and (max-width: 480px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Rustic Pickle
 .sezzle-a83d20de-8c82-4663-998a-9ee529a6f689 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     zoom: 0.9;
     margin-top: -15px;
     margin-bottom: 10px;
@@ -4135,14 +4148,14 @@
 
 // Addison Clark
 .sezzle-6e6c6bb7-c547-4017-bdcd-5f486002424a {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (min-width: 591px) and (max-width: 879px) {
         max-width: 200px;
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 10px;
     .sezzle-button-text {
@@ -4167,32 +4180,32 @@
 
 // Charlotte and Ezra
 .sezzle-61e2bbb4-4a11-4c69-a581-e30c96088684 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     @media screen and (max-width: 500px) {
       zoom: 0.9;
     }
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Gigi and Max
 .sezzle-f1c8f6c9-3f69-4674-8517-1c81f5147c31 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-top: 15px;
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
@@ -4202,76 +4215,76 @@
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Bray and Co
 .sezzle-e6593a73-b5c1-46b1-ae69-944101e27677 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 10px;
     margin-top: -10px;
     .sezzle-button-text {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Mason Blake Apparel
 .sezzle-0abacb3f-de3d-425f-a35d-0e89b9acb84d {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-top: -10px;
     margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Glamour Defined
 .sezzle-3ea7ece0-3224-4fef-b9f5-1f86e3b490d7 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     margin-bottom: 10px;
     margin-top: 10px;
     @media screen and (max-width: 719px) {
@@ -4285,75 +4298,74 @@
 
 // Layton Co
 .sezzle-a5760fab-3333-47b2-b1de-59e78d273cc6 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (min-width: 591px) and (max-width: 872px) {
         max-width: 200px;
       }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 15px;
     .sezzle-button-text {
       @media screen and (min-width: 769px) and (max-width: 878px) {
         max-width: 200px;
       }
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Fallon Ave Boutique
 .sezzle-8859d063-fd10-4927-b8b0-c94347b9f3a3 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
-
 // The Yellow Daffodil Boutique
 .sezzle-838e7ae4-c63c-475a-b166-303f8fce127e {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 15px;
     .sezzle-button-text {
       @media screen and (min-width: 769px) and (max-width: 878px) {
         max-width: 200px;
       }
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
@@ -4378,68 +4390,68 @@
 
 // Black Sheep Boutique and Salon
 .sezzle-0b36d61f-1e08-446f-a980-5d0a7747ea23 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 749px) {
         max-width: 200px;
       }
     }
   }
-	&.sezzle-cart-page-widget {
-		margin-bottom: 10px;
+  &.sezzle-cart-page-widget {
+    margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Ash and Aspens LLC
 .sezzle-8ee17373-25b5-48bb-aad1-0cc5a989c83a {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
-				max-width: 200px;
+      @media screen and (max-width: 749px) {
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Modish Trends
 .sezzle-67b68a0d-db00-4e89-b3a2-4182e273bfec {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 750px) {
+      @media screen and (max-width: 750px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 750px) {
+      @media screen and (max-width: 750px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
-	}
+    }
+  }
 }
 
 // Little Faces Apparel, LLC
@@ -4464,261 +4476,260 @@
 
 // Kellective
 .sezzle-1c838184-089a-455f-9cad-29da560fbfd5 {
-	&.sezzle-product-page-widget {
-		.sezzle-button-text {
-			max-width: 200px;
-		}
-	}
-
-	&.sezzle-cart-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 770px) {
+      max-width: 200px;
+    }
+  }
+
+  &.sezzle-cart-page-widget {
+    .sezzle-button-text {
+      @media screen and (max-width: 770px) {
         float: left !important;
         text-align: left !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 770px) {
+      @media screen and (max-width: 770px) {
         float: left !important;
         justify-content: left !important;
       }
-		}
+    }
   }
 }
 
 // A Quiver Full
 .sezzle-a116af67-d0a2-45b6-a726-dc17a7d5efb4 {
-	&.sezzle-cart-page-widget {
-		margin-bottom: 10px;
+  &.sezzle-cart-page-widget {
+    margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (min-width: 769px) and (max-width: 896px) {
-				max-width: 200px;
+      @media screen and (min-width: 769px) and (max-width: 896px) {
+        max-width: 200px;
       }
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Billykirk
 .sezzle-758e55c9-2d43-420c-a3a4-b52f05e8f49f {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     zoom: 0.8;
     .sezzle-custom-widget-wrapper {
-        max-width: 530px;
-        @media screen and (max-width: 459px) {
-          max-width: 400px;
-        }
+      max-width: 530px;
+      @media screen and (max-width: 459px) {
+        max-width: 400px;
+      }
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 800px) {
+      @media screen and (max-width: 800px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 800px) {
+      @media screen and (max-width: 800px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
-
 // WANTMYLOOK
 .sezzle-c5b9244a-dcf3-400c-9870-87e11b09727d {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (min-width: 767px) and (max-width: 1077px) {
+      @media screen and (min-width: 767px) and (max-width: 1077px) {
         max-width: 200px;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (min-width: 767px) and (max-width: 1077px) {
+      @media screen and (min-width: 767px) and (max-width: 1077px) {
         max-width: 200px;
       }
-		}
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-		}
+      font-weight: 400;
+    }
   }
 }
 
 // Creek Baby Co
 .sezzle-75517ec2-40bf-45c3-b543-96c0ec07dfe5 {
-	&.sezzle-cart-page-widget {
-		margin-bottom: 10px;
+  &.sezzle-cart-page-widget {
+    margin-bottom: 10px;
     .sezzle-button-text {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 768px) {
+      @media screen and (max-width: 768px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Pure Threads
 .sezzle-6abe9a26-1ed9-4975-a0ba-abc4b28cceb8 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-		}
+      font-weight: 400;
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // carryURheart
 .sezzle-6565a955-af22-499e-83dc-0eb11b036f16 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-		}
+      font-weight: 400;
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Brooke Ashley design
 .sezzle-127c1dc2-99b4-4e66-8968-6d3b1ec2a998 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 749px) {
-				max-width: 200px;
+      @media screen and (max-width: 749px) {
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Love Heals LLC
 .sezzle-2ab116e3-51e0-4446-a7eb-0175b0b36d60 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 767px) {
+      @media screen and (max-width: 767px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 767px) {
+      @media screen and (max-width: 767px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Downtown Diva
 .sezzle-8a37c350-72f2-4fe0-9838-c0e64109780b {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     @media screen and (max-width: 404px) {
       zoom: 0.9;
     }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 15px;
     margin-top: -15px;
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // Verclare Boutique
 .sezzle-292aa7fa-f152-425b-b396-a218c13cd798 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 991px) {
+      @media screen and (max-width: 991px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 991px) {
+      @media screen and (max-width: 991px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     margin-bottom: 10px;
     zoom: 0.9;
   }
@@ -4728,25 +4739,25 @@
 .sezzle-003f7ac4-413e-459d-9d5d-31ff75dc2318 {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 991px) {
+      @media screen and (max-width: 991px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 991px) {
+      @media screen and (max-width: 991px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
 // KAIMU
 .sezzle-48c47f81-9d83-435a-ad86-6f52dda69e2e {
   &.sezzle-cart-page-widget {
-    .sezzle-button-text{
+    .sezzle-button-text {
       font-size: 12px;
     }
     .sezzle-checkout-button {
@@ -4804,7 +4815,7 @@
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
       max-width: 200px;
-      @media screen and (max-width: 749px){
+      @media screen and (max-width: 749px) {
         float: none !important;
         text-align: center !important;
       }
@@ -4843,18 +4854,18 @@
 .sezzle-67c42e4f-8f5d-4a84-b446-30928722b242 {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 1024px) {
+      @media screen and (max-width: 1024px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 1024px) {
+      @media screen and (max-width: 1024px) {
         float: none !important;
         justify-content: center !important;
       }
-		}
+    }
   }
 }
 
@@ -4923,14 +4934,14 @@
 .sezzle-323da956-e858-432c-bae6-4642b11c5572 {
   &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			@media screen and (max-width: 740px) {
+      @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
       }
@@ -5033,7 +5044,7 @@
   &.sezzle-cart-page-widget {
     padding-left: 45px;
     margin-bottom: 20px;
-    @media screen and (max-width:768px) {
+    @media screen and (max-width: 768px) {
       padding-left: 0;
     }
   }
@@ -5064,10 +5075,10 @@
 .sezzle-528abbba-6da5-41eb-9a29-71b3919e9be2 {
   &.sezzle-product-page-widget {
     .sezzle-button-text {
-			@media screen and (max-width: 959px) {
-			}
-		}
-	}
+      @media screen and (max-width: 959px) {
+      }
+    }
+  }
 }
 // FitPro
 .sezzle-645cdb0e-d606-438d-9091-9e7ba6a99b1a {
@@ -5115,14 +5126,13 @@
       }
     }
   }
-
 }
 
 // stellaivyboutique.myshopify.com
 .sezzle-f84401aa-bbfa-4474-af71-dbc7ce4dce62 {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
@@ -5130,7 +5140,7 @@
       }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
@@ -5725,8 +5735,8 @@
 .sezzle-29c874c5-1dd1-4a89-b9a6-fe1a3ff6a6a0 {
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
-			color: black;
+      font-weight: 400;
+      color: black;
       @media screen and (max-width: 800px) {
         float: none !important;
         text-align: center !important;
@@ -5734,8 +5744,8 @@
       }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-			color: black;
+      font-weight: 400;
+      color: black;
       @media screen and (max-width: 800px) {
         float: none !important;
         justify-content: center !important;
@@ -5946,7 +5956,7 @@
   &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
-				max-width: 200px;
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
@@ -5958,19 +5968,19 @@
         justify-content: center !important;
       }
     }
-	}
-	&.sezzle-cart-page-widget {
+  }
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 980px) {
-				max-width: 200px;
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 980px) {
         float: none !important;
         justify-content: center !important;
@@ -5981,7 +5991,7 @@
 
 // the house of gentry
 .sezzle-b6f5fc7a-c680-4a9e-bada-accb3b585fcd {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 1024px) {
         float: none !important;
@@ -6000,23 +6010,23 @@
 
 // taylordtoyouboutique.myshopify.com
 .sezzle-6406e8b1-23a4-44e2-b37b-a84a6b4e2f86 {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
-				max-width: 200px;
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
       }
     }
     .sezzle-checkout-button {
-			margin-bottom: 10px;
+      margin-bottom: 10px;
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 // Southern Roots Boutique
@@ -6033,7 +6043,7 @@
   &.sezzle-cart-page-widget {
     .sezzle-button-text {
       max-width: 200px;
-      padding-top: 7px
+      padding-top: 7px;
     }
   }
 }
@@ -6062,10 +6072,10 @@
 
 // she-the-seeker.myshopify.com
 .sezzle-7e1081e8-6309-4087-8cb4-435de4e05c8e {
-	&.sezzle-cart-page-widget {
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 800px) {
-				max-width: 200px;
+        max-width: 200px;
         float: none !important;
         text-align: center !important;
         margin: auto !important;
@@ -6075,9 +6085,9 @@
       @media screen and (max-width: 800px) {
         float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 // Little Lulus Bling Boutique
@@ -6110,7 +6120,7 @@
 
 // big-chop-accessories-boutique.myshopify.com
 .sezzle-b5ed3509-3437-47f2-8493-cd9e69010e8b {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -6122,12 +6132,12 @@
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
-	&.sezzle-cart-page-widget {
+      }
+    }
+  }
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 740px) {
         float: none !important;
         text-align: center !important;
@@ -6135,13 +6145,13 @@
       }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
+      font-weight: 400;
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 // The cutting edge
@@ -6156,30 +6166,30 @@
 
 // bluelayneboutique.myshopify.com
 .sezzle-6abef53a-d7ac-4771-8446-bbd6c5f53458 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
-			margin-top: -8px;
+      margin-top: -8px;
       @media screen and (max-width: 479px) {
         max-width: 200px;
       }
     }
-	}
-	&.sezzle-cart-page-widget {
+  }
+  &.sezzle-cart-page-widget {
     .sezzle-button-text {
-			font-weight: 400;
-			.payment-amount {
-				font-weight: 400;
-			}
+      font-weight: 400;
+      .payment-amount {
+        font-weight: 400;
+      }
     }
     .sezzle-checkout-button {
-			font-weight: 400;
-		}
-	}
+      font-weight: 400;
+    }
+  }
 }
 
 // chloe-vs-tank.myshopify.com
 .sezzle-7d4eede0-a1a6-4905-9ec8-b11492f50cb4 {
-	&.sezzle-product-page-widget {
+  &.sezzle-product-page-widget {
     .sezzle-button-text {
       @media screen and (max-width: 740px) {
         float: none !important;
@@ -6191,9 +6201,9 @@
       @media screen and (max-width: 740px) {
         float: none !important;
         justify-content: center !important;
-			}
-		}
-	}
+      }
+    }
+  }
 }
 
 // Street Sole
@@ -6235,7 +6245,6 @@
         justify-content: center !important;
       }
     }
-
   }
 }
 
@@ -6258,7 +6267,7 @@
         font-weight: 300 !important;
         font-size: 20px !important;
       }
-    } 
+    }
   }
 }
 
@@ -6283,13 +6292,12 @@
 
 // tea-for-three-a-childrens-boutique.myshopify.com
 .sezzle-2f6dbbe5-058f-4a56-992d-494fa1424c19 {
-	&.sezzle-product-page-widget {
-		.payment-amount {
-			font-size: 14px !important
-		}
+  &.sezzle-product-page-widget {
+    .payment-amount {
+      font-size: 14px !important;
+    }
   }
 }
-
 
 // his-n-her-favors.myshopify.com
 .sezzle-f5784a4f-7e98-40df-8946-10538c6e1977 {
@@ -6334,10 +6342,10 @@
 
 // jewels-and-charlie.myshopify.com
 .sezzle-6b51e3bc-3560-4761-b87b-14c627c08e4e {
-	&.sezzle-cart-page-widget {
-		.payment-amount {
-			font-weight: 300 !important
-		}
+  &.sezzle-cart-page-widget {
+    .payment-amount {
+      font-weight: 300 !important;
+    }
   }
 }
 
@@ -6432,7 +6440,7 @@
     margin-top: -45px;
     margin-bottom: 20px;
     @media screen and (max-width: 767px) {
-        margin-top: -15px !important;
+      margin-top: -15px !important;
     }
     .sezzle-button-text {
       max-width: 200px;
@@ -6443,7 +6451,7 @@
     margin-bottom: 15px;
     .sezzle-button-text {
       max-width: 195px;
-      font-size: 13.5px
+      font-size: 13.5px;
     }
     .sezzle-checkout-button {
       font-size: 13.5px;
@@ -6622,16 +6630,16 @@
   &.sezzle-product-page-widget {
     clear: left;
     .sezzle-custom-widget-wrapper {
-     display: inline;
-     margin-left: 10px;
-   }
+      display: inline;
+      margin-left: 10px;
+    }
   }
 }
 
 // AdrianAlexander
 .sezzle-b41c2f14-38a1-461e-978f-22c33e100d91 {
   &.sezzle-product-page-widget {
-    @media screen and (max-width:1025px) {
+    @media screen and (max-width: 1025px) {
       margin-top: 0px !important;
     }
   }
