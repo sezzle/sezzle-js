@@ -165,6 +165,8 @@ var SezzleJS = function (options) {
   this.countryCode = null;
   this.ip = null;
   this.fingerprint = null;
+  this.trackId = null;
+  this.productPrice = null;
 }
 
 /**
@@ -710,6 +712,7 @@ SezzleJS.prototype.insertAsFirstChild = function (element, referenceElement) {
  */
 SezzleJS.prototype.isProductEligible = function (priceText) {
   var price = this.parsePrice(priceText);
+  this.productPrice = price;
   var priceInCents = price * 100;
   if (priceInCents >= this.minPrice && priceInCents <= this.maxPrice) {
     return true;
@@ -1115,34 +1118,34 @@ SezzleJS.prototype.replaceBanner = function () {
 * Log Event
 */
 SezzleJS.prototype.logEvent = function (eventName) {
-  if (this.fingerprint == null) {
-    this.getFingerprint(function (fingerprint) {
-      this.fingerprint = fingerprint;
-      this.postEvent(JSON.stringify({
-        'event_name': eventName,
-        'button_version': document.sezzleButtonVersion,
-        'cart_id': this.getCookie('cart'),
-        'fingerprint': fingerprint,
-        'ip_address': this.ip,
-        'merchant_site': window.location.hostname,
-        'is_mobile_browser': this.isMobileBrowser(),
-        'user_agent': navigator.userAgent,
-        'merchant_uuid': this.merchantID,
-      }));
-    }.bind(this));
-  } else {
+    this.track_id = this.getTrackId();
+    let viewport = null
+    try{
+        viewport = document.documentElement.clientWidth + "x" + document.documentElement.clientHeight
+    }catch {
+        //unable to fetch viewport dimensions
+    }
+    let sezzleConfigStr = null
+    if(document.sezzleConfig){
+        sezzleConfigStr = JSON.stringify(document.sezzleConfig)
+    }
+
     this.postEvent(JSON.stringify({
-      'event_name': eventName,
-      'button_version': document.sezzleButtonVersion,
-      'cart_id': this.getCookie('cart'),
-      'fingerprint': this.fingerprint,
-      'ip_address': this.ip,
-      'merchant_site': window.location.hostname,
-      'is_mobile_browser': this.isMobileBrowser(),
-      'user_agent': navigator.userAgent,
-      'merchant_uuid': this.merchantID,
+        "event_name": eventName,
+        "button_version": document.sezzleButtonVersion,
+        "cart_id": this.getCookie('cart'),
+        "fingerprint": this.fingerprint,
+        "ip_address": this.ip,
+        "merchant_site": window.location.hostname,
+        "is_mobile_browser": this.isMobileBrowser(),
+        "user_agent": navigator.userAgent,
+        "merchant_uuid": this.merchantID,
+        "track_id": this.track_id,
+        "page_url": window.location.href,
+        "viewport": viewport,
+        "product_price": this.productPrice,
+        "sezzle_config": sezzleConfigStr ,
     }));
-  }
 }
 
 /*
@@ -1193,6 +1196,26 @@ SezzleJS.prototype.getFingerprint = function (callback) {
       callback(result);
     });
   }
+}
+
+/*
+* Get Track ID
+*/
+SezzleJS.prototype.getTrackId = function() {
+    let track_id = null;
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    track_id = this.getCookie("szl_uuid")
+    if (!track_id) {
+        track_id = generateUUID();
+        document.cookie = "szl_uuid=" + track_id + ";domain=.sezzle.com;path=/";
+    }
+    return track_id
 }
 
 /*
