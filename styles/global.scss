@@ -745,7 +745,7 @@
 }
 
 .sezzle-shopify-info-button {
-  overflow: unset;
+  overflow: unset !important;
   &.sezzle-right {
     text-align: right;
     justify-content: right;
