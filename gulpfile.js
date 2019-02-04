@@ -2,23 +2,12 @@ var gulp = require('gulp'),
     sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
-    uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
-    concat = require('gulp-concat'),
-    notify = require('gulp-notify'),
-    cache = require('gulp-cache'),
-    livereload = require('gulp-livereload'),
     del = require('del'),
-    replace = require('gulp-replace'),
     fs = require('fs'),
     rimraf = require('gulp-rimraf'),
     s3 = require('gulp-s3-upload')(config),
     cloudfront = require('gulp-cloudfront-invalidate'),
-    pump = require('pump'),
-    htmlToJS = require('gulp-html-to-js'),
-    webserver = require('gulp-webserver'),
-    htmlmin = require('gulp-htmlmin'),
     rp = require("request-promise"),
     config = { useIAM: true };
 
@@ -57,7 +46,6 @@ gulp.task("upload-initial", function() {
         paths: ['/scripts/*']
     }));
 });
-
 
 gulp.task("upload-widget", function() {
     var indexPath = './sezzle.js'

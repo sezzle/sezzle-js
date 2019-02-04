@@ -1,13 +1,13 @@
 {
   "name": "sezzle-js",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Sezzle Sales Widget Price Watcher",
   "main": "sezzle.js",
   "scripts": {
-    "deploy-initial": "./node_modules/.bin/gulp upload-initial",
-    "deploy-widget": "./node_modules/.bin/gulp deploywidget",
-    "deploy-css": "./node_modules/.bin/gulp styles && ./node_modules/.bin/gulp deploycss",
-    "test": "echo \"Error: no test specified\""
+    "deploy-initial": "gulp upload-initial",
+    "deploy-widget": "gulp deploywidget",
+    "deploy-css": "gulp styles && ./node_modules/.bin/gulp deploycss",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -22,28 +22,17 @@
   "devDependencies": {
     "del": "^2.2.2",
     "fs": "0.0.1-security",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-autoprefixer": "^3.1.1",
-    "gulp-cache": "^0.4.5",
-    "gulp-concat": "^2.6.1",
     "gulp-cssnano": "^2.1.2",
-    "gulp-html-to-js": "0.0.5",
-    "gulp-html2string": "^0.1.1",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-imagemin": "^3.1.1",
     "gulp-inline-source": "^3.0.0",
     "gulp-jshint": "^2.0.4",
-    "gulp-livereload": "^3.8.1",
-    "gulp-notify": "^3.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.5.4",
     "gulp-rimraf": "^0.2.1",
     "gulp-ruby-sass": "^2.1.1",
     "gulp-s3-upload": "1.7.1",
     "gulp-stylelint": "^4.0.0",
-    "gulp-uglify": "^2.1.2",
-    "gulp-webserver": "^0.9.1",
-    "pump": "^1.0.2",
+    "jest": "^24.0.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.0",
@@ -51,5 +40,11 @@
   },
   "dependencies": {
     "gulp-cloudfront-invalidate": "^0.1.5"
-  }
+  },
+  "keywords": [
+    "sezzle",
+    "merchant",
+    "js",
+    "widget"
+  ]
 }
