@@ -9,11 +9,16 @@ before_script:
 
 stages:
   - test
+  - build
   - deploy
 
 test:
   stage: test
   script: npm run test
+
+build:
+  stage: build
+  script: npm run build
 
 deploy:
   stage: deploy
