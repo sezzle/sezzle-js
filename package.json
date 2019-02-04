@@ -7,7 +7,8 @@
     "deploy-initial": "gulp upload-initial",
     "deploy-widget": "gulp deploywidget",
     "deploy-css": "gulp styles && ./node_modules/.bin/gulp deploycss",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "build": "gulp bundlejs"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "fs": "0.0.1-security",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^3.1.1",
+    "gulp-cloudfront-invalidate": "^0.1.5",
     "gulp-cssnano": "^2.1.2",
     "gulp-inline-source": "^3.0.0",
     "gulp-jshint": "^2.0.4",
@@ -36,10 +38,9 @@
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.0",
-    "stylelint-config-standard": "^17.0.0"
-  },
-  "dependencies": {
-    "gulp-cloudfront-invalidate": "^0.1.5"
+    "stylelint-config-standard": "^17.0.0",
+    "terser": "^3.14.0",
+    "webpack-stream": "^5.2.1"
   },
   "keywords": [
     "sezzle",
