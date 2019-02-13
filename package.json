@@ -5,7 +5,7 @@
   "description": "Sezzle Sales Widget Price Watcher",
   "main": "sezzle.js",
   "scripts": {
-    "deploy": "npm run deploy",
+    "deploy": "gulp deploy",
     "test": "jest --coverage",
     "build": "gulp bundlejs",
     "release": "gulp release",
