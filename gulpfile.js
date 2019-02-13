@@ -4,20 +4,19 @@ var gulp = require('gulp'),
   cssnano = require('gulp-cssnano'),
   rename = require('gulp-rename'),
   del = require('del'),
-  fs = require('fs'),
-  rimraf = require('gulp-rimraf'),
   s3 = require('gulp-s3-upload')(config),
-  cloudfront = require('gulp-cloudfront-invalidate'),
   rp = require('request-promise'),
   config = { useIAM: true },
   webpack = require('webpack-stream'),
   pjson = require('./package.json'),
   git = require('gulp-git'),
   compareVersions = require('compare-versions'),
-  bump = require('gulp-bump');
+  exec = require('child_process').exec,
+  jeditor = require("gulp-json-editor");
+
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
-var globalCssUploadName = 'sezzle-styles-global2.0.2.css';
+var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 var newVersion = '';
 
 /**
@@ -48,7 +47,7 @@ gulp.task('csscompile', function () {
 gulp.task('cssupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
   var indexPath = './dist/global-css/global.min.css'
-  gulp.src(indexPath)
+  return gulp.src(indexPath)
     .pipe(rename('shopify-app/assets/' + globalCssUploadName))
     .pipe(s3({
       Bucket: 'sezzlemedia', //  Required
@@ -129,28 +128,50 @@ gulp.task('post-button-to-widget-server', function () {
     })
 });
 
-gulp.task('grabversion', function(done) {
+function versionCheck(oldVersion) {
   var argv = require('yargs').argv;
   newVersion = argv.newversion;
   if(typeof(newVersion) === 'boolean' ||
     typeof(newVersion) === 'undefined' ||
     !(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/.test(newVersion)) ||
-    compareVersions(newVersion, pjson.version) < 1
+    compareVersions(newVersion, oldVersion) < 1
   ) {
     throw 'Invalid value for newversion'
   };
+}
+
+gulp.task('grabversion', function(done) {
+  versionCheck(pjson.version);
   done();
 })
 
-gulp.task('updatepackage', function() {
+gulp.task('grabversioncss', function(done) {
+  versionCheck(pjson.cssversion);
+  done();
+})
+
+function updateVersion(params) {
   return gulp.src(['./package.json', './package-lock.json'])
-    .pipe(bump({version: newVersion}))
+    .pipe(jeditor(params))
     .pipe(gulp.dest('./'));
+}
+
+gulp.task('updatepackage', function() {
+  return updateVersion({version: newVersion});
+})
+
+gulp.task('updatepackagecss', function() {
+  return updateVersion({cssversion: newVersion});
 })
 
 gulp.task('commitupdate', function() {
   return gulp.src('./package.json')
-    .pipe(git.commit(`version: ${newVersion}`));
+    .pipe(git.commit(`bumped js version to: ${newVersion}`));
+})
+
+gulp.task('commitupdatecss', function() {
+  return gulp.src('./package.json')
+    .pipe(git.commit(`bumped css version: ${newVersion}`));
 })
 
 gulp.task('createtag', function(done) {
@@ -163,7 +184,86 @@ gulp.task('createtag', function(done) {
   });
 })
 
+function getbranchName(type) {
+  return `version-${type}-${newVersion}`;
+}
+function createBranch(branchName, done) {
+  git.checkout('master', function(err) {
+    if (err) throw err;
+    git.pull('origin', 'master', function (err) {
+      if (err) throw err;
+      git.checkout(branchName, {args:'-b'}, function (err) {
+        if (err) throw err;
+        done();
+      });
+    });
+  })
+}
+gulp.task('newbranch', function(done) {
+  createBranch(getbranchName('js'), done);
+})
+gulp.task('newbranchcss', function(done) {
+  createBranch(getbranchName('css'), done);
+})
+
+function pushBranch(branchName, done) {
+  git.push('origin', branchName, function (err) {
+    if (err) throw err;
+    done();
+  });
+}
+gulp.task('pushversion', function(done) {
+  pushBranch(getbranchName('js'), done);
+})
+gulp.task('pushversioncss', function(done) {
+  pushBranch(getbranchName('css'), done);
+})
+
 gulp.task('styles', gulp.series('cleancss', 'csscompile'));
+
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
-gulp.task('deploycss', gulp.series('cssupload', 'post-button-css-to-wrapper'));
-gulp.task('release', gulp.series('grabversion', 'updatepackage', 'commitupdate', 'createtag'));
+gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
+
+// local processes
+gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitupdate', 'pushversion'));
+gulp.task('release-css', gulp.series('grabversioncss', 'newbranchcss', 'updatepackagecss', 'commitupdatecss', 'pushversioncss'));
+
+// CI processes
+gulp.task('deploy', function (done) {
+  // Check if there is any version commit
+  exec('git log --pretty=format:%s -2 | tail', function (err, stdout, stderr) {
+    var commits = stdout.split('\n');
+    if (commits.length === 2) {
+      var versionCommit = '';
+      // check if the first commit is a Merge commit
+      if (commits[0].indexOf('Merge pull request') > -1) {
+        // Then the second commit should be the version commit
+        versionCommit = commits[1];
+      } else {
+        // Or the first commit should be the version commit
+        versionCommit = commits[0];
+      }
+      if (versionCommit.indexOf('bumped js version to:') > -1) {
+        console.log(versionCommit);
+        console.log('Updating JS version');
+        exec('npx gulp deploywidget', function(err, stdout, stderr) {
+          console.log(stdout);
+          done();
+        });
+      } else if (versionCommit.indexOf('bumped css version to:') > -1) {
+        console.log(versionCommit);
+        console.log('Updating CSS version');
+        exec('npx gulp deploycss', function(err, stdout, stderr) {
+          console.log(stdout);
+          done();
+        })
+      } else {
+        console.log('No version change commit found');
+        done();
+      }
+    } else {
+      console.log('No version change commit found');
+      done();
+    }
+  })
+});
