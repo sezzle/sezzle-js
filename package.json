@@ -1,7 +1,7 @@
 {
   "name": "sezzle-js",
   "version": "3.1.0",
-  "cssversion": "2.0.4",
+  "cssversion": "2.0.6",
   "description": "Sezzle Sales Widget Price Watcher",
   "main": "sezzle.js",
   "scripts": {
@@ -47,10 +47,5 @@
     "webpack-stream": "^5.2.1",
     "yargs": "^12.0.5"
   },
-  "keywords": [
-    "sezzle",
-    "merchant",
-    "js",
-    "widget"
-  ]
+  "keywords": ["sezzle", "merchant", "js", "widget"]
 }
