@@ -91,6 +91,7 @@ var SezzleJS = function(options) {
   this.textColor = options.color || 'inherit';
   this.fontSize = options.fontSize || 12;
   this.maxWidth = options.maxWidth || 400; //pixels
+  this.fixedHeight = options.fixedHeight || 0; //pixels
   // This is used to get price of element
   this.priceElementClass = options.priceElementClass || 'sezzle-price-element';
   // This is used to tell where to render sezzle element to
@@ -412,6 +413,10 @@ SezzleJS.prototype.setElementMargins = function (element) {
 SezzleJS.prototype.setWidgetSize = function (element) {
   element.style.transformOrigin = 'top ' + this.alignment;
   element.style.transform = 'scale(' + this.scaleFactor + ')';
+  if (this.fixedHeight) {
+    element.style.height = this.fixedHeight + 'px';
+    element.style.overflow = 'hidden';
+  }
 }
 
 /**
@@ -1107,8 +1112,9 @@ SezzleJS.prototype.logEvent = function (eventName) {
           viewport.height = screen.height;
       }
 
-  } catch {
+  } catch(error) {
       // unable to fetch viewport dimensions
+      console.log(error);
   }
   var sezzleConfigStr = null
   if (document.sezzleConfig) {
