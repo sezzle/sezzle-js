@@ -837,11 +837,11 @@ SezzleJS.prototype.mutationCallBack = function (mutations) {
  * @param element to be observed
  * @return void
  */
-SezzleJS.prototype.startObserve = function (element) {
+SezzleJS.prototype.startObserve = function (element, callback) {
   // TODO : Need a way to unsubscribe to prevent memory leak
   // Deleted elements should not be observed
   // That is handled
-  var observer = new MutationObserver(this.mutationCallBack.bind(this));
+  var observer = new MutationObserver(callback);
   observer.observe(element, this._config);
   return observer;
 }
@@ -1256,8 +1256,7 @@ SezzleJS.prototype.initWidget = function () {
           index, el.targetXPathIndex
         );
         if (sz) {
-
-          el.observer = this.startObserve(el.element);
+          el.observer = this.startObserve(el.element, this.mutationCallBack.bind(this));
         } else { // remove the element from the els array
           delete els[index];
         }
@@ -1289,7 +1288,7 @@ SezzleJS.prototype.initWidget = function () {
 
   if (this.hasPriceClassElement) {
     var sz = this.renderAwesomeSezzle(this.priceElements[0], this.renderElements[0], 0, 0);
-    this.startObserve(this.priceElements[0]);
+    this.startObserve(this.priceElements[0], this.mutationCallBack.bind(this));
   } else {
     sezzleWidgetCheckInterval.call(this);
   }
