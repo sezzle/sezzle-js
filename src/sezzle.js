@@ -40,6 +40,11 @@ var SezzleJS = function(options) {
     }
   }.bind(this));
 
+  // This array of array where each array holds an object with two keys
+  // relatedPath - this is a xpath of an element related to the price element
+  // action - this is a function triggered when the element has a mutation
+  this.relatedElementActions = options.relatedElementActions || [];
+
   this.ignoredPriceElements = [];
   if (options.ignoredPriceElements) {
     if (typeof (options.ignoredPriceElements) === 'string') {
@@ -1212,6 +1217,30 @@ SezzleJS.prototype.init = function () {
 }
 
 /**
+ * This function start an observation on related elements to the price element
+ * for any change and perform an action based on that
+ */
+SezzleJS.prototype.observeRelatedElements = function(priceElement, sezzleElement, targets) {
+  if (targets) {
+    targets.forEach(function(target) {
+      if (typeof(target.relatedPath) === 'string' &&
+        typeof(target.action) === 'function') {
+        var elements = this.getElementsByXPath(
+          Helper.breakXPath(target.relatedPath),
+          0,
+          [priceElement]
+        );
+        if (elements.length > 0) {
+          this.startObserve(elements[0], function(mutation) {
+            target.action(mutation, sezzleElement);
+          });
+        }
+      }
+    }.bind(this));
+  }
+}
+
+/**
  * All steps required to show the widget
  */
 SezzleJS.prototype.initWidget = function () {
@@ -1257,6 +1286,7 @@ SezzleJS.prototype.initWidget = function () {
         );
         if (sz) {
           el.observer = this.startObserve(el.element, this.mutationCallBack.bind(this));
+          this.observeRelatedElements(el.element, sz, this.relatedElementActions[el.targetXPathIndex]);
         } else { // remove the element from the els array
           delete els[index];
         }
