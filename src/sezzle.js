@@ -108,6 +108,8 @@ var SezzleJS = function(options) {
   this.apModalHTML = options.apModalHTML || '';
   // if doing widget with both Sezzle or quadpay - the modal to display:
   this.qpModalHTML = options.qpModalHTML || '';
+  // after pay link
+  this.apLink = options.apLink || 'https://www.afterpay.com/terms-of-service';
 
   // This option is to render custom class in sezzle widget
   // This option contains an array of objects
@@ -530,6 +532,17 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         apInfoIconNode.className = 'ap-modal-info-link';
         apInfoIconNode.innerHTML = '&#9432;';
         sezzleButtonText.appendChild(apInfoIconNode);
+        break;
+
+      case 'afterpay-link-icon':
+        var apAnchor = document.createElement('a');
+        apAnchor.href = this.apLink;
+        apAnchor.target = '_blank';
+        var apLinkIconNode = document.createElement('code');
+        apLinkIconNode.className = 'ap-info-link';
+        apLinkIconNode.innerHTML = '&#9432;';
+        apAnchor.appendChild(apLinkIconNode)
+        sezzleButtonText.appendChild(apAnchor);
         break;
 
       case 'quadpay-logo':
