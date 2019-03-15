@@ -1,4 +1,3 @@
-require('./initial');
 var Helper = require('./helper');
 
 var SezzleJS = function(options) {
@@ -1120,49 +1119,52 @@ SezzleJS.prototype.replaceBanner = function () {
 * Log Event
 */
 SezzleJS.prototype.logEvent = function (eventName) {
-  var viewport = {
-      width: null,
-      height: null
-  };
-  try {
-      if (screen && screen.width) {
-          viewport.width = screen.width;
-      }
-      if (screen && screen.height) {
-          viewport.height = screen.height;
-      }
+  // We only log event when it's allowed to
+  if (document.sezzleConfig && !document.sezzleConfig.noTracking) {
+    var viewport = {
+        width: null,
+        height: null
+    };
+    try {
+        if (screen && screen.width) {
+            viewport.width = screen.width;
+        }
+        if (screen && screen.height) {
+            viewport.height = screen.height;
+        }
 
-  } catch(error) {
-      // unable to fetch viewport dimensions
-      console.log(error);
-  }
-  var sezzleConfigStr = null
-  if (document.sezzleConfig) {
-      sezzleConfigStr = JSON.stringify(document.sezzleConfig);
-  }
-  var win = window.frames.szl;
-  if (win) {
-    var cartId = this.getCookie('cart');
-    var merchantID = this.merchantID;
-    var productPrice = this.productPrice;
-    var isMobileBrowser = this.isMobileBrowser();
-    var ip = this.ip;
-    setTimeout(function () {
-      win.postMessage({
-        'event_name': eventName,
-        'button_version': document.sezzleButtonVersion,
-        'cart_id': cartId,
-        'ip_address': ip,
-        'merchant_site': window.location.hostname,
-        'is_mobile_browser': isMobileBrowser,
-        'user_agent': navigator.userAgent,
-        'merchant_uuid': merchantID,
-        'page_url': window.location.href,
-        'viewport': viewport,
-        'product_price': productPrice,
-        'sezzle_config': sezzleConfigStr,
-      }, 'https://tracking.sezzle.com');
-    },100);
+    } catch(error) {
+        // unable to fetch viewport dimensions
+        console.log(error);
+    }
+    var sezzleConfigStr = null
+    if (document.sezzleConfig) {
+        sezzleConfigStr = JSON.stringify(document.sezzleConfig);
+    }
+    var win = window.frames.szl;
+    if (win) {
+      var cartId = this.getCookie('cart');
+      var merchantID = this.merchantID;
+      var productPrice = this.productPrice;
+      var isMobileBrowser = this.isMobileBrowser();
+      var ip = this.ip;
+      setTimeout(function () {
+        win.postMessage({
+          'event_name': eventName,
+          'button_version': document.sezzleButtonVersion,
+          'cart_id': cartId,
+          'ip_address': ip,
+          'merchant_site': window.location.hostname,
+          'is_mobile_browser': isMobileBrowser,
+          'user_agent': navigator.userAgent,
+          'merchant_uuid': merchantID,
+          'page_url': window.location.href,
+          'viewport': viewport,
+          'product_price': productPrice,
+          'sezzle_config': sezzleConfigStr,
+        }, 'https://tracking.sezzle.com');
+      },100);
+    }
   }
 };
 
