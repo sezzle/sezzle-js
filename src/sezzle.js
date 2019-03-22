@@ -60,6 +60,19 @@ var SezzleJS = function(options) {
     }
   }
 
+  this.hideElements = [];
+  if (options.hideClasses) {
+    if (typeof (options.hideClasses) === 'string') {
+      // Only one x-path is given
+      this.hideElements.push(Helper.breakXPath(options.hideClasses.trim()));
+    } else {
+      // options.hideClasses is an array of x-paths
+      this.hideElements = options.hideClasses.map(function (path) {
+        return Helper.breakXPath(path.trim());
+      }.bind(this));
+    }
+  }
+
   this.numberOfPayments = Math.floor(options.numberOfPayments) || 4;
   this.forcedShow = options.forcedShow || false;
   this.alignment = options.alignment || 'auto';
@@ -1067,18 +1080,6 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
  * Hide elements pointed to by this.hideElements
  */
 SezzleJS.prototype.hideSezzleHideElements = function () {
-  this.hideElements = [];
-  if (options.hideClasses) {
-    if (typeof (options.hideClasses) === 'string') {
-      // Only one x-path is given
-      this.hideElements.push(Helper.breakXPath(options.hideClasses.trim()));
-    } else {
-      // options.hideClasses is an array of x-paths
-      this.hideElements = options.hideClasses.map(function (path) {
-        return Helper.breakXPath(path.trim());
-      }.bind(this));
-    }
-  }
   this.hideElements.forEach(function (subpaths) {
     this.getElementsByXPath(subpaths).forEach(function (element) {
       element.classList.add('sezzle-hidden');
