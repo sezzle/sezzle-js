@@ -1082,7 +1082,9 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
 SezzleJS.prototype.hideSezzleHideElements = function () {
   this.hideElements.forEach(function (subpaths) {
     this.getElementsByXPath(subpaths).forEach(function (element) {
-      element.classList.add('sezzle-hidden');
+      if (!element.classList.contains('sezzle-hidden')) {
+        element.classList.add('sezzle-hidden');
+      }
     })
   }.bind(this));
 }
