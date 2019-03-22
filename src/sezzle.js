@@ -1087,33 +1087,6 @@ SezzleJS.prototype.hideSezzleHideElements = function () {
   }.bind(this));
 }
 
-/**
- * Replaces the afterpay banner
- *
- */
-SezzleJS.prototype.replaceBanner = function () {
-  var imgurl = this.bannerURL;
-  var linkpath = this.bannerLink;
-  var bannerClass = this.bannerClass;
-
-  if (bannerClass != '') {
-    var element = document.getElementsByClassName(bannerClass)[0];
-
-    if (linkpath != '') {
-      var link = element.getElementsByTagName('a');
-      if (link[0] != null) {
-        link[0].setAttribute('href', linkpath);
-      }
-    }
-
-    if (imgurl != '') {
-      var img = element.getElementsByTagName('img');
-      if (img[0] != null) {
-        img[0].setAttribute('src', imgurl);
-      }
-    }
-  }
-}
 
 /*
 * Log Event
@@ -1225,7 +1198,6 @@ SezzleJS.prototype.init = function () {
             }
         }
         this.hideSezzleHideElements();
-        this.replaceBanner();
       }
     }.bind(this));
   }
