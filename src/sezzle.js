@@ -222,8 +222,23 @@ SezzleJS.prototype.getElementsByXPath = function (xpath, xindex, elements) {
       Array.prototype.forEach.call(element.getElementsByClassName(xpath[xindex].substr(1)), function (el) {
         children.push(el);
       });
-      // If this is a tag
-    } else {
+
+    } else if (xpath[xindex].indexOf('child') === 0) { // If this is a child indicator
+      var childNumber = xpath[xindex].split("-")[1];
+      var childElement = element.childNodes[childNumber];
+      if (typeof(childElement) !== "undefined") {
+        if (childElement.nodeName === "#text") { // if it's a text node we wrap it
+          newSpan = document.createElement('span');
+          newSpan.appendChild(document.createTextNode(childElement.nodeValue));
+          element.replaceChild(newSpan, childElement)
+          children.push(newSpan);
+        } else {
+          children.push(childElement);
+        }
+      } else {
+        children.push(element);
+      }
+    } else { // If this is a tag
       var indexToTake = 0;
       if (xpath[xindex].split('-').length > 1) {
         if (xpath[xindex].split('-')[1] >= 0) {
