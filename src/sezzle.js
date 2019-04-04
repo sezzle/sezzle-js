@@ -45,6 +45,7 @@ var SezzleJS = function(options) {
   // This array of array where each array holds an object with two keys
   // relatedPath - this is a xpath of an element related to the price element
   // action - this is a function triggered when the element has a mutation
+  // initialAction - this is a function to act upon a pre existing element's condition
   this.relatedElementActions = options.relatedElementActions || [];
 
   this.ignoredPriceElements = [];
@@ -1230,16 +1231,21 @@ SezzleJS.prototype.observeRelatedElements = function(priceElement, sezzleElement
   if (targets) {
     targets.forEach(function(target) {
       if (typeof(target.relatedPath) === 'string' &&
-        typeof(target.action) === 'function') {
+        (typeof(target.action) === 'function' || typeof(target.initialAction) === 'function')) {
         var elements = this.getElementsByXPath(
           Helper.breakXPath(target.relatedPath),
           0,
           [priceElement]
         );
         if (elements.length > 0) {
-          this.startObserve(elements[0], function(mutation) {
-            target.action(mutation, sezzleElement);
-          });
+          if (typeof(target.action) === 'function') {
+            this.startObserve(elements[0], function(mutation) {
+              target.action(mutation, sezzleElement);
+            });
+          }
+          if (typeof(target.initialAction) === 'function') {
+            target.initialAction(elements[0], sezzleElement);
+          }
         }
       }
     }.bind(this));
