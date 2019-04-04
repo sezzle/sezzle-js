@@ -1,6 +1,9 @@
 var Helper = require('./helper');
 
 var SezzleJS = function(options) {
+  if (typeof(options) === 'undefined') {
+    options = {};
+  }
   // Configurable options
   this.xpath = [];
   if (options.targetXPath) {
