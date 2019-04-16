@@ -457,7 +457,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   var index = index || 0;
 
   // Do not render this product if it is not eligible
-  if (!this.isProductEligible(element.innerText)) return false;
+  if (!this.isProductEligible(element.textContent)) return false;
   // Set data index to each price element for tracking
   element.dataset.sezzleindex = index;
   // Get element to be rendered with sezzle's widget
@@ -594,7 +594,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
       case 'price-split':
         var priceSplitNode = document.createElement('span');
         priceSplitNode.className = 'sezzle-payment-amount sezzle-price-split sezzleindex-' + index;
-        var priceElemTexts = element.innerText.split(this.splitPriceElementsOn);
+        var priceElemTexts = element.textContent.split(this.splitPriceElementsOn);
         var priceSplitText = '';
         if (priceElemTexts.length == 1) { //if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
           //give the original element in the case there might be some ignored elements present
@@ -603,7 +603,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
           var priceElems = [];
           priceElemTexts.forEach(function (text) {
             var priceElemSpan = document.createElement('span');
-            priceElemSpan.innerText = text;
+            priceElemSpan.textContent = text;
             priceElems.push(priceElemSpan);
           });
           priceElems.forEach(function (elem, index) {
@@ -775,7 +775,7 @@ SezzleJS.prototype.isProductEligible = function (priceText) {
  */
 SezzleJS.prototype.getPriceText = function (element) {
   if (this.ignoredPriceElements == []) {
-    return element.innerText;
+    return element.textContent;
   } else {
     this.ignoredPriceElements.forEach(function (subpaths) {
       // get all elements pointed to by the xPath. Search is rooted at element
@@ -788,7 +788,7 @@ SezzleJS.prototype.getPriceText = function (element) {
 
   // if no ignored elements are found, return the whole inner text of the element
   if (!element.getElementsByClassName('sezzle-ignored-price-element').length) {
-    return element.innerText;
+    return element.textContent;
   }
 
   var clone = element.cloneNode(true);
@@ -805,7 +805,7 @@ SezzleJS.prototype.getPriceText = function (element) {
     element.classList.remove('sezzle-ignored-price-element');
   });
 
-  return clone.innerText;
+  return clone.textContent;
 }
 
 /**
@@ -863,7 +863,7 @@ SezzleJS.prototype.mutationCallBack = function (mutations) {
       } else {
         sezzlePriceElement.parentElement.parentElement.parentElement.classList.remove('sezzle-hidden');
       }
-      sezzlePriceElement.innerText = price;
+      sezzlePriceElement.textContent = price;
     }.bind(this));
 };
 
