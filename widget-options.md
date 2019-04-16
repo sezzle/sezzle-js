@@ -1,12 +1,18 @@
 ### Explanation of each option
-  `targetXPath` (optional)
+  `targetXPath`
   * Simple
     * Detail - Path to the element in your webpage from where price would be picked up from.
     * Type - `string`
   * Advanced
     * Detail - You may have multiple price elements in one page. So, this option also accepts a list of paths to multiple price elements.
     * Type - `array of strings`
-  * Default - `empty`
+  * Xpath formats
+    * `..` path to the parent element
+    * `#some_id` Use the `#` in the front to identify an element with ID
+    * `.some_class` Use the `.` in the front to identify elements with class name
+    * `.` just a dot would mean the same element at that point
+    * `child-<number>` This is used to point a child element with an index number.
+        * **Note:** Sometimes the price element may look like `<span id="money">$ 120.00 <del>$ 200.00</del></span>`. In this case we can point to the first child like this `#money/child-1`. If the child is a text type element, which is true in this case, it'll wrap the text with a span and use that as a price element. There are other ways to handle it too, like using `ignoredPriceElements` which is discussed later in this document.
 
   `renderToPath` (optional)
   * Simple
@@ -15,7 +21,8 @@
   * Advanced
     * Detail - You may want to place widgets in multiple places. So you can pass multiple paths in an array. The price path in `ith` index of `targetXPath` array will rendered at the path given in `ith` index of this array(`renderToPath`). If you do not pass any thing to `ith` index of this array but there is a path in `ith` index of `targetXPath`, then the widget will be rendered just below the price element.
     * Type - `array of strings`
-  * Default - `empty`
+  * Xpath formats
+    * Same as `targetXPath`
 
   `forcedShow` (optional)
   Shows the widget in every country if `true`. Else it shows up only in the `United States`.
@@ -26,11 +33,6 @@
   Aligns the widget in the parent div.
   * Options - `left`, `center`, `right`, `auto`.
   * Default - `auto`
-  * Type - `string`
-
-  `merchantID`
-  ID given by Sezzle to the merchant. This can be found in the upper right corner of the sezzle merchant dashboard. Only approved merchants get an ID.
-  * Default - `empty`
   * Type - `string`
 
   `theme` (optional)
@@ -61,9 +63,11 @@
   * Default - `empty`
 
   `hideClasses` (optional)
-  The classes of elements that should be hidden when sezzle's logo is showing. This is useful when you want to hide a similar product as Sezzle and is not available in a country where Sezzle is.
+  The xpaths of elements that should be hidden. The path is always relative to the document. This is useful when you want to hide a similar product as Sezzle.
   * Type - `array of strings`
   * Default - `[]`
+  * Xpath formats
+    * Same as `targetXPath`
 
   `priceElementClass` (optional)
   Class to the price element. This option is used instead of `targetXPath` to make the integration simple. You can pass this as a class of your choice else it defaults to `sezzle-price-element`. If you have `just one` element in your page with this class added to it(which should be the price element), the system would pick up price using this.
@@ -79,6 +83,12 @@
   This is used to change the text of the widget and also change the arrangement of text, logo and the know more url within the widget. Example, `or 4 interest-free payments with %%price%% %%logo%% %%link%%` will render the default widget. `price`, `logo` and `link` within `%% %%` can be put in different places in the string to change arrangement of each of them.
   * Type - `string`
   * Default - `empty`
+  * Supported Keys -
+    * `price` - This is used to render sezzle price in the widget
+    * `logo` - This is used to render Sezzle logo (The url provided in `imageUrl`) in the widget
+    * `link` - This is to render an anchor that renders a rext `Learn more` which opens Sezzle info modal on click
+    * `info` - This is an info icon that opens Sezzle info modal on click.
+    * `question-mark` - This is also a way to show the Sezzle modal
 
 `fontSize` (optional)
 This sets the font size in pixels.
