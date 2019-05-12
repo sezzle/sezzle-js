@@ -487,7 +487,8 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   this.setWidgetSize(sezzle);
 
   var node = document.createElement('div');
-  node.className = 'sezzle-checkout-button-wrapper';
+  node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
+  node.style.cursor = 'pointer';
   this.insertStoreCSSClassInElement(node);
   this.addCSSAlignment(node);
 
@@ -514,7 +515,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
       // changed from learn-more to link as that is what current altVersionTemplates use
       case 'link':
         var learnMoreNode = document.createElement('span');
-        learnMoreNode.className = 'sezzle-modal-link sezzle-learn-more';
+        learnMoreNode.className = 'sezzle-learn-more';
         var learnMoreText = document.createTextNode('Learn more');
         learnMoreNode.appendChild(learnMoreText);
         sezzleButtonText.appendChild(learnMoreNode);
@@ -522,35 +523,35 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 
       case 'info':
         var infoIconNode = document.createElement('code');
-        infoIconNode.className = 'sezzle-modal-link sezzle-info-icon';
+        infoIconNode.className = 'sezzle-info-icon';
         infoIconNode.innerHTML = '&#9432;';
         sezzleButtonText.appendChild(infoIconNode);
         break;
 
       case 'question-mark':
         var questionMarkIconNode = document.createElement('img');
-        questionMarkIconNode.className = 'sezzle-modal-link sezzle-question-mark-icon';
+        questionMarkIconNode.className = 'sezzle-question-mark-icon';
         questionMarkIconNode.src = 'https://d2uyik3j5wol98.cloudfront.net/images/question_mark_black.png';
         sezzleButtonText.appendChild(questionMarkIconNode);
         break;
 
       case 'afterpay-logo':
         var apNode = document.createElement('img');
-        apNode.className = 'sezzle-afterpay-logo';
+        apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
         apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png';
         sezzleButtonText.appendChild(apNode);
         break;
 
       case 'afterpay-logo-grey':
         var apNode = document.createElement('img');
-        apNode.className = 'sezzle-afterpay-logo';
+        apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
         apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png';
         sezzleButtonText.appendChild(apNode);
         break;
 
       case 'afterpay-info-icon':
         var apInfoIconNode = document.createElement('code');
-        apInfoIconNode.className = 'ap-modal-info-link';
+        apInfoIconNode.className = 'ap-modal-info-link no-sezzle-info';
         apInfoIconNode.innerHTML = '&#9432;';
         sezzleButtonText.appendChild(apInfoIconNode);
         break;
@@ -568,28 +569,28 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 
       case 'quadpay-logo':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo';
+        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-logo-grey':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo';
+        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-grayscale.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-logo-white':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo';
+        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-white.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-info-icon':
         var quadpayInfoIconNode = document.createElement('code');
-        quadpayInfoIconNode.className = 'quadpay-modal-info-link';
+        quadpayInfoIconNode.className = 'quadpay-modal-info-link no-sezzle-info';
         quadpayInfoIconNode.innerHTML = '&#9432;';
         sezzleButtonText.appendChild(quadpayInfoIconNode);
         break;
@@ -983,17 +984,10 @@ SezzleJS.prototype.renderQPModal = function () {
  * to open the modal
  */
 SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
-  // attach click event listeners to open/close modal
-  // all assets with the sezzle-modal-link class have click event listeners hooked to them
-  // if the widget does not contain an element with a sezzle-modal-link, the event listener is attached to the whole widget
-  Array.prototype.forEach.call(sezzleElement.getElementsByClassName('sezzle-button-text'), function (el) {
-    var modalLinks = el.getElementsByClassName('sezzle-modal-link');
-    if (modalLinks.length == 0) {
-      // attach event listener to sezzle-button-text
-      // add the sezzle-modal-link class to sezzle-button-text to make it appear clickable
-      // (elements with the sezzle-modal-link class appear clickable when hovered on)
-      el.classList.add('sezzle-modal-link');
-      el.addEventListener('click', function () {
+  var modalLinks = sezzleElement.getElementsByClassName('sezzle-modal-link');
+  Array.prototype.forEach.call(modalLinks, function (modalLink) {
+    modalLink.addEventListener('click', function (event) {
+      if (!event.target.classList.contains('no-sezzle-info')) {
         var modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
         // Show modal node
         modalNode.style.display = 'block';
@@ -1001,43 +995,30 @@ SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
         modalNode.getElementsByClassName('sezzle-checkout-modal')[0].className = 'sezzle-checkout-modal';
         // log on click event
         this.logEvent('onclick');
-      }.bind(this));
-    } else { // attach event listener to the sezzle-modal-link(s)
-      Array.prototype.forEach.call(modalLinks, function (modalLink) {
-        modalLink.addEventListener('click', function () {
-          var modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
-          // Show modal node
-          modalNode.style.display = 'block';
-          // Remove hidden class to show the item
-          modalNode.getElementsByClassName('sezzle-checkout-modal')[0].className = 'sezzle-checkout-modal';
-          // log on click event
-          this.logEvent('onclick');
-        }.bind(this));
-      }.bind(this));
-    }
-
-    // for AfterPay
-    var apModalLinks = el.getElementsByClassName('ap-modal-info-link');
-    Array.prototype.forEach.call(apModalLinks, function (modalLink) {
-      modalLink.addEventListener('click', function () {
-        // Show modal node
-        document.getElementsByClassName('sezzle-ap-modal')[0].style.display = 'block';
-        // log on click event
-        this.logEvent('onclick-afterpay');
-      }.bind(this));
+      }
     }.bind(this));
+  }.bind(this));
 
-    // for QuadPay
-    var qpModalLinks = el.getElementsByClassName('quadpay-modal-info-link');
-    Array.prototype.forEach.call(qpModalLinks, function (modalLink) {
-      modalLink.addEventListener('click', function () {
-        // Show modal node
-        document.getElementsByClassName('sezzle-qp-modal')[0].style.display = 'block';
-        // log on click event
-        this.logEvent('onclick-quadpay');
-      }.bind(this));
+  // for AfterPay
+  var apModalLinks = sezzleElement.getElementsByClassName('ap-modal-info-link');
+  Array.prototype.forEach.call(apModalLinks, function (modalLink) {
+    modalLink.addEventListener('click', function () {
+      // Show modal node
+      document.getElementsByClassName('sezzle-ap-modal')[0].style.display = 'block';
+      // log on click event
+      this.logEvent('onclick-afterpay');
     }.bind(this));
+  }.bind(this));
 
+  // for QuadPay
+  var qpModalLinks = sezzleElement.getElementsByClassName('quadpay-modal-info-link');
+  Array.prototype.forEach.call(qpModalLinks, function (modalLink) {
+    modalLink.addEventListener('click', function () {
+      // Show modal node
+      document.getElementsByClassName('sezzle-qp-modal')[0].style.display = 'block';
+      // log on click event
+      this.logEvent('onclick-quadpay');
+    }.bind(this));
   }.bind(this));
 }
 
