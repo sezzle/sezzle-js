@@ -77,7 +77,7 @@ Example:
 If `targetXPath` is `#foo/.bar` - This will look for an element with id `foo` and then an element with class `bar` inside that element's children.
 If `renderToPath` is `.` - This will render the widget in the same element as the price element.
 If `renderToPath` is `..` - This will render the widget one parent above the price element.
-If `renderToPath` is `../..` - This will render the widget two parents above the price element. 
+If `renderToPath` is `../..` - This will render the widget two parents above the price element.
 If `renderToPath` is `../../.my-render-element` - This will render the widget two parents above the price element in an element with the class `my-render-element`.
 
 For more details please [click here](/widget-options.md)
@@ -108,7 +108,7 @@ Done!
 
 ```bash
 
-npm run deploy-widget
+npm run release -- --newversion=<version-number>
 
 ```
 
@@ -116,6 +116,7 @@ For CSS Updates:
 
 ```bash
 
-npm run deploy-css
+npm run release-css -- --newversion=<version-number>
 
 ```
+These commands will create a new branch with version update. That branch needs to be merged with master. An auto deploy will be triggered.
