@@ -131,6 +131,11 @@ var SezzleJS = function(options) {
   //]
   this.customClasses = Array.isArray(options.customClasses) ? options.customClasses : [];
 
+  // Used for conditional rendering of widgets on a targetXPath
+  // The xpath is only parsed when the URL of the current page matches the provided
+  // pattern on the same index. If no pattern is provided, it is parsed on all URLs
+  this.urlRegexPatterns = Array.isArray(options.urlRegexPatterns) ? options.urlRegexPatterns : []
+
   this.widgetTemplate = [];
   if (options.altVersionTemplate) {
     this.widgetTemplate = options.altVersionTemplate.split('%%');
@@ -1261,6 +1266,8 @@ SezzleJS.prototype.initWidget = function () {
   function sezzleWidgetCheckInterval() {
     // Look for newly added price elements
     this.xpath.forEach(function (path, index) {
+      // if there exists a pattern to match on the current index, check for the match, else continue
+      if(index < this.urlRegexPatterns.length && !RegExp(this.urlRegexPatterns[index]).test(window.location.href)) return;
       this.getElementsByXPath(path).forEach(function (e) {
         if (!e.hasAttribute('data-sezzleindex')) {
           els.push({
