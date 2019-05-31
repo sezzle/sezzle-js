@@ -134,7 +134,7 @@ var SezzleJS = function(options) {
   // Used for conditional rendering of widgets on a targetXPath
   // The xpath is only parsed when the URL of the current page matches the provided
   // pattern on the same index. If no pattern is provided, it is parsed on all URLs
-  this.urlRegexPatterns = Array.isArray(options.urlRegexPatterns) ? options.urlRegexPatterns : []
+  this.urlRegexPatterns = Array.isArray(options.urlRegexPatterns) ? options.urlRegexPatterns : [];
 
   this.widgetTemplate = [];
   if (options.altVersionTemplate) {
