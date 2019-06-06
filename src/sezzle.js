@@ -7,7 +7,7 @@ var SezzleJS = function(options) {
 
 	this.configGroups = [];
 	// i points to options.configGroups' current index while j points to the internal configGroups' current index
-	for(var i = 0, j = -1; i < options.configGroups.length; i++) {
+	for(var i = 0, j = -1, len = options.configGroups.length; i < len; i++) {
 		// don't parse if URL doesn't match
 		if(options.configGroups[i].urlMatch && !RegExp(options.configGroups[i].urlMatch).test(window.location.href)) continue;
 		
@@ -54,7 +54,6 @@ var SezzleJS = function(options) {
 		}
 
 		this.configGroups[j].numberOfPayments = Math.floor(options.configGroups[i].numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
-		this.configGroups[j].forcedShow = options.configGroups[i].forcedShow || (options.defaultConfig && options.defaultConfig.forcedShow) || false;
 		this.configGroups[j].alignment = options.configGroups[i].alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
 		this.configGroups[j].widgetType = options.configGroups[i].widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
 		this.configGroups[j].minPrice = options.configGroups[i].minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
@@ -81,11 +80,6 @@ var SezzleJS = function(options) {
 		this.configGroups[j].sezzleWidgetContainerClass = options.configGroups[i].sezzleWidgetContainerClass || (options.defaultConfig && options.defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
 		// splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
 		this.configGroups[j].splitPriceElementsOn = options.configGroups[i].splitPriceElementsOn || (options.defaultConfig && options.defaultConfig.splitPriceElementsOn) || '';
-		this.configGroups[j].altModalHTML = options.configGroups[i].altModalHTML || (options.defaultConfig && options.defaultConfig.altModalHTML) || '';
-		// if doing widget with both Sezzle or afterpay - the modal to display:
-		this.configGroups[j].apModalHTML = options.configGroups[i].apModalHTML || (options.defaultConfig && options.defaultConfig.apModalHTML) || '';
-		// if doing widget with both Sezzle or quadpay - the modal to display:
-		this.configGroups[j].qpModalHTML = options.configGroups[i].qpModalHTML || (options.defaultConfig && options.defaultConfig.qpModalHTML) || '';
 		// after pay link
 		this.configGroups[j].apLink = options.configGroups[i].apLink || (options.defaultConfig && options.defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
 		// countries widget should show in
@@ -145,6 +139,12 @@ var SezzleJS = function(options) {
 
 	// properties that do not belong to a config group
 	this.merchantID = options.merchantID || '';
+	this.forcedShow = options.forcedShow || false;
+	this.altModalHTML = options.altModalHTML || '';
+	// if doing widget with both Sezzle or afterpay - the modal to display:
+	this.apModalHTML = options.apModalHTML || '';
+	// if doing widget with both Sezzle or quadpay - the modal to display:
+	this.qpModalHTML = options.qpModalHTML || '';
 
 	// Non configurable options
 	this._config = { attributes: true, childList: true, characterData: true };
@@ -1077,24 +1077,24 @@ SezzleJS.prototype.logEvent = function (eventName) {
 	// We only log event when it's allowed to
 	if (document.sezzleConfig && !document.sezzleConfig.noTracking) {
 		var viewport = {
-				width: null,
-				height: null
+			width: null,
+			height: null
 		};
 		try {
 				if (screen && screen.width) {
-						viewport.width = screen.width;
+					viewport.width = screen.width;
 				}
 				if (screen && screen.height) {
-						viewport.height = screen.height;
+					viewport.height = screen.height;
 				}
 
 		} catch(error) {
-				// unable to fetch viewport dimensions
-				console.log(error);
+			// unable to fetch viewport dimensions
+			console.log(error);
 		}
 		var sezzleConfigStr = null
 		if (document.sezzleConfig) {
-				sezzleConfigStr = JSON.stringify(document.sezzleConfig);
+			sezzleConfigStr = JSON.stringify(document.sezzleConfig);
 		}
 		var win = window.frames.szl;
 		if (win) {
@@ -1157,11 +1157,11 @@ SezzleJS.prototype.init = function () {
 		this.getCountryCodeFromIP(function (countryCode) {
 			// only inject Google tag manager for clients visiting from the United States or Canada
 			if (countryCode === 'US' || 'CA') {
-					var win = window.frames.szl;
-					if (win && !document.sezzleConfig.noGtm) {
-							// win.postMessage('initGTMScript', 'http://localhost:9001/');
-							win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
-					}
+				var win = window.frames.szl;
+				if (win && !document.sezzleConfig.noGtm) {
+					// win.postMessage('initGTMScript', 'http://localhost:9001/');
+					win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
+				}
 			}
 		}.bind(this));
 	} else {
@@ -1172,12 +1172,12 @@ SezzleJS.prototype.init = function () {
 				this.loadCSS(this.initWidget.bind(this));
 				// only inject Google tag manager for clients visiting from the United States or Canada
 				if (countryCode === 'US' || 'CA') {
-						var win = window.frames.szl;
-						if (win && !document.sezzleConfig.noGtm) {
-							setTimeout(function () {
-								win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
-							},100)
-						}
+					var win = window.frames.szl;
+					if (win && !document.sezzleConfig.noGtm) {
+						setTimeout(function () {
+							win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
+						},100)
+					}
 				}
 			}
 		}.bind(this));
@@ -1217,90 +1217,93 @@ SezzleJS.prototype.observeRelatedElements = function(priceElement, sezzleElement
  * All steps required to show the widget
  */
 SezzleJS.prototype.initWidget = function () {
+	const intervalInMs = 2000;
 	var els = [];
-	var intervalInMs = 2000;
-	var modalsRendered = false;
 
-	function renderModals() {
-		// This should always happen before rendering the widget
-		this.renderModal();
-		// only render APModal if ap-modal-link exists
-		if (document.getElementsByClassName('ap-modal-info-link').length > 0) {
-			this.renderAPModal();
-		}
-		// only render QPModal if ap-modal-link exists
-		if (document.getElementsByClassName('quadpay-modal-info-link').length > 0) {
-			this.renderQPModal();
-		}
-		modalsRendered = true;
-	};
+	for(var i = 0, len = this.configGroups.length; i < len; i++) {
+		var modalsRendered = false;
 
-	function sezzleWidgetCheckInterval() {
-		// Look for newly added price elements
-		this.xpath.forEach(function (path, index) {
-			this.getElementsByXPath(path).forEach(function (e) {
-				if (!e.hasAttribute('data-sezzleindex')) {
-					els.push({
-						element: e,
-						toRenderElement: this.getElementToRender(e, index),
-						deleted: false,
-						observer: null,
-						targetXPathIndex: index
-					});
-				}
-			}.bind(this))
-		}.bind(this));
-		// add the sezzle widget to the price elements
-		els.forEach(function (el, index) {
-			if (!el.element.hasAttribute('data-sezzleindex')) {
-				var sz = this.renderAwesomeSezzle(
-					el.element, el.toRenderElement,
-					index, el.targetXPathIndex
-				);
-				if (sz) {
-					el.observer = this.startObserve(el.element, this.mutationCallBack.bind(this));
-					this.addClickEventForModal(sz);
-					this.observeRelatedElements(el.element, sz, this.relatedElementActions[el.targetXPathIndex]);
-				} else { // remove the element from the els array
-					delete els[index];
-				}
+		function renderModals() {
+			// This should always happen before rendering the widget
+			this.renderModal();
+			// only render APModal if ap-modal-link exists
+			if (document.getElementsByClassName('ap-modal-info-link').length > 0) {
+				this.renderAPModal();
 			}
-		}.bind(this));
-		// refresh the array
-		els = els.filter(function(e) {
-			return e !== undefined;
-		})
-
-		// Find the deleted price elements
-		// remove corresponding Sezzle widgets if exists
-		els.forEach(function(el, index) {
-			if (el.element.parentElement == null && !el.deleted) { // element is deleted
-				// Stop observing for changes in the element
-				if (el.observer !== null) el.observer.disconnect();
-				// Mark that element as deleted
-				el.deleted = true;
-				// Delete the corresponding sezzle widget if exist
-				var tmp = document.getElementsByClassName(`sezzlewidgetindex-${index}`);
-				if (tmp.length) {
-					var sw = tmp[0];
-					sw.parentElement.removeChild(sw);
-				}
+			// only render QPModal if ap-modal-link exists
+			if (document.getElementsByClassName('quadpay-modal-info-link').length > 0) {
+				this.renderQPModal();
 			}
-		})
-		// Hide elements ex: afterpay
-		this.hideSezzleHideElements();
-		setTimeout(sezzleWidgetCheckInterval.bind(this), intervalInMs)
-	};
+			modalsRendered = true;
+		};
 
-	if (this.hasPriceClassElement) {
-		var sz = this.renderAwesomeSezzle(this.priceElements[0], this.renderElements[0], 0, 0);
-		this.startObserve(this.priceElements[0], this.mutationCallBack.bind(this));
-	} else {
-		sezzleWidgetCheckInterval.call(this);
+		function sezzleWidgetCheckInterval() {
+			// Look for newly added price elements
+			this.xpath.forEach(function (path, index) {
+				this.getElementsByXPath(path).forEach(function (e) {
+					if (!e.hasAttribute('data-sezzleindex')) {
+						els.push({
+							element: e,
+							toRenderElement: this.getElementToRender(e, index),
+							deleted: false,
+							observer: null,
+							targetXPathIndex: index
+						});
+					}
+				}.bind(this))
+			}.bind(this));
+			// add the sezzle widget to the price elements
+			els.forEach(function (el, index) {
+				if (!el.element.hasAttribute('data-sezzleindex')) {
+					var sz = this.renderAwesomeSezzle(
+						el.element, el.toRenderElement,
+						index, el.targetXPathIndex
+					);
+					if (sz) {
+						el.observer = this.startObserve(el.element, this.mutationCallBack.bind(this));
+						this.addClickEventForModal(sz);
+						this.observeRelatedElements(el.element, sz, this.relatedElementActions[el.targetXPathIndex]);
+					} else { // remove the element from the els array
+						delete els[index];
+					}
+				}
+			}.bind(this));
+			// refresh the array
+			els = els.filter(function(e) {
+				return e !== undefined;
+			})
+
+			// Find the deleted price elements
+			// remove corresponding Sezzle widgets if exists
+			els.forEach(function(el, index) {
+				if (el.element.parentElement == null && !el.deleted) { // element is deleted
+					// Stop observing for changes in the element
+					if (el.observer !== null) el.observer.disconnect();
+					// Mark that element as deleted
+					el.deleted = true;
+					// Delete the corresponding sezzle widget if exist
+					var tmp = document.getElementsByClassName(`sezzlewidgetindex-${index}`);
+					if (tmp.length) {
+						var sw = tmp[0];
+						sw.parentElement.removeChild(sw);
+					}
+				}
+			})
+			// Hide elements ex: afterpay
+			this.hideSezzleHideElements();
+			setTimeout(sezzleWidgetCheckInterval.bind(this), intervalInMs)
+		};
+
+		if (this.configGroups[i].hasPriceClassElement) {
+			var sz = this.renderAwesomeSezzle(this.priceElements[0], this.renderElements[0], 0, 0);
+			this.startObserve(this.priceElements[0], this.mutationCallBack.bind(this));
+		} else {
+			sezzleWidgetCheckInterval.call(this);
+		}
+
+		// render them modals if not done already
+		if (!modalsRendered) renderModals.call(this);
 	}
-
-	// render them mdoals if not done already
-	if (!modalsRendered) renderModals.call(this);
 }
 
 module.exports = SezzleJS;
