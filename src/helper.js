@@ -6,7 +6,7 @@
  * function is used for backwards compatability 
  * with older versions
  * @param options options passed into SezzleJS' constructor
- * @return no return. The function directly mutates options
+ * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function(options) {
   if(typeof options !== 'object') return null;
