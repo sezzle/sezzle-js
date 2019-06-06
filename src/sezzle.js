@@ -6,85 +6,90 @@ var SezzleJS = function(options) {
 	if(!options) return;
 
 	this.configGroups = [];
-	for(var i = 0; i < options.configGroups.length; i++) {
+	// i points to options.configGroups' current index while j points to the internal configGroups' current index
+	for(var i = 0, j = -1; i < options.configGroups.length; i++) {
+		// don't parse if URL doesn't match
+		if(options.configGroups[i].urlMatch && !RegExp(options.configGroups[i].urlMatch).test(window.location.href)) continue;
+		
 		this.configGroups.push({});
+		j++;
 
 		// Configurable options
 
 		// targetXPath SHOULD NOT be specified in defaultConfig since
 		// it is like an ID for a configGroup.
-		this.configGroups[i].xpath = Helper.breakXPath(options.configGroups[i].targetXPath) || [];
+		this.configGroups[j].xpath = Helper.breakXPath(options.configGroups[i].targetXPath) || [];
 
-		this.configGroups[i].renderToPath = this.configGroups[i].renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
+		this.configGroups[j].renderToPath = options.configGroups[i].renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
 
 		// This array in which its elements are objects with two keys
 		// relatedPath - this is a xpath of an element related to the price element
 		// action - this is a function triggered when the element has a mutation
 		// initialAction - this is a function to act upon a pre existing element's condition
-		this.configGroups[i].relatedElementActions = options.configGroups[i].relatedElementActions || (options.defaultConfig && options.defaultConfig.relatedElementActions) || [];
+		this.configGroups[j].relatedElementActions = options.configGroups[i].relatedElementActions || (options.defaultConfig && options.defaultConfig.relatedElementActions) || [];
 
-		this.configGroups[i].ignoredPriceElements = options.configGroups[i].ignoredPriceElements || (options.defaultConfig && options.defaultConfig.ignoredPriceElements) || [];
-		if (typeof (this.configGroups[i].ignoredPriceElements) === 'string') {
+		this.configGroups[j].ignoredPriceElements = options.configGroups[i].ignoredPriceElements || (options.defaultConfig && options.defaultConfig.ignoredPriceElements) || [];
+		if (typeof (this.configGroups[j].ignoredPriceElements) === 'string') {
 			// Only one x-path is given
-			this.configGroups[i].ignoredPriceElements = [this.configGroups[i].ignoredPriceElements.trim().split('/')
+			this.configGroups[j].ignoredPriceElements = [this.configGroups[j].ignoredPriceElements.trim().split('/')
 				.filter(function (subpath) {
 					return subpath !== '';
 				})];
 		} else {
-			// this.configGroups[i].ignoredPriceElements is an array of x-paths
-			this.configGroups[i].ignoredPriceElements = this.configGroups[i].ignoredPriceElements.map(function (path) {
+			// this.configGroups[j].ignoredPriceElements is an array of x-paths
+			this.configGroups[j].ignoredPriceElements = this.configGroups[j].ignoredPriceElements.map(function (path) {
 				return Helper.breakXPath(path.trim());
 			}.bind(this));
 		}
 
-		this.configGroups[i].hideElements = options.configGroups[i].hideElements || (options.defaultConfig && options.defaultConfig.hideElements) || [];
-		if (typeof (this.configGroups[i].hideElements) === 'string') {
+		this.configGroups[j].hideElements = options.configGroups[i].hideElements || (options.defaultConfig && options.defaultConfig.hideElements) || [];
+		if (typeof (this.configGroups[j].hideElements) === 'string') {
 			// Only one x-path is given
-			this.configGroups[i].hideElements = [Helper.breakXPath(options.hideClasses.trim())];
+			this.configGroups[j].hideElements = [Helper.breakXPath(options.configGroups[i].hideClasses.trim())];
 		} else {
-			// this.configGroups[i].hideElements is an array of x-paths
-			this.configGroups[i].hideElements = this.configGroups[i].hideElements.map(function (path) {
+			// this.configGroups[j].hideElements is an array of x-paths
+			this.configGroups[j].hideElements = this.configGroups[j].hideElements.map(function (path) {
 				return Helper.breakXPath(path.trim());
 			}.bind(this));
 		}
 
-		this.configGroups[i].numberOfPayments = Math.floor(options.configGroups[i].numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
-		this.configGroups[i].forcedShow = options.configGroups[i].forcedShow || (options.defaultConfig && options.defaultConfig.forcedShow) || false;
-		this.configGroups[i].alignment = options.configGroups[i].alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
-		this.configGroups[i].widgetType = options.configGroups[i].widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
-		this.configGroups[i].minPrice = options.configGroups[i].minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
-		this.configGroups[i].maxPrice = options.configGroups[i].maxPrice || (options.defaultConfig && options.defaultConfig.maxPrice) || 250000;
-		this.configGroups[i].bannerURL = options.configGroups[i].bannerURL || (options.defaultConfig && options.defaultConfig.bannerURL) || '';
-		this.configGroups[i].bannerClass = options.configGroups[i].bannerClass || (options.defaultConfig && options.defaultConfig.bannerClass) || '';
-		this.configGroups[i].bannerLink = options.configGroups[i].bannerLink || (options.defaultConfig && options.defaultConfig.bannerLink) || '';
-		this.configGroups[i].fontWeight = options.configGroups[i].fontWeight || (options.defaultConfig && options.defaultConfig.fontWeight) | 300;
-		this.configGroups[i].alignmentSwitchMinWidth = options.configGroups[i].alignmentSwitchMinWidth || (options.defaultConfig && options.defaultConfig.alignmentSwitchMinWidth); //pixels
-		this.configGroups[i].alignmentSwitchType = options.configGroups[i].alignmentSwitchType || (options.defaultConfig && options.defaultConfig.alignmentSwitchType);
-		this.configGroups[i].marginTop = options.configGroups[i].marginTop || (options.defaultConfig && options.defaultConfig.marginTop) || 0; //pixels
-		this.configGroups[i].marginBottom = options.configGroups[i].marginBottom || (options.defaultConfig && options.defaultConfig.marginBottom) || 0; //pixels
-		this.configGroups[i].marginLeft = options.configGroups[i].marginLeft || (options.defaultConfig && options.defaultConfig.marginLeft) || 0; //pixels
-		this.configGroups[i].marginRight = options.configGroups[i].marginRight || (options.defaultConfig && options.defaultConfig.marginRight) || 0; //pixels
-		this.configGroups[i].scaleFactor = options.configGroups[i].scaleFactor || (options.defaultConfig && options.defaultConfig.scaleFactor) || 1.0;
-		this.configGroups[i].fontFamily = options.configGroups[i].fontFamily || (options.defaultConfig && options.defaultConfig.fontFamily) || 'inherit';
-		this.configGroups[i].textColor = options.configGroups[i].color || (options.defaultConfig && options.defaultConfig.color) || 'inherit';
-		this.configGroups[i].fontSize = options.configGroups[i].fontSize || (options.defaultConfig && options.defaultConfig.fontSize) || 12;
-		this.configGroups[i].maxWidth = options.configGroups[i].maxWidth || (options.defaultConfig && options.defaultConfig.maxWidth) || 400; //pixels
-		this.configGroups[i].fixedHeight = options.configGroups[i].fixedHeight || (options.defaultConfig && options.defaultConfig.fixedHeight) || 0; //pixels
+		this.configGroups[j].numberOfPayments = Math.floor(options.configGroups[i].numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
+		this.configGroups[j].forcedShow = options.configGroups[i].forcedShow || (options.defaultConfig && options.defaultConfig.forcedShow) || false;
+		this.configGroups[j].alignment = options.configGroups[i].alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
+		this.configGroups[j].widgetType = options.configGroups[i].widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
+		this.configGroups[j].minPrice = options.configGroups[i].minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
+		this.configGroups[j].maxPrice = options.configGroups[i].maxPrice || (options.defaultConfig && options.defaultConfig.maxPrice) || 250000;
+		this.configGroups[j].bannerURL = options.configGroups[i].bannerURL || (options.defaultConfig && options.defaultConfig.bannerURL) || '';
+		this.configGroups[j].bannerClass = options.configGroups[i].bannerClass || (options.defaultConfig && options.defaultConfig.bannerClass) || '';
+		this.configGroups[j].bannerLink = options.configGroups[i].bannerLink || (options.defaultConfig && options.defaultConfig.bannerLink) || '';
+		this.configGroups[j].fontWeight = options.configGroups[i].fontWeight || (options.defaultConfig && options.defaultConfig.fontWeight) | 300;
+		this.configGroups[j].alignmentSwitchMinWidth = options.configGroups[i].alignmentSwitchMinWidth || (options.defaultConfig && options.defaultConfig.alignmentSwitchMinWidth); //pixels
+		this.configGroups[j].alignmentSwitchType = options.configGroups[i].alignmentSwitchType || (options.defaultConfig && options.defaultConfig.alignmentSwitchType);
+		this.configGroups[j].marginTop = options.configGroups[i].marginTop || (options.defaultConfig && options.defaultConfig.marginTop) || 0; //pixels
+		this.configGroups[j].marginBottom = options.configGroups[i].marginBottom || (options.defaultConfig && options.defaultConfig.marginBottom) || 0; //pixels
+		this.configGroups[j].marginLeft = options.configGroups[i].marginLeft || (options.defaultConfig && options.defaultConfig.marginLeft) || 0; //pixels
+		this.configGroups[j].marginRight = options.configGroups[i].marginRight || (options.defaultConfig && options.defaultConfig.marginRight) || 0; //pixels
+		this.configGroups[j].scaleFactor = options.configGroups[i].scaleFactor || (options.defaultConfig && options.defaultConfig.scaleFactor) || 1.0;
+		this.configGroups[j].fontFamily = options.configGroups[i].fontFamily || (options.defaultConfig && options.defaultConfig.fontFamily) || 'inherit';
+		this.configGroups[j].textColor = options.configGroups[i].color || (options.defaultConfig && options.defaultConfig.color) || 'inherit';
+		this.configGroups[j].fontSize = options.configGroups[i].fontSize || (options.defaultConfig && options.defaultConfig.fontSize) || 12;
+		this.configGroups[j].maxWidth = options.configGroups[i].maxWidth || (options.defaultConfig && options.defaultConfig.maxWidth) || 400; //pixels
+		this.configGroups[j].fixedHeight = options.configGroups[i].fixedHeight || (options.defaultConfig && options.defaultConfig.fixedHeight) || 0; //pixels
 		// This is used to get price of element
-		this.configGroups[i].priceElementClass = options.configGroups[i].priceElementClass || (options.defaultConfig && options.defaultConfig.priceElementClass) || 'sezzle-price-element';
+		this.configGroups[j].priceElementClass = options.configGroups[i].priceElementClass || (options.defaultConfig && options.defaultConfig.priceElementClass) || 'sezzle-price-element';
 		// This is used to tell where to render sezzle element to
-		this.configGroups[i].sezzleWidgetContainerClass = options.configGroups[i].sezzleWidgetContainerClass || (options.defaultConfig && options.defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
+		this.configGroups[j].sezzleWidgetContainerClass = options.configGroups[i].sezzleWidgetContainerClass || (options.defaultConfig && options.defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
 		// splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
-		this.configGroups[i].splitPriceElementsOn = options.configGroups[i].splitPriceElementsOn || (options.defaultConfig && options.defaultConfig.splitPriceElementsOn) || '';
-		this.configGroups[i].altModalHTML = options.configGroups[i].altModalHTML || (options.defaultConfig && options.defaultConfig.altModalHTML) || '';
+		this.configGroups[j].splitPriceElementsOn = options.configGroups[i].splitPriceElementsOn || (options.defaultConfig && options.defaultConfig.splitPriceElementsOn) || '';
+		this.configGroups[j].altModalHTML = options.configGroups[i].altModalHTML || (options.defaultConfig && options.defaultConfig.altModalHTML) || '';
 		// if doing widget with both Sezzle or afterpay - the modal to display:
-		this.configGroups[i].apModalHTML = options.configGroups[i].apModalHTML || (options.defaultConfig && options.defaultConfig.apModalHTML) || '';
+		this.configGroups[j].apModalHTML = options.configGroups[i].apModalHTML || (options.defaultConfig && options.defaultConfig.apModalHTML) || '';
 		// if doing widget with both Sezzle or quadpay - the modal to display:
-		this.configGroups[i].qpModalHTML = options.configGroups[i].qpModalHTML || (options.defaultConfig && options.defaultConfig.qpModalHTML) || '';
+		this.configGroups[j].qpModalHTML = options.configGroups[i].qpModalHTML || (options.defaultConfig && options.defaultConfig.qpModalHTML) || '';
 		// after pay link
-		this.configGroups[i].apLink = options.configGroups[i].apLink || (options.defaultConfig && options.defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
+		this.configGroups[j].apLink = options.configGroups[i].apLink || (options.defaultConfig && options.defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
 		// countries widget should show in
-		this.configGroups[i].supportedCountryCodes = options.configGroups[i].supportedCountryCodes || (options.defaultConfig && options.defaultConfig.supportedCountryCodes) || ['US', 'IN', 'CA'];
+		this.configGroups[j].supportedCountryCodes = options.configGroups[i].supportedCountryCodes || (options.defaultConfig && options.defaultConfig.supportedCountryCodes) || ['US', 'IN', 'CA'];
 		// This option is to render custom class in sezzle widget
 		// This option contains an array of objects
 		// each of the objects should have two properties
@@ -97,18 +102,18 @@ var SezzleJS = function(options) {
 		// {xpath:'.', className: 'test-1', index: 0, targetXPathIndex: 0},
 		// {xpath: './.hello', className: 'test-2', index: 0, targetXPathIndex: 0}
 		//]
-		this.configGroups[i].customClasses = Array.isArray(options.configGroups[i].customClasses) ? options.configGroups[i].customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ?  options.defaultConfig.customClasses : []);
+		this.configGroups[j].customClasses = Array.isArray(options.configGroups[i].customClasses) ? options.configGroups[i].customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ?  options.defaultConfig.customClasses : []);
 
-		this.configGroups[i].widgetTemplate = options.configGroups[i].widgetTemplate || (options.defaultConfig && options.defaultConfig.widgetTemplate);
-		if (this.configGroups[i].widgetTemplate) {
-			this.configGroups[i].widgetTemplate = this.configGroups[i].widgetTemplate.split('%%');
+		this.configGroups[j].widgetTemplate = options.configGroups[i].widgetTemplate || (options.defaultConfig && options.defaultConfig.widgetTemplate);
+		if (this.configGroups[j].widgetTemplate) {
+			this.configGroups[j].widgetTemplate = this.configGroups[j].widgetTemplate.split('%%');
 		} else {
 			var defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
-			this.configGroups[i].widgetTemplate = defaultWidgetTemplate.split('%%');
+			this.configGroups[j].widgetTemplate = defaultWidgetTemplate.split('%%');
 		}
 
-		if (this.configGroups[i].splitPriceElementsOn) {
-			this.configGroups[i].widgetTemplate = this.configGroups[i].widgetTemplate.map(function(subtemplate) {
+		if (this.configGroups[j].splitPriceElementsOn) {
+			this.configGroups[j].widgetTemplate = this.configGroups[j].widgetTemplate.map(function(subtemplate) {
 				if (subtemplate === 'price') {
 					return 'price-split';
 				}
@@ -117,24 +122,24 @@ var SezzleJS = function(options) {
 		}
 
 		// Search for price elements. If found, assume there is only one in this page
-		this.configGroups[i].hasPriceClassElement = false;
-		this.configGroups[i].priceElements = Array.prototype.slice.
-			call(document.getElementsByClassName(this.configGroups[i].priceElementClass));
+		this.configGroups[j].hasPriceClassElement = false;
+		this.configGroups[j].priceElements = Array.prototype.slice.
+			call(document.getElementsByClassName(this.configGroups[j].priceElementClass));
 
-		this.configGroups[i].renderElements = Array.prototype.slice.
-			call(document.getElementsByClassName(this.configGroups[i].sezzleWidgetContainerClass));
+		this.configGroups[j].renderElements = Array.prototype.slice.
+			call(document.getElementsByClassName(this.configGroups[j].sezzleWidgetContainerClass));
 
-		if (this.configGroups[i].priceElements.length == 1) {
-			this.configGroups[i].hasPriceClassElement = true;
+		if (this.configGroups[j].priceElements.length == 1) {
+			this.configGroups[j].hasPriceClassElement = true;
 		}
 
-		this.configGroups[i].theme = options.configGroups[i].theme || '';
-		if (this.configGroups[i].theme == 'dark') {
-			this.configGroups[i].imageURL = options.configGroups[i].imageURL || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
-			this.configGroups[i].imageClassName = 'szl-dark-image';
+		this.configGroups[j].theme = options.configGroups[i].theme || '';
+		if (this.configGroups[j].theme == 'dark') {
+			this.configGroups[j].imageURL = options.configGroups[i].imageURL || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
+			this.configGroups[j].imageClassName = 'szl-dark-image';
 		} else {
-			this.configGroups[i].imageURL = options.configGroups[i].imageUrl || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
-			this.configGroups[i].imageClassName = 'szl-light-image';
+			this.configGroups[j].imageURL = options.configGroups[i].imageUrl || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+			this.configGroups[j].imageClassName = 'szl-light-image';
 		}
 	}
 
