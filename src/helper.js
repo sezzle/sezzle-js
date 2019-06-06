@@ -337,7 +337,6 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
  * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function(options) {
-  if(typeof options !== 'object') return null;
   if(typeof options.configGroups !== 'undefined') {
     if(Array.isArray(options.configGroups)) {
       splitConfig(options.configGroups);
