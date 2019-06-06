@@ -6,9 +6,9 @@ var SezzleJS = function(options) {
 	// ensure options is compatible with current version
 	options = Helper.makeCompatible(options);
 
-	// filter off config groups which does not match the current URL
+	// filter off config groups which do not match the current URL
 	options.configGroups = options.configGroups.filter(function(configGroup) {
-		// if no url match, have to consider the group for backwards compatability
+		// if no URL match, have to consider the group for backwards compatability
 		return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
 	})
 
@@ -40,17 +40,6 @@ var SezzleJS = function(options) {
 		} else {
 			// this.configGroups[index].ignoredPriceElements is an array of x-paths
 			this.configGroups[index].ignoredPriceElements = this.configGroups[index].ignoredPriceElements.map(function (path) {
-				return Helper.breakXPath(path.trim());
-			}.bind(this));
-		}
-
-		this.configGroups[index].hideElements = configGroup.hideElements || (options.defaultConfig && options.defaultConfig.hideElements) || [];
-		if (typeof (this.configGroups[index].hideElements) === 'string') {
-			// Only one x-path is given
-			this.configGroups[index].hideElements = [Helper.breakXPath(configGroup.hideClasses.trim())];
-		} else {
-			// this.configGroups[index].hideElements is an array of x-paths
-			this.configGroups[index].hideElements = this.configGroups[index].hideElements.map(function (path) {
 				return Helper.breakXPath(path.trim());
 			}.bind(this));
 		}
@@ -92,11 +81,11 @@ var SezzleJS = function(options) {
 		// xpath -> the path from the root of sezzle element
 		// className -> a string of classname that is to be added
 		// index -> this is optional, if provided then only the widget with
-		// targetXPathIndex -> It's a map to the element that match the targetPath of that index
+		// configGroupIndex -> It's a map to the element that match the configGroup of that index
 		// the same sezzle index value will be effected with the class name
 		// Example : [
-		// {xpath:'.', className: 'test-1', index: 0, targetXPathIndex: 0},
-		// {xpath: './.hello', className: 'test-2', index: 0, targetXPathIndex: 0}
+		// {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
+		// {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
 		//]
 		this.configGroups[index].customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ?  options.defaultConfig.customClasses : []);
 
@@ -137,6 +126,11 @@ var SezzleJS = function(options) {
 			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
 			this.configGroups[index].imageClassName = 'szl-light-image';
 		}
+
+		// variables set by the JS
+		this.configGroups[index].productPrice = null;
+		this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
+
     }.bind(this));
 
 	// properties that do not belong to a config group
@@ -148,20 +142,28 @@ var SezzleJS = function(options) {
 	// if doing widget with both Sezzle or quadpay - the modal to display:
 	this.qpModalHTML = options.qpModalHTML || '';
 
+	this.hideElements = options.hideElements || [];
+		if (typeof (this.hideElements) === 'string') {
+			// Only one x-path is given
+			this.hideElements = [Helper.breakXPath(this.hideElements.trim())];
+		} else {
+			// this.hideElements is an array of x-paths
+			this.hideElements = this.hideElements.map(function (path) {
+				return Helper.breakXPath(path.trim());
+			}.bind(this));
+		}
+
 	// Non configurable options
 	this._config = { attributes: true, childList: true, characterData: true };
 	// URL to request to get ip of request
 	this.countryFromIPRequestURL = 'https://geoip.sezzle.com/v1/geoip/ipdetails';
 	// URL to request to get css details
 	this.cssForMerchantURL = 'https://widget.sezzle.com/v1/css/price-widget?uuid=' + this.merchantID;
-	//private boolean variable set to true if widget is to be rendered as first child of the parent
-	this.widgetIsFirstChild = false;
 
 	// Variables set by the js
 	this.countryCode = null;
 	this.ip = null;
 	this.fingerprint = null;
-	this.productPrice = null;
 }
 
 /**
@@ -258,17 +260,18 @@ SezzleJS.prototype.loadCSS = function (callback) {
 /**
  * Add CSS alignment class as required based on the viewport width
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.addCSSAlignment = function (element) {
+SezzleJS.prototype.addCSSAlignment = function (element, configGroupIndex) {
 	var newAlignment = '';
-	if (matchMedia && this.alignmentSwitchMinWidth && this.alignmentSwitchType) {
-		var queryString = '(min-width: ' + this.alignmentSwitchMinWidth + 'px)';
+	if (matchMedia && this.configGroups[configGroupIndex].alignmentSwitchMinWidth && this.configGroups[configGroupIndex].alignmentSwitchType) {
+		var queryString = '(min-width: ' + this.configGroups[configGroupIndex].alignmentSwitchMinWidth + 'px)';
 		var mq = window.matchMedia(queryString);
 		if (!mq.matches) {
-			newAlignment = this.alignmentSwitchType
+			newAlignment = this.confiGroups[configGroupIndex].alignmentSwitchType
 		}
 	}
-	switch (newAlignment || this.alignment) {
+	switch (newAlignment || this.configGroups[configGroupIndex].alignment) {
 		case 'left':
 			element.className += ' sezzle-left';
 			break;
@@ -309,46 +312,50 @@ SezzleJS.prototype.guessWidgetAlignment = function (priceElement) {
 /**
  * Add CSS fonts styling as required
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.addCSSFontStyle = function (element) {
-	if (this.fontWeight) {
-		element.style.fontWeight = this.fontWeight;
+SezzleJS.prototype.addCSSFontStyle = function (element, configGroupIndex) {
+	if (this.configGroups[configGroupIndex].fontWeight) {
+		element.style.fontWeight = this.configGroups[configGroupIndex].fontWeight;
 	}
-	if (this.fontFamily) {
-		element.style.fontFamily = this.fontFamily;
+	if (this.configGroups[configGroupIndex].fontFamily) {
+		element.style.fontFamily = this.configGroups[configGroupIndex].fontFamily;
 	}
-	if (this.fontSize != 'inherit') {
-		element.style.fontSize = this.fontSize + 'px';
+	if (this.configGroups[configGroupIndex].fontSize != 'inherit') {
+		element.style.fontSize = this.configGroups[configGroupIndex].fontSize + 'px';
 	}
 }
 
 /**
  * Add CSS width class as required
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
 
-SezzleJS.prototype.addCSSWidth = function (element) {
-	if (this.maxWidth) {
-		element.style.maxWidth = this.maxWidth + 'px';
+SezzleJS.prototype.addCSSWidth = function (element, configGroupIndex) {
+	if (this.configGroups[configGroupIndex].maxWidth) {
+		element.style.maxWidth = this.configGroups[configGroupIndex].maxWidth + 'px';
 	}
 }
 
 /**
  * Add CSS text color as required
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.addCSSTextColor = function (element) {
-	if (this.textColor) {
-		element.style.color = this.textColor;
+SezzleJS.prototype.addCSSTextColor = function (element, configGroupIndex) {
+	if (this.configGroups[configGroupIndex].textColor) {
+		element.style.color = this.configGroups[configGroupIndex].textColor;
 	}
 }
 
 /**
  * Add CSS theme class as required
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.addCSSTheme = function (element) {
-	switch (this.theme) {
+SezzleJS.prototype.addCSSTheme = function (element, configGroupIndex) {
+	switch (this.configGroups[configGroupIndex].theme) {
 		case 'dark':
 			element.className += ' szl-dark';
 			break;
@@ -361,13 +368,14 @@ SezzleJS.prototype.addCSSTheme = function (element) {
 /**
  * Add CSS customisation class as required
  * @param element Element to add to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.addCSSCustomisation = function (element) {
-	this.addCSSAlignment(element);
-	this.addCSSFontStyle(element);
-	this.addCSSTextColor(element);
-	this.addCSSTheme(element);
-	this.addCSSWidth(element);
+SezzleJS.prototype.addCSSCustomisation = function (element, configGroupIndex) {
+	this.addCSSAlignment(element, configGroupIndex);
+	this.addCSSFontStyle(element, configGroupIndex);
+	this.addCSSTextColor(element, configGroupIndex);
+	this.addCSSTheme(element), configGroupIndex;
+	this.addCSSWidth(element, configGroupIndex);
 }
 
 /**
@@ -381,9 +389,10 @@ SezzleJS.prototype.insertStoreCSSClassInElement = function (element) {
 /**
  * Insert css class name in element
  * @param element to add class to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.insertWidgetTypeCSSClassInElement = function (element) {
-	switch (this.widgetType) {
+SezzleJS.prototype.insertWidgetTypeCSSClassInElement = function (element, configGroupIndex) {
+	switch (this.configGroups[configGroupIndex].widgetType) {
 		case 'cart':
 			element.className += ' sezzle-cart-page-widget';
 			break;
@@ -402,26 +411,28 @@ SezzleJS.prototype.insertWidgetTypeCSSClassInElement = function (element) {
 /**
  * Set the top and bottom margins of element
  * @param element to set margins to
+ * @param configGroupIndex index of the config group that element belongs to
  */
-SezzleJS.prototype.setElementMargins = function (element) {
-	element.style.marginTop = this.marginTop + 'px';
-	element.style.marginBottom = this.marginBottom + 'px';
-	element.style.marginRight = this.marginRight + 'px';
-	element.style.marginLeft = this.marginLeft + 'px';
+SezzleJS.prototype.setElementMargins = function (element, configGroupIndex) {
+	element.style.marginTop = this.configGroups[configGroupIndex].marginTop + 'px';
+	element.style.marginBottom = this.configGroups[configGroupIndex].marginBottom + 'px';
+	element.style.marginLeft = this.configGroups[configGroupIndex].marginLeft + 'px';
+	element.style.marginRight = this.configGroups[configGroupIndex].marginRight + 'px';
 }
 
-/*
+/**
  * Scale the element size using CSS transforms
  * The transform origin is set to 'top {this.alignment}'
  * scale() scales the element appropriately, maintaining the aspect ratio
  * @param element - element to set the size to
+ * @param configGroupIndex - index of the config group that element belongs to
  * @return void
 */
-SezzleJS.prototype.setWidgetSize = function (element) {
+SezzleJS.prototype.setWidgetSize = function (element, configGroupIndex) {
 	element.style.transformOrigin = 'top ' + this.alignment;
 	element.style.transform = 'scale(' + this.scaleFactor + ')';
-	if (this.fixedHeight) {
-		element.style.height = this.fixedHeight + 'px';
+	if (this.configGroups[configGroupIndex].fixedHeight) {
+		element.style.height = this.configGroups[configGroupIndex].fixedHeight + 'px';
 		element.style.overflow = 'hidden';
 	}
 }
@@ -430,14 +441,16 @@ SezzleJS.prototype.setWidgetSize = function (element) {
  * This function will set Sezzle's elements with
  * the price element in parallel
  * @param element - This is the price element
+ * @param renderelement Element to render the widget to
  * @param index - Index of the element in the page
+ * @param configGroupIndex Index of the config group
  * @return void
  */
-SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index, targetXPathIndex) {
+SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index, configGroupIndex) {
 	var index = index || 0;
 
 	// Do not render this product if it is not eligible
-	if (!this.isProductEligible(element.textContent)) return false;
+	if (!this.isProductEligible(element.textContent, configGroupIndex)) return false;
 	// Do not render if sezzle ignored price element
 	if (element.classList.contains('sezzle-ignored-price-element')) return false;
 	// Set data index to each price element for tracking
@@ -445,10 +458,10 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	// Get element to be rendered with sezzle's widget
 	var parent = renderelement;
 
-	//get the alignment of the widget (if widgetAlignment is auto)
+	// get the alignment of the widget (if widgetAlignment is auto)
 	// the alignment, when set to auto follows the text-align property of the price element
-	if (this.alignment === 'auto') {
-		this.alignment = this.guessWidgetAlignment(element);
+	if (this.configGroups[configGroupIndex].alignment === 'auto') {
+		this.configGroups[configGroupIndex].alignment = this.guessWidgetAlignment(element);
 	}
 
 	// root node for sezzle
@@ -456,31 +469,32 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	// TODO: why there is a shopify specific naming
 	sezzle.className = `sezzle-shopify-info-button sezzlewidgetindex-${index}`;
 
-	if (this.ABTestClass) {
-		sezzle.className += this.ABTestClass;
-	}
+	// not set in the config currently
+	//if (this.ABTestClass) {
+	//	sezzle.className += this.ABTestClass;
+	//}
 
-	this.insertWidgetTypeCSSClassInElement(sezzle);
+	this.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
 	this.insertStoreCSSClassInElement(sezzle);
-	this.setElementMargins(sezzle);
-	this.setWidgetSize(sezzle);
+	this.setElementMargins(sezzle, configGroupIndex);
+	this.setWidgetSize(sezzle, configGroupIndex);
 
 	var node = document.createElement('div');
 	node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
 	node.style.cursor = 'pointer';
 	this.insertStoreCSSClassInElement(node);
-	this.addCSSAlignment(node);
+	this.addCSSAlignment(node, configGroupIndex);
 
 	var sezzleButtonText = document.createElement('div');
 	sezzleButtonText.className = 'sezzle-button-text';
-	this.addCSSCustomisation(sezzleButtonText);
+	this.addCSSCustomisation(sezzleButtonText, configGroupIndex);
 
 	this.widgetTemplate.forEach(function (subtemplate) {
 		switch (subtemplate) {
 			case 'price':
 				var priceSpanNode = document.createElement('span');
 				priceSpanNode.className = 'sezzle-payment-amount sezzle-button-text sezzleindex-' + index;
-				var priceValueText = document.createTextNode(this.getFormattedPrice(element));
+				var priceValueText = document.createTextNode(this.getFormattedPrice(element, configGroupIndex));
 				priceSpanNode.appendChild(priceValueText);
 				sezzleButtonText.appendChild(priceSpanNode);
 				break;
@@ -488,7 +502,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 			case 'logo':
 				var logoNode = document.createElement('img');
 				logoNode.className = 'sezzle-logo ' + this.imageClassName;
-				logoNode.src = this.imageURL;
+				logoNode.src = this.configGroups[configGroupIndex].imageURL;
 				sezzleButtonText.appendChild(logoNode);
 				break;
 			// changed from learn-more to link as that is what current altVersionTemplates use
@@ -577,11 +591,11 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 			case 'price-split':
 				var priceSplitNode = document.createElement('span');
 				priceSplitNode.className = 'sezzle-payment-amount sezzle-price-split sezzleindex-' + index;
-				var priceElemTexts = element.textContent.split(this.splitPriceElementsOn);
+				var priceElemTexts = element.textContent.split(this.configGroups[configGroupIndex].splitPriceElementsOn);
 				var priceSplitText = '';
 				if (priceElemTexts.length == 1) { //if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
 					//give the original element in the case there might be some ignored elements present
-					priceSplitText = this.getFormattedPrice(element);
+					priceSplitText = this.getFormattedPrice(element, configGroupIndex);
 				} else {
 					var priceElems = [];
 					priceElemTexts.forEach(function (text) {
@@ -591,9 +605,9 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 					});
 					priceElems.forEach(function (elem, index) {
 						if (index == 0) {
-							priceSplitText = this.getFormattedPrice(elem);
+							priceSplitText = this.getFormattedPrice(elem, configGroupIndex);
 						} else {
-							priceSplitText = priceSplitText + ' ' + this.splitPriceElementsOn + ' ' + this.getFormattedPrice(elem);
+							priceSplitText = priceSplitText + ' ' + this.configGroups[configGroupIndex].splitPriceElementsOn + ' ' + this.getFormattedPrice(elem, configGroupIndex);
 						}
 					}.bind(this));
 				}
@@ -620,15 +634,15 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	// Adding main node to sezzel node
 	sezzle.appendChild(node);
 
-	this.customClasses.forEach(function(customClass) {
+	this.configGroups[configGroupIndex].customClasses.forEach(function(customClass) {
 		if (customClass.xpath && customClass.className) {
 			if (typeof(customClass.index) !== 'number') {
 				customClass.index = -1; // set the default value
 			}
-			if (typeof(customClass.targetXPathIndex) !== 'number') {
-				customClass.targetXPathIndex = -1; // set the default value
+			if (typeof(customClass.configGroupIndex) !== 'number') {
+				customClass.configGroupIndex = -1; // set the default value
 			}
-			if (customClass.index === index || customClass.targetXPathIndex === targetXPathIndex) {
+			if (customClass.index === index || customClass.configGroupIndex === configGroupIndex) {
 				var path = Helper.breakXPath(customClass.xpath);
 				this.getElementsByXPath(path, 0, [sezzle])
 					.forEach(function(el) {
@@ -636,15 +650,15 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 					})
 			}
 		}
-	}.bind(this))
+	}.bind(this));
 
 	// Adding sezzle to parent node
-	if (this.widgetIsFirstChild) {
-		this.insertAsFirstChild(sezzle, parent);
+	if (this.configGroups[configGroupIndex].widgetIsFirstChild) {
+		Helper.insertAsFirstChild(sezzle, parent);
 	} else {
-		this.insertAfter(sezzle, parent);
+		Helper.insertAfter(sezzle, parent);
 	}
-	this.logEvent('onload');
+	this.logEvent('onload', configGroupIndex);
 	return sezzle;
 }
 
@@ -654,21 +668,21 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
  * of the given price element. If the over ride path is found and
  * it leads to a valid element then that element will be returned
  * @param element - This is the price element
- * @param index - Index of the price element in this.xpath array
+ * @param index - Index of the config group that element belongs to
  * @return the element where Sezzle's widget will be rendered
  */
 SezzleJS.prototype.getElementToRender = function (element, index) {
 	var index = index || 0;
 	var toRenderElement = null;
 
-	if (this.rendertopath[index] !== null) {
-		var path = Helper.breakXPath(this.rendertopath[index]);
+	if (this.configGroups[index].rendertopath !== null) {
+		var path = Helper.breakXPath(this.configGroups[index].rendertopath);
 		var toRenderElement = element;
 
 		for (var i = 0; i < path.length; i++) {
 			var p = path[i];
 
-			if (toRenderElement == null) {
+			if (toRenderElement === null) {
 				break;
 			} else if (p === '.') {
 				continue;
@@ -691,7 +705,7 @@ SezzleJS.prototype.getElementToRender = function (element, index) {
 					toRenderElement.children.length > 0 ?
 						toRenderElement.firstElementChild :
 						null;
-				this.widgetIsFirstChild = true;
+				this.configGroups[index].widgetIsFirstChild = true;
 			} else {
 				// If this is a tag
 				// indexes are 0-indexed (e.g. span-2 means third span)
@@ -708,59 +722,29 @@ SezzleJS.prototype.getElementToRender = function (element, index) {
 			}
 		}
 	}
-	if (toRenderElement === null) {
-		// No path defined
-		// return the parent elelment
-		return element.parentElement;
-	}
-	return toRenderElement;
-}
-
-/**
- * Insert child after a given element
- * @param el Element to insert
- * @param referenceNode Element to insert after
- */
-SezzleJS.prototype.insertAfter = function (el, referenceNode) {
-	referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
-}
-
-/**
- * Insert element as the first child of the parentElement of referenceElement
- * @param element Element to insert
- * @param referenceElement Element to grab parent element
- */
-SezzleJS.prototype.insertAsFirstChild = function (element, referenceElement) {
-	referenceElement.parentElement.insertBefore(element, referenceElement);
-	//bump up element above nodes which are not element nodes (if any)
-	while (element.previousSibling) {
-		element.parentElement.insertBefore(element, element.previousSibling);
-	}
+	return toRenderElement ? toRenderElement : element.parentElement; // return the element's parent if toRenderElement is null
 }
 
 /**
  * Is the product eligible for sezzle pay
  * @param price Price of product
  */
-SezzleJS.prototype.isProductEligible = function (priceText) {
+SezzleJS.prototype.isProductEligible = function (priceText, configGroupIndex) {
 	var price = Helper.parsePrice(priceText);
-	this.productPrice = price;
+	this.configGroups[configGroupIndex].productPrice = price;
 	var priceInCents = price * 100;
-	if (priceInCents >= this.minPrice && priceInCents <= this.maxPrice) {
-		return true;
-	}
-	return false;
+	return priceInCents >= this.configGroups[configGroupIndex].minPrice && priceInCents <= this.configGroups[configGroupIndex].maxPrice;
 }
 
 /**
  * Gets price text
  * @param element Element that contains the price text
  */
-SezzleJS.prototype.getPriceText = function (element) {
-	if (this.ignoredPriceElements == []) {
+SezzleJS.prototype.getPriceText = function (element, configGroupIndex) {
+	if (this.configGroups[configGroupIndex].ignoredPriceElements == []) {
 		return element.textContent;
 	} else {
-		this.ignoredPriceElements.forEach(function (subpaths) {
+		this.configGroups[configGroupIndex].ignoredPriceElements.forEach(function (subpaths) {
 			// get all elements pointed to by the xPath. Search is rooted at element
 			this.getElementsByXPath(subpaths, 0, [element]).forEach(function (ignoredPriceElement) {
 				//mark the element to be ignored
@@ -774,6 +758,7 @@ SezzleJS.prototype.getPriceText = function (element) {
 		return element.textContent;
 	}
 
+	// deep clone
 	var clone = element.cloneNode(true);
 
 	//remove all marked elements
@@ -795,8 +780,8 @@ SezzleJS.prototype.getPriceText = function (element) {
  * Formats a price as Sezzle needs it
  * @param element Element that contains price text
  */
-SezzleJS.prototype.getFormattedPrice = function (element) {
-	priceText = this.getPriceText(element);
+SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
+	priceText = this.getPriceText(element, configGroupIndex);
 
 	// Get the price string - useful for formtting Eg: 120.00(string)
 	var priceString = Helper.parsePriceString(priceText, true);
@@ -834,12 +819,12 @@ SezzleJS.prototype.getFormattedPrice = function (element) {
  * given DOM element (Price element in our case)
  * and act on that
  */
-SezzleJS.prototype.mutationCallBack = function (mutations) {
+SezzleJS.prototype.mutationCallBack = function (mutations, configGroupIndex) {
 	mutations
 		.filter(function (mutation) { return mutation.type === 'childList' })
 		.forEach(function (mutation) {
 			var priceIndex = mutation.target.dataset.sezzleindex;
-			var price = this.getFormattedPrice(mutation.target);
+			var price = this.getFormattedPrice(mutation.target, configGroupIndex);
 			var sezzlePriceElement = document.getElementsByClassName('sezzleindex-' + priceIndex)[0];
 			if (!/\d/.test(price)) {
 				sezzlePriceElement.parentElement.parentElement.parentElement.classList.add('sezzle-hidden');
@@ -962,7 +947,7 @@ SezzleJS.prototype.renderQPModal = function () {
  * This function add events to the button in sezzle widget
  * to open the modal
  */
-SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
+SezzleJS.prototype.addClickEventForModal = function(sezzleElement, configGroupIndex) {
 	var modalLinks = sezzleElement.getElementsByClassName('sezzle-modal-link');
 	Array.prototype.forEach.call(modalLinks, function (modalLink) {
 		modalLink.addEventListener('click', function (event) {
@@ -973,7 +958,7 @@ SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
 				// Remove hidden class to show the item
 				modalNode.getElementsByClassName('sezzle-modal')[0].className = 'sezzle-modal';
 				// log on click event
-				this.logEvent('onclick');
+				this.logEvent('onclick', configGroupIndex);
 			}
 		}.bind(this));
 	}.bind(this));
@@ -985,7 +970,7 @@ SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
 			// Show modal node
 			document.getElementsByClassName('sezzle-ap-modal')[0].style.display = 'block';
 			// log on click event
-			this.logEvent('onclick-afterpay');
+			this.logEvent('onclick-afterpay', configGroupIndex);
 		}.bind(this));
 	}.bind(this));
 
@@ -996,7 +981,7 @@ SezzleJS.prototype.addClickEventForModal = function(sezzleElement) {
 			// Show modal node
 			document.getElementsByClassName('sezzle-qp-modal')[0].style.display = 'block';
 			// log on click event
-			this.logEvent('onclick-quadpay');
+			this.logEvent('onclick-quadpay', configGroupIndex);
 		}.bind(this));
 	}.bind(this));
 }
@@ -1013,9 +998,7 @@ SezzleJS.prototype.getCountryCodeFromIP = function (callback) {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
 				var body = httpRequest.response;
-				if (typeof body === 'string') {
-					body = JSON.parse(body);
-				}
+				if (typeof body === 'string') body = JSON.parse(body);
 				this.countryCode = body.country_iso_code;
 				this.ip = body.ip;
 				callback(this.countryCode);
@@ -1075,7 +1058,7 @@ SezzleJS.prototype.hideSezzleHideElements = function () {
 /*
 * Log Event
 */
-SezzleJS.prototype.logEvent = function (eventName) {
+SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
 	// We only log event when it's allowed to
 	if (document.sezzleConfig && !document.sezzleConfig.noTracking) {
 		var viewport = {
@@ -1083,12 +1066,12 @@ SezzleJS.prototype.logEvent = function (eventName) {
 			height: null
 		};
 		try {
-				if (screen && screen.width) {
-					viewport.width = screen.width;
-				}
-				if (screen && screen.height) {
-					viewport.height = screen.height;
-				}
+			if (screen && screen.width) {
+				viewport.width = screen.width;
+			}
+			if (screen && screen.height) {
+				viewport.height = screen.height;
+			}
 
 		} catch(error) {
 			// unable to fetch viewport dimensions
@@ -1102,7 +1085,7 @@ SezzleJS.prototype.logEvent = function (eventName) {
 		if (win) {
 			var cartId = this.getCookie('cart');
 			var merchantID = this.merchantID;
-			var productPrice = this.productPrice;
+			var productPrice = configGroupIndex !== undefined ? this.configGroups[i].productPrice : null;
 			var isMobileBrowser = this.isMobileBrowser();
 			var ip = this.ip;
 			setTimeout(function () {
@@ -1181,7 +1164,7 @@ SezzleJS.prototype.init = function () {
 					if (win && !document.sezzleConfig.noGtm) {
 						setTimeout(function () {
 							win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
-						},100)
+						},100);
 					}
 				}
 			}
@@ -1250,22 +1233,24 @@ SezzleJS.prototype.initWidget = function () {
 						toRenderElement: this.getElementToRender(e, index),
 						deleted: false,
 						observer: null,
-						targetXPathIndex: index
+						configGroupIndex: index
 					});
 				}
-			}.bind(this))
+			}.bind(this));
 		}.bind(this));
 		// add the sezzle widget to the price elements
 		els.forEach(function (el, index) {
 			if (!el.element.hasAttribute('data-sezzleindex')) {
 				var sz = this.renderAwesomeSezzle(
 					el.element, el.toRenderElement,
-					index, el.targetXPathIndex
+					index, el.configGroupIndex
 				);
 				if (sz) {
-					el.observer = this.startObserve(el.element, this.mutationCallBack.bind(this));
-					this.addClickEventForModal(sz);
-					this.observeRelatedElements(el.element, sz, this.relatedElementActions[el.targetXPathIndex]);
+					el.observer = this.startObserve(el.element, function(mutations) {
+						this.mutationCallBack.bind(this)(mutations, el.configGroupIndex);
+					});
+					this.addClickEventForModal(sz, el.configGroupIndex);
+					this.observeRelatedElements(el.element, sz, this.configGroups[el.configGroupIndex].relatedElementActions);
 				} else { // remove the element from the els array
 					delete els[index];
 				}
@@ -1297,18 +1282,19 @@ SezzleJS.prototype.initWidget = function () {
 		setTimeout(sezzleWidgetCheckInterval.bind(this), intervalInMs)
 	};
 
-	var allConfigsUsePriceElement = true;
+	var allConfigsUsePriceClassElement = true;
 	this.configGroups.forEach(function(configGroup, index) {
-		if (this.configGroups[i].hasPriceClassElement) {
-			var sz = this.renderAwesomeSezzle(this.priceElements[0], this.renderElements[0], 0, 0);
-			this.startObserve(this.priceElements[0], this.mutationCallBack.bind(this));
+		if (this.configGroups[index].hasPriceClassElement) {
+			var sz = this.renderAwesomeSezzle(this.configGroups[index].priceElements[0], this.configGroups[index].renderElements[0], 0, index);
+			this.startObserve(this.configGroups[index].priceElements[0], function(mutations) {
+				this.mutationCallBack.bind(this)(mutations, index);
+			});
 		} else {
-			allConfigsUsePriceElement = false;
+			allConfigsUsePriceClassElement = false;
 		}
 	}.bind(this)); 
 
-	if(!allConfigsUsePriceElement) sezzleWidgetCheckInterval.call(this);
-	
+	if(!allConfigsUsePriceClassElement) sezzleWidgetCheckInterval.call(this);
 }
 
 module.exports = SezzleJS;
