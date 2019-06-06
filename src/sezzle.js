@@ -51,7 +51,6 @@ var SezzleJS = function(options) {
 		this.configGroups[i].numberOfPayments = Math.floor(options.configGroups[i].numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
 		this.configGroups[i].forcedShow = options.configGroups[i].forcedShow || (options.defaultConfig && options.defaultConfig.forcedShow) || false;
 		this.configGroups[i].alignment = options.configGroups[i].alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
-		this.configGroups[i].merchantID = options.configGroups[i].merchantID || (options.defaultConfig && options.defaultConfig.merchantID) || '';
 		this.configGroups[i].widgetType = options.configGroups[i].widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
 		this.configGroups[i].minPrice = options.configGroups[i].minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
 		this.configGroups[i].maxPrice = options.configGroups[i].maxPrice || (options.defaultConfig && options.defaultConfig.maxPrice) || 250000;
@@ -138,6 +137,9 @@ var SezzleJS = function(options) {
 			this.configGroups[i].imageClassName = 'szl-light-image';
 		}
 	}
+
+	// properties that do not belong to a config group
+	this.merchantID = options.merchantID || '';
 
 	// Non configurable options
 	this._config = { attributes: true, childList: true, characterData: true };
