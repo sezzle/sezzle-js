@@ -9,7 +9,6 @@
  * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function(options) {
-  if(typeof options !== 'object') return null;
   if(typeof options.configGroups !== 'undefined') {
     if(Array.isArray(options.configGroups)) {
       splitConfig(options.configGroups);
@@ -124,4 +123,26 @@ exports.parsePriceString = function (price, includeComma) {
  */
 exports.parsePrice = function (price) {
   return parseFloat(this.parsePriceString(price, false));
+}
+
+/**
+ * Insert child after a given element
+ * @param el Element to insert
+ * @param referenceNode Element to insert after
+ */
+exports.insertAfter = function (el, referenceNode) {
+	referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+}
+
+/**
+ * Insert element as the first child of the parentElement of referenceElement
+ * @param element Element to insert
+ * @param referenceElement Element to grab parent element
+ */
+exports.insertAsFirstChild = function (element, referenceElement) {
+	referenceElement.parentElement.insertBefore(element, referenceElement);
+	//bump up element above nodes which are not element nodes (if any)
+	while (element.previousSibling) {
+		element.parentElement.insertBefore(element, element.previousSibling);
+	}
 }
