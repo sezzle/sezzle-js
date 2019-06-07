@@ -4,9 +4,8 @@ var sezzleConfig = require('./sezzle.config.json');
 
 describe('Backwards compatability function works as expected', () => {
   test('Properly converts old config structure to new config structure', () => {
-    const sz = new SezzleJS(sezzleConfig);
     // deep object comparison
-    expect(JSON.stringify(sz.new).toEqual(JSON.stringify(Helper.makeCompatible(sz.old))));
+    expect(JSON.stringify(sezzleConfig.new).toEqual(JSON.stringify(Helper.makeCompatible(sezzleConfig.old))));
   })
 })
 
