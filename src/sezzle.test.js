@@ -2,27 +2,39 @@ const SezzleJS = require('./sezzle');
 const Helper = require('./helper');
 var sezzleConfig = require('./sezzle.config.json');
 
+describe('Backwards compatability function works as expected', () => {
+  test('Properly converts old config structure to new config structure', () => {
+    const sz = new SezzleJS(sezzleConfig);
+    // deep object comparison
+    expect(JSON.stringify(sz.new).toEqual(JSON.stringify(Helper.makeCompatible(sz.old))));
+  })
+})
+
 describe('Constructor correctly sets the parameters', () => {
-  test('Properly sets xpath value when targetXPath is an array', () => {
-    const sz = new SezzleJS(sezzleConfig);
-    expect(sz.xpath).toEqual(
-      sezzleConfig.targetXPath.map((i) => Helper.breakXPath(i))
-    );
+  test('Properly sets xpath value when there are multiple configs in the configGroups array', () => {
+    const sz = new SezzleJS(sezzleConfig.new);
+    for(var i = 0, len = sezzleConfig.configGroups.length; i < len; i++) {
+      expect(sz.configGroups[i].xpath).toEqual(
+        sezzleConfig.configGroups[i].targetXPath.map((j) => Helper.breakXPath(j))
+      );
+    }
   })
 
-  test('Properly sets rendertopath value when renderToPath is an array', () => {
-    const sz = new SezzleJS(sezzleConfig);
-    expect(sz.rendertopath).toEqual(sezzleConfig.renderToPath);
+  test('Properly sets rendertopath value when there are multiple configs in the configGroups array', () => {
+    const sz = new SezzleJS(sezzleConfig.new);
+    for(var i = 0, len = sezzleConfig.configGroups.length; i < len; i++) {
+      expect(sz.configGroups[i].rendertopath).toEqual(sezzleConfig.new.configGroups[i].renderToPath);
+    }
   })
 
-  test('Properly sets xpath value when targetXPath is a string', () => {
-    const newConfig = {...sezzleConfig, ...{targetXPath: '#id/.class'}}
+  /*test('Properly sets xpath value when targetXPath is a string', () => { ==> targetXPath is always a string now. 
+    const newConfig = {...sezzleConfig, ...{targetXPath: '#id/.class'}}        This is redundant. Refer to test 1 
     const sz = new SezzleJS(newConfig);
     expect(sz.xpath).toEqual([Helper.breakXPath(newConfig.targetXPath)]);
   })
 
-  test('Properly sets rendertopath value when renderToPath is a string', () => {
-    const newConfig = {
+  test('Properly sets rendertopath value when renderToPath is a string', () => { ==> renderTopath is always a string now.
+    const newConfig = {                                                              This is redundant. Refer to test 2
       ...sezzleConfig,
       ...{
         renderToPath: '../..',
@@ -33,7 +45,7 @@ describe('Constructor correctly sets the parameters', () => {
     expect(sz.rendertopath).toEqual([newConfig.renderToPath]);
   })
 
-  test('Properly sets rendertopath value syncup with xpath', () => {
+  test('Properly sets rendertopath value syncup with xpath', () => {  ==> Redundant, not applicable anymore
     const newConfig = {
       ...sezzleConfig,
       ...{
@@ -42,7 +54,7 @@ describe('Constructor correctly sets the parameters', () => {
     };
     const sz = new SezzleJS(newConfig);
     expect(sz.rendertopath).toEqual([newConfig.renderToPath, null]);
-  })
+  }) */
 
   test(`Properly sets ignoredPriceElements ` +
       `value when options.ignoredPriceElements is` +
