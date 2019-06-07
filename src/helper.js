@@ -346,9 +346,9 @@ exports.makeCompatible = function(options) {
 	}
 
 	// split the configs up if necessary
-	options.configGroups = splitConfig(options.configGroups);
+	options.configGroups = exports.splitConfig(options.configGroups);
 	// place fields which do not belong in a group outside of configGroups
-	factorize(options);
+	exports.factorize(options);
 
 	// should we factorize common field values and place in defaultConfig? I don't think so
 	return options;
