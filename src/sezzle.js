@@ -4,7 +4,7 @@ var SezzleJS = function(options) {
 	if(!options) options = {};
 
 	// ensure options is compatible with current version
-	options = Helper.makeCompatible(options);
+	// options = Helper.makeCompatible(options);
 
 	// filter off config groups which do not match the current URL
 	options.configGroups = options.configGroups.filter(function(configGroup) {
@@ -99,10 +99,7 @@ var SezzleJS = function(options) {
 
 		if (this.configGroups[index].splitPriceElementsOn) {
 			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.map(function(subtemplate) {
-				if (subtemplate === 'price') {
-					return 'price-split';
-				}
-				return subtemplate;
+				return subtemplate === 'price' ? 'price-split' : subtemplate;
 			});
 		}
 
@@ -127,6 +124,17 @@ var SezzleJS = function(options) {
 			this.configGroups[index].imageClassName = 'szl-light-image';
 		}
 
+		this.configGroups[index].hideElements = configGroup.hideElements || (options.defaultConfig && options.defaultConfig.hideElements) || [];
+		if (typeof (this.configGroups[index].hideElements) === 'string') {
+			// Only one x-path is given
+			this.configGroups[index].hideElements = [Helper.breakXPath(this.configGroups[index].hideElements.trim())];
+		} else {
+			// this.configGroups[index].hideElements is an array of x-paths
+			this.configGroups[index].hideElements = this.configGroups[index].hideElements.map(function (path) {
+				return Helper.breakXPath(path.trim());
+			}.bind(this));
+		}
+
 		// variables set by the JS
 		this.configGroups[index].productPrice = null;
 		this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
@@ -141,17 +149,6 @@ var SezzleJS = function(options) {
 	this.apModalHTML = options.apModalHTML || '';
 	// if doing widget with both Sezzle or quadpay - the modal to display:
 	this.qpModalHTML = options.qpModalHTML || '';
-
-	this.hideElements = options.hideElements || [];
-		if (typeof (this.hideElements) === 'string') {
-			// Only one x-path is given
-			this.hideElements = [Helper.breakXPath(this.hideElements.trim())];
-		} else {
-			// this.hideElements is an array of x-paths
-			this.hideElements = this.hideElements.map(function (path) {
-				return Helper.breakXPath(path.trim());
-			}.bind(this));
-		}
 
 	// Non configurable options
 	this._config = { attributes: true, childList: true, characterData: true };
@@ -1044,8 +1041,8 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
 /**
  * Hide elements pointed to by this.hideElements
  */
-SezzleJS.prototype.hideSezzleHideElements = function () {
-	this.hideElements.forEach(function (subpaths) {
+SezzleJS.prototype.hideSezzleHideElements = function (configGroupIndex) {
+	this.configGroups[confifgGroupIndex].hideElements.forEach(function (subpaths) {
 		this.getElementsByXPath(subpaths).forEach(function (element) {
 			if (!element.classList.contains('sezzle-hidden')) {
 				element.classList.add('sezzle-hidden');
@@ -1276,17 +1273,21 @@ SezzleJS.prototype.initWidget = function () {
 					sw.parentElement.removeChild(sw);
 				}
 			}
-		})
+		});
+
 		// Hide elements ex: afterpay
-		this.hideSezzleHideElements();
+		for(var index = 0, len = this.configGroups.length; index < len; index++) {
+			this.hideSezzleHideElements(index);
+		}
+
 		setTimeout(sezzleWidgetCheckInterval.bind(this), intervalInMs)
 	};
 
 	var allConfigsUsePriceClassElement = true;
 	this.configGroups.forEach(function(configGroup, index) {
-		if (this.configGroups[index].hasPriceClassElement) {
-			var sz = this.renderAwesomeSezzle(this.configGroups[index].priceElements[0], this.configGroups[index].renderElements[0], 0, index);
-			this.startObserve(this.configGroups[index].priceElements[0], function(mutations) {
+		if (configGroup.hasPriceClassElement) {
+			var sz = this.renderAwesomeSezzle(configGroup.priceElements[0], configGroup.renderElements[0], 0, index);
+			this.startObserve(configGroup.priceElements[0], function(mutations) {
 				this.mutationCallBack.bind(this)(mutations, index);
 			});
 		} else {
