@@ -1,14 +1,16 @@
-var Helper = require('./helper');
+// var Helper = require('./helper');
+
+var Helper = new Helper();
 
 var SezzleJS = function(options) {
 	if(!options) options = {};
 
 	// ensure options is compatible with current version
-	// options = Helper.makeCompatible(options);
+	options = Helper.makeCompatible(options);
 
 	// filter off config groups which do not match the current URL
 	options.configGroups = options.configGroups ? options.configGroups.filter(function(configGroup) {
-		// if no URL match is provided, consider the group
+		// if no URL match is provided, consider the group for backwards compatability reasons
 		return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
 	}) : [];
 
@@ -22,7 +24,7 @@ var SezzleJS = function(options) {
 		// it is like an ID for a configGroup (except if adding the price element class is used)
 		this.configGroups[index].xpath = Helper.breakXPath(configGroup.targetXPath) || [];
 
-		this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || "..";
+		this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
 
 		// This array in which its elements are objects with two keys
 		// relatedPath - this is a xpath of an element related to the price element
@@ -1298,4 +1300,4 @@ SezzleJS.prototype.initWidget = function () {
 	if(!allConfigsUsePriceClassElement) sezzleWidgetCheckInterval.call(this);
 }
 
-module.exports = SezzleJS;
+// module.exports = SezzleJS;
