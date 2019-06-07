@@ -1,4 +1,6 @@
-var Helper = require('./helper');
+// var Helper = require('./helper');
+
+var Helper = new Helper();
 
 var SezzleJS = function (options) {
   if (!options) options = {};
@@ -1206,4 +1208,4 @@ SezzleJS.prototype.initWidget = function () {
   if (!allConfigsUsePriceClassElement) sezzleWidgetCheckInterval.call(this);
 }
 
-module.exports = SezzleJS;
+// module.exports = SezzleJS;
