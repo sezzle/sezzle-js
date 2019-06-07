@@ -7,10 +7,10 @@ var SezzleJS = function(options) {
 	// options = Helper.makeCompatible(options);
 
 	// filter off config groups which do not match the current URL
-	options.configGroups = options.configGroups.filter(function(configGroup) {
-		// if no URL match, have to consider the group for backwards compatability
+	options.configGroups = options.configGroups ? options.configGroups.filter(function(configGroup) {
+		// if no URL match is provided, consider the group
 		return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
-	})
+	}) : [];
 
 	this.configGroups = [];
 	options.configGroups.forEach(function(configGroup, index) {
@@ -22,7 +22,7 @@ var SezzleJS = function(options) {
 		// it is like an ID for a configGroup (except if adding the price element class is used)
 		this.configGroups[index].xpath = Helper.breakXPath(configGroup.targetXPath) || [];
 
-		this.configGroups[index].renderToPath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
+		this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || "..";
 
 		// This array in which its elements are objects with two keys
 		// relatedPath - this is a xpath of an element related to the price element
@@ -73,8 +73,6 @@ var SezzleJS = function(options) {
 		this.configGroups[index].splitPriceElementsOn = configGroup.splitPriceElementsOn || (options.defaultConfig && options.defaultConfig.splitPriceElementsOn) || '';
 		// after pay link
 		this.configGroups[index].apLink = configGroup.apLink || (options.defaultConfig && options.defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
-		// countries widget should show in
-		this.configGroups[index].supportedCountryCodes = configGroup.supportedCountryCodes || (options.defaultConfig && options.defaultConfig.supportedCountryCodes) || ['US', 'IN', 'CA'];
 		// This option is to render custom class in sezzle widget
 		// This option contains an array of objects
 		// each of the objects should have two properties
@@ -93,7 +91,7 @@ var SezzleJS = function(options) {
 		if (this.configGroups[index].widgetTemplate) {
 			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.split('%%');
 		} else {
-			var defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
+			var defaultWidgetTemplate = 'or ' + this.configGroups[index].numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
 			this.configGroups[index].widgetTemplate = defaultWidgetTemplate.split('%%');
 		}
 
@@ -115,7 +113,7 @@ var SezzleJS = function(options) {
 			this.configGroups[index].hasPriceClassElement = true;
 		}
 
-		this.configGroups[index].theme = configGroup.theme || '';
+		this.configGroups[index].theme = configGroup.theme || 'light';
 		if (this.configGroups[index].theme == 'dark') {
 			this.configGroups[index].imageURL = configGroup.imageURL || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
 			this.configGroups[index].imageClassName = 'szl-dark-image';
@@ -149,6 +147,8 @@ var SezzleJS = function(options) {
 	this.apModalHTML = options.apModalHTML || '';
 	// if doing widget with both Sezzle or quadpay - the modal to display:
 	this.qpModalHTML = options.qpModalHTML || '';
+	// countries widget should show in
+	this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
 
 	// Non configurable options
 	this._config = { attributes: true, childList: true, characterData: true };
@@ -371,7 +371,7 @@ SezzleJS.prototype.addCSSCustomisation = function (element, configGroupIndex) {
 	this.addCSSAlignment(element, configGroupIndex);
 	this.addCSSFontStyle(element, configGroupIndex);
 	this.addCSSTextColor(element, configGroupIndex);
-	this.addCSSTheme(element), configGroupIndex;
+	this.addCSSTheme(element, configGroupIndex);
 	this.addCSSWidth(element, configGroupIndex);
 }
 
@@ -486,7 +486,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	sezzleButtonText.className = 'sezzle-button-text';
 	this.addCSSCustomisation(sezzleButtonText, configGroupIndex);
 
-	this.widgetTemplate.forEach(function (subtemplate) {
+	this.configGroups[configGroupIndex].widgetTemplate.forEach(function (subtemplate) {
 		switch (subtemplate) {
 			case 'price':
 				var priceSpanNode = document.createElement('span');
@@ -498,7 +498,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 
 			case 'logo':
 				var logoNode = document.createElement('img');
-				logoNode.className = 'sezzle-logo ' + this.imageClassName;
+				logoNode.className = 'sezzle-logo ' + this.configGroups[configGroupIndex].imageClassName;
 				logoNode.src = this.configGroups[configGroupIndex].imageURL;
 				sezzleButtonText.appendChild(logoNode);
 				break;
@@ -548,7 +548,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 
 			case 'afterpay-link-icon':
 				var apAnchor = document.createElement('a');
-				apAnchor.href = this.apLink;
+				apAnchor.href = this.configGroups[configGroupIndex].apLink;
 				apAnchor.target = '_blank';
 				var apLinkIconNode = document.createElement('code');
 				apLinkIconNode.className = 'ap-info-link';
@@ -802,7 +802,7 @@ SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
 	}.bind(this));
 
 	// get the sezzle installment price
-	var sezzleInstallmentPrice = (price / this.numberOfPayments).toFixed(2);
+	var sezzleInstallmentPrice = (price / this.configGroups[configGroupIndex].numberOfPayments).toFixed(2);
 
 	// format the string
 	var sezzleInstallmentFormattedPrice = formatter.replace('{price}', sezzleInstallmentPrice);
@@ -1042,7 +1042,7 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
  * Hide elements pointed to by this.hideElements
  */
 SezzleJS.prototype.hideSezzleHideElements = function (configGroupIndex) {
-	this.configGroups[confifgGroupIndex].hideElements.forEach(function (subpaths) {
+	this.configGroups[configGroupIndex].hideElements.forEach(function (subpaths) {
 		this.getElementsByXPath(subpaths).forEach(function (element) {
 			if (!element.classList.contains('sezzle-hidden')) {
 				element.classList.add('sezzle-hidden');
@@ -1217,7 +1217,7 @@ SezzleJS.prototype.initWidget = function () {
 		if (document.getElementsByClassName('quadpay-modal-info-link').length > 0) {
 			this.renderQPModal();
 		}
-	})(); // Note: this function is called here
+	}.bind(this))(); // Note: this function is called here
 
 	function sezzleWidgetCheckInterval() {
 		// Look for newly added price elements
