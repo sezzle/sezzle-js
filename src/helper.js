@@ -1,3 +1,5 @@
+var cloneDeep = require('lodash.clonedeep')
+
 /**
  * This is a helper function to ensure that
  * the options passed into SezzleJS'
@@ -13,7 +15,7 @@ exports.makeCompatible = function(options) {
 		// most likely old config, must wrap it in config group
 		// deep clone to prevent circular structure
 		options = {
-			configGroups: [JSON.parse(JSON.stringify(options))]
+			configGroups: [cloneDeep(options)]
 		};
 	}
 
@@ -57,7 +59,7 @@ exports.splitConfig = function(configGroups) {
 			// break up the array, starting from the first element
 			group.targetXPath.forEach(function(xpath, inner) {
 				// deep clone as config may have nested objects
-				var config = JSON.parse(JSON.stringify(group));
+				var config = cloneDeep(group);
 
 				// overwrite targetXPath
 				config.targetXPath = xpath;
