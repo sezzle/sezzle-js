@@ -47,5 +47,13 @@
     "webpack-stream": "^5.2.1",
     "yargs": "^12.0.5"
   },
-  "keywords": ["sezzle", "merchant", "js", "widget"]
+  "keywords": [
+    "sezzle",
+    "merchant",
+    "js",
+    "widget"
+  ],
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0"
+  }
 }
