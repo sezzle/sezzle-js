@@ -11,7 +11,7 @@ var cloneDeep = require('lodash.clonedeep')
  * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function(options) {
-  	if(typeof (options.configGroups) === 'undefined') {
+  if(typeof (options.configGroups) === 'undefined') {
 		// most likely old config, must wrap it in config group
 		// deep clone to prevent circular structure
 		options = {
@@ -38,60 +38,66 @@ exports.splitConfig = function(configGroups) {
 	var res = [];
 
 	configGroups.forEach(function(group, outer) {
-		if(typeof (group.targetXPath)!== 'undefined' && Array.isArray(group.targetXPath)) {
-			// need to ensure it's array and not string so that code doesnt mistakenly separate chars
-			let renderToPathIsArray = Array.isArray(group.renderToPath);
+		if(typeof (group.targetXPath)!== 'undefined') {
+			// everything revolves around an xpath
+			if(Array.isArray(group.targetXPath)) {
+				// need to ensure it's array and not string so that code doesnt mistakenly separate chars
+				let renderToPathIsArray = Array.isArray(group.renderToPath);
 
-			// group up custom classes according to index
-			let groupedCustomClasses = [];
-			group.customClasses.forEach(function(customClass) {
-				if(typeof (customClass.targetXPathIndex) === 'number') {
-					if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
-						groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
-					} else {
-						groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
+				// group up custom classes according to index
+				let groupedCustomClasses = [];
+				group.customClasses.forEach(function(customClass) {
+					if(typeof (customClass.targetXPathIndex) === 'number') {
+						if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
+							groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
+						} else {
+							groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
+						}
+						delete customClass.targetXPathIndex;
 					}
-					delete customClass.targetXPathIndex;
-				}
-			})
+				})
 
-			// a group should revolve around targetXPath
-			// break up the array, starting from the first element
-			group.targetXPath.forEach(function(xpath, inner) {
-				// deep clone as config may have nested objects
-				var config = cloneDeep(group);
+				// a group should revolve around targetXPath
+				// break up the array, starting from the first element
+				group.targetXPath.forEach(function(xpath, inner) {
+					// deep clone as config may have nested objects
+					var config = cloneDeep(group);
 
-				// overwrite targetXPath
-				config.targetXPath = xpath;
+					// overwrite targetXPath
+					config.targetXPath = xpath;
 
-				// sync up renderToPath array
-				if(renderToPathIsArray && typeof (group.renderToPath[inner]) !== 'undefined') {
-					config.renderToPath = group.renderToPath[inner] ? group.renderToPath[inner] : null;
-				} else {
-					// nullify
-					config.renderToPath = null;
-				}
+					// sync up renderToPath array
+					if(renderToPathIsArray && typeof (group.renderToPath[inner]) !== 'undefined') {
+						config.renderToPath = group.renderToPath[inner] ? group.renderToPath[inner] : null;
+					} else {
+						// nullify
+						config.renderToPath = null;
+					}
 
-				// sync up relatedElementActions array
-				if(group.relatedElementActions && 
-					typeof (group.relatedElementActions[inner]) !== 'undefined' && 
-					Array.isArray(group.relatedElementActions[inner])) {
-					config.relatedElementActions = group.relatedElementActions[inner];
-				}
+					// sync up relatedElementActions array
+					if(group.relatedElementActions && 
+						typeof (group.relatedElementActions[inner]) !== 'undefined' && 
+						Array.isArray(group.relatedElementActions[inner])) {
+						config.relatedElementActions = group.relatedElementActions[inner];
+					}
 
-				// sync up customClasses
-				if(typeof (groupedCustomClasses[inner]) !== 'undefined') {
-					config.customClasses = groupedCustomClasses[inner];
-				}
+					// sync up customClasses
+					if(typeof (groupedCustomClasses[inner]) !== 'undefined') {
+						config.customClasses = groupedCustomClasses[inner];
+					}
 
-				// duplicate ignoredPriceElements string / array if exists
-				if(group.ignoredPriceElements) {
-					config.ignoredPriceElements = group.ignoredPriceElements;
-				}
+					// duplicate ignoredPriceElements string / array if exists
+					if(group.ignoredPriceElements) {
+						config.ignoredPriceElements = group.ignoredPriceElements;
+					}
 
-				// that's all, append
-				res.push(config);
-			});
+					// that's all, append
+					res.push(config);
+				});
+			} else {
+				// must be a single string
+				res.push(group)
+			}
     	}
 	});
 	return res;
