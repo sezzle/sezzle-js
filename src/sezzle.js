@@ -333,6 +333,19 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 }
 
 /**
+ * Scale the widget size using CSS transforms
+ * The transform origin is set to 'top {this.alignment}'
+ * scale() scales the element appropriately, maintaining the aspect ratio
+ * @param element - logo element
+ * @param configGroupIndex - index of the config group that element belongs to
+ * @return void
+ */
+SezzleJS.prototype.setLogoSize = function(element, configGroupIndex) {
+	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
+	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
+}
+
+/**
  * This function will set Sezzle's elements with
  * the price element in parallel
  * @param element - This is the price element
