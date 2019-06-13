@@ -59,7 +59,8 @@ var SezzleJS = function(options) {
 		this.configGroups[index].marginBottom = configGroup.marginBottom || (options.defaultConfig && options.defaultConfig.marginBottom) || 0; //pixels
 		this.configGroups[index].marginLeft = configGroup.marginLeft || (options.defaultConfig && options.defaultConfig.marginLeft) || 0; //pixels
 		this.configGroups[index].marginRight = configGroup.marginRight || (options.defaultConfig && options.defaultConfig.marginRight) || 0; //pixels
-		this.configGroups[index].scaleFactor = configGroup.scaleFactor || (options.defaultConfig && options.defaultConfig.scaleFactor) || 1.0;
+		this.configGroups[index].scaleFactor = configGroup.scaleFactor || (options.defaultConfig && options.defaultConfig.scaleFactor);
+		this.configGroups[index].logoSize = configGroup.logoSize || (options.defaultConfig && options.defaultConfig.logoSize) || 1.0;
 		this.configGroups[index].fontFamily = configGroup.fontFamily || (options.defaultConfig && options.defaultConfig.fontFamily) || 'inherit';
 		this.configGroups[index].textColor = configGroup.color || (options.defaultConfig && options.defaultConfig.color) || 'inherit';
 		this.configGroups[index].fontSize = configGroup.fontSize || (options.defaultConfig && options.defaultConfig.fontSize) || 12;
@@ -87,7 +88,7 @@ var SezzleJS = function(options) {
 		//]
 		this.configGroups[index].customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ?  options.defaultConfig.customClasses : []);
 
-		this.configGroups[index].widgetTemplate = configGroup.widgetTemplate || (options.defaultConfig && options.defaultConfig.widgetTemplate);
+		this.configGroups[index].widgetTemplate = configGroup.altVersionTemplate || (options.defaultConfig && options.defaultConfig.altVersionTemplate);
 		if (this.configGroups[index].widgetTemplate) {
 			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.split('%%');
 		} else {
@@ -115,7 +116,7 @@ var SezzleJS = function(options) {
 
 		this.configGroups[index].theme = configGroup.theme || 'light';
 		if (this.configGroups[index].theme == 'dark') {
-			this.configGroups[index].imageURL = configGroup.imageURL || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
+			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
 			this.configGroups[index].imageClassName = 'szl-dark-image';
 		} else {
 			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
@@ -426,12 +427,25 @@ SezzleJS.prototype.setElementMargins = function (element, configGroupIndex) {
  * @return void
 */
 SezzleJS.prototype.setWidgetSize = function (element, configGroupIndex) {
-	element.style.transformOrigin = 'top ' + this.alignment;
-	element.style.transform = 'scale(' + this.scaleFactor + ')';
+	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
+	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].scaleFactor + ')';
 	if (this.configGroups[configGroupIndex].fixedHeight) {
 		element.style.height = this.configGroups[configGroupIndex].fixedHeight + 'px';
 		element.style.overflow = 'hidden';
 	}
+}
+
+/**
+ * Scale the widget size using CSS transforms
+ * The transform origin is set to 'top {this.alignment}'
+ * scale() scales the element appropriately, maintaining the aspect ratio
+ * @param element - logo element
+ * @param configGroupIndex - index of the config group that element belongs to
+ * @return void
+ */
+SezzleJS.prototype.setLogoSize = function(element, configGroupIndex) {
+	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
+	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
 }
 
 /**
@@ -474,7 +488,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	this.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
 	this.insertStoreCSSClassInElement(sezzle);
 	this.setElementMargins(sezzle, configGroupIndex);
-	this.setWidgetSize(sezzle, configGroupIndex);
+	if(this.scaleFactor) this.setWidgetSize(sezzle, configGroupIndex);
 
 	var node = document.createElement('div');
 	node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
@@ -501,6 +515,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 				logoNode.className = 'sezzle-logo ' + this.configGroups[configGroupIndex].imageClassName;
 				logoNode.src = this.configGroups[configGroupIndex].imageURL;
 				sezzleButtonText.appendChild(logoNode);
+				this.setLogoSize(logoNode, configGroupIndex);
 				break;
 			// changed from learn-more to link as that is what current altVersionTemplates use
 			case 'link':
