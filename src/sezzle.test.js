@@ -14,7 +14,7 @@ describe('Constructor correctly sets the parameters', () => {
     const sz = new SezzleJS(sezzleConfig.new);
     for(var i = 0, len = sz.configGroups.length; i < len; i++) {
       expect(sz.configGroups[i].xpath).toEqual(
-        sz.configGroups[i].targetXPath.map((j) => Helper.breakXPath(j))
+        sz.configGroups[i].xpath.map((j) => Helper.breakXPath(j))
       );
     }
   })
