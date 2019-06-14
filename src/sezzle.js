@@ -33,10 +33,7 @@ var SezzleJS = function(options) {
 		this.configGroups[index].ignoredPriceElements = configGroup.ignoredPriceElements || (options.defaultConfig && options.defaultConfig.ignoredPriceElements) || [];
 		if (typeof (this.configGroups[index].ignoredPriceElements) === 'string') {
 			// Only one x-path is given
-			this.configGroups[index].ignoredPriceElements = [this.configGroups[index].ignoredPriceElements.trim().split('/')
-				.filter(function (subpath) {
-					return subpath !== '';
-				})];
+			this.configGroups[index].ignoredPriceElements = [Helper.breakXPath(this.configGroups[index].ignoredPriceElements.trim())];
 		} else {
 			// this.configGroups[index].ignoredPriceElements is an array of x-paths
 			this.configGroups[index].ignoredPriceElements = this.configGroups[index].ignoredPriceElements.map(function (path) {
@@ -119,7 +116,7 @@ var SezzleJS = function(options) {
 			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
 			this.configGroups[index].imageClassName = 'szl-dark-image';
 		} else {
-			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageURL) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+			this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageUrl) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
 			this.configGroups[index].imageClassName = 'szl-light-image';
 		}
 
@@ -138,12 +135,12 @@ var SezzleJS = function(options) {
 		this.configGroups[index].productPrice = null;
 		this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
 
-    }.bind(this));
+  }.bind(this));
 
 	// properties that do not belong to a config group
 	this.merchantID = options.merchantID || '';
 	this.forcedShow = options.forcedShow || false;
-	this.altModalHTML = options.altModalHTML || '';
+	this.altModalHTML = options.altLightboxHTML || '';
 	// if doing widget with both Sezzle or afterpay - the modal to display:
 	this.apModalHTML = options.apModalHTML || '';
 	// if doing widget with both Sezzle or quadpay - the modal to display:
@@ -290,14 +287,13 @@ SezzleJS.prototype.addCSSAlignment = function (element, configGroupIndex) {
  * this method is based on the belief that the widget alignment should follow the text-align property of the price element
  */
 SezzleJS.prototype.guessWidgetAlignment = function (priceElement) {
-	if (!priceElement) {
-		return 'left'; //default
-	}
+	if (!priceElement) return 'left'; //default
+
 	var textAlignment = window.getComputedStyle(priceElement).textAlign
 	if (textAlignment === 'start' || textAlignment === 'justify') {
 		// start is a CSS3  value for textAlign to accommodate for other languages which may be RTL (right to left), for instance Arabic
-		// Since the sites we are adding to are mostly, if not all in English, it will be LTR (left to right), hence 'left' at the start
-		// 'justify' will be the same as 'left'
+		// Since the sites we are adding the widgets to are mostly, if not all in English, it will be LTR (left to right), which implies
+		// that 'start' and 'justify' would mean 'left'
 		return 'left';
 	} else if (textAlignment === 'end') {
 		// end is a CSS3  value for textAlign to accommodate for other languages which may be RTL (right to left), for instance Arabic
@@ -893,7 +889,10 @@ SezzleJS.prototype.renderModal = function () {
 	});
 
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-	document.getElementsByClassName('sezzle-modal')[0].addEventListener('click', function (event) {
+	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
+	// backwards compatability check
+	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
 	});
@@ -921,10 +920,13 @@ SezzleJS.prototype.renderAPModal = function () {
 	});
 
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-	document.getElementsByClassName('sezzle-modal')[0].addEventListener('click', function (event) {
+	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
+	// backwards compatability check
+	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
-	})
+	});
 }
 
 /**
@@ -949,10 +951,13 @@ SezzleJS.prototype.renderQPModal = function () {
 	});
 
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-	document.getElementsByClassName('sezzle-modal')[0].addEventListener('click', function (event) {
+	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
+	// backwards compatability check
+	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
-	})
+	});
 }
 
 /**
@@ -1097,7 +1102,7 @@ SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
 		if (win) {
 			var cartId = this.getCookie('cart');
 			var merchantID = this.merchantID;
-			var productPrice = configGroupIndex !== undefined ? this.configGroups[i].productPrice : null;
+			var productPrice = configGroupIndex !== undefined ? this.configGroups[configGroupIndex].productPrice : null;
 			var isMobileBrowser = this.isMobileBrowser();
 			var ip = this.ip;
 			setTimeout(function () {
@@ -1260,7 +1265,7 @@ SezzleJS.prototype.initWidget = function () {
 				if (sz) {
 					el.observer = this.startObserve(el.element, function(mutations) {
 						this.mutationCallBack.bind(this)(mutations, el.configGroupIndex);
-					});
+					}.bind(this));
 					this.addClickEventForModal(sz, el.configGroupIndex);
 					this.observeRelatedElements(el.element, sz, this.configGroups[el.configGroupIndex].relatedElementActions);
 				} else { // remove the element from the els array
