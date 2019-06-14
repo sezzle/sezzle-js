@@ -372,16 +372,18 @@ exports.splitConfig = function(configGroups) {
 
 				// group up custom classes according to index
 				let groupedCustomClasses = [];
-				group.customClasses.forEach(function(customClass) {
-					if(typeof (customClass.targetXPathIndex) === 'number') {
-						if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
-							groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
-						} else {
-							groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
+				if(group.customClasses) {
+					group.customClasses.forEach(function(customClass) {
+						if(typeof (customClass.targetXPathIndex) === 'number') {
+							if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
+								groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
+							} else {
+								groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
+							}
+							delete customClass.targetXPathIndex;
 						}
-						delete customClass.targetXPathIndex;
-					}
-				})
+					})
+				}
 
 				// a group should revolve around targetXPath
 				// break up the array, starting from the first element
@@ -439,7 +441,7 @@ exports.splitConfig = function(configGroups) {
  * @return no return. The function mutates the object
  */
 exports.factorize = function(options) {
-	const fieldsToFactorize = ["merchantID", "forcedShow", "altModalHTML", "apModalHTML", "qpModalHTML"];
+	const fieldsToFactorize = ["merchantID", "forcedShow", "altLightboxHTML", "apModalHTML", "qpModalHTML"];
 	var choose = {};
 
 	// assumption is being made that all these fields are the same across all config groups
