@@ -1015,7 +1015,7 @@ SezzleJS.prototype.getCountryCodeFromIP = function (callback) {
 		if (httpRequest.readyState === XMLHttpRequest.DONE) {
 			if (httpRequest.status === 200) {
 				var body = httpRequest.response;
-				if (typeof body === 'string') body = JSON.parse(body);
+				if (typeof (body) === 'string') body = JSON.parse(body);
 				this.countryCode = body.country_iso_code;
 				this.ip = body.ip;
 				callback(this.countryCode);
