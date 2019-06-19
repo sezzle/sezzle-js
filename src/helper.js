@@ -327,122 +327,191 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
 }
 
 /**
- * This is a helper function to ensure that
- * the options passed into SezzleJS'
- * constructor is compatible with the current
+ * This is a function to validate configs
+ * @param options new config to validate
+ * @return nothing. If config is invalid, error is thrown and program execution is stopped.
+ */
+exports.validateConfig = function(options) {
+	if(!Array.isArray(options.configGroups)) {
+		throw new Error("options.configGroups must be an array");
+	} else {
+		if(!options.configGroups.length) {
+			throw new Error("options.configGroups must have at least one config object");
+		}
+	}
+
+	// checking fields which MUST be specified in configGroups. (Only one as of now really :D)
+	const mustInclude = ["targetXPath"];
+	options.configGroups.forEach(function(group) {
+		mustInclude.forEach(function(field) {
+			if(!group.hasOwnProperty(field)) {
+				throw new Error(field + " must be specified in all configs in options.configGroups");
+			}
+		});
+	});
+
+	// type checks for crucial fields
+
+	// expected types for crucial fields in the config
+	// may do type checking for all fields in the future but it's just not necessary as of now
+	const expectedTypes = {
+		"targetXPath": "string",
+		"renderToPath": "string",
+		"urlMatch": "string"
+	}
+	options.configGroups.forEach(function(group) {
+		Object.keys(expectedTypes).forEach(function(key) {
+			if(group.hasOwnProperty(key) && typeof(group[key]) !== expectedTypes[key]) {
+				throw new Error(key + " must be of type " + expectedTypes[key]);
+			}
+		});
+	});
+
+	// properties that do not belong to a config group (must have been factorized before)
+	const propsNotInConfigGroup = [
+		"merchantID", 
+		"forcedShow", 
+		"minPrice", 
+		"maxPrice", 
+		"numberOfPayments", 
+		"altLightboxHTML", 
+		"apModalHTML", 
+		"qpModalHTML",
+		"noGtm",
+		"noTracking",
+		"testID"
+	];
+
+	// check correct factorization
+	options.configGroups.forEach(function(group) {
+		Object.keys(group).forEach(function(key) {
+			if(propsNotInConfigGroup.includes(key)) {
+				throw new Error(key + " is not a property of a configGroup. Specify this key at the outermost layer");
+			}
+		});
+	});
+
+	// if control reaches this point, the config is acceptable. It may not be perfect since the checks
+	// are pretty loose, but at least the crucial parts of it are OK. May add more checks in the future.
+	return;
+}
+
+
+/**
+ * This is a helper function to convert an old
+ * config passed into SezzleJS' constructor to a 
+ * new one which is compatible with the current
  * SezzleJS version. In other words, this
  * function is used for backwards compatability 
- * with older versions
- * @param options options passed into SezzleJS' constructor
+ * with older versions.
+ * @param options old config passed into SezzleJS' constructor
  * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function(options) {
-  if(typeof (options.configGroups) === 'undefined') {
-		// most likely old config, must wrap it in config group
-		// deep clone to prevent circular structure
-		options = {
-			configGroups: [cloneDeep(options)]
-		};
-	}
-
-	// split the configs up if necessary
-	options.configGroups = exports.splitConfig(options.configGroups);
 	// place fields which do not belong in a group outside of configGroups
-	exports.factorize(options);
-
+	var compatible = exports.factorize(options);
+	// split the configs up if necessary
+	compatible.configGroups = exports.splitConfig(options);
 	// should we factorize common field values and place in defaultConfig? I don't think so
-	return options;
+	return compatible;
 }
 
 /**
  * Function to split configs up according to the targetXPath
  * Every config should have at most one targetXPath.
- * @param configGroups Array of configs
+ * @param options Old config
  * @return split array of configs
  */
-exports.splitConfig = function(configGroups) {
+exports.splitConfig = function(options) {
 	var res = [];
-
-	configGroups.forEach(function(group, outer) {
-		if(typeof (group.targetXPath)!== 'undefined') {
-			// everything revolves around an xpath
-			if(Array.isArray(group.targetXPath)) {
-				// need to ensure it's array and not string so that code doesnt mistakenly separate chars
-				let renderToPathIsArray = Array.isArray(group.renderToPath);
-
-				// group up custom classes according to index
-				let groupedCustomClasses = [];
-				if(group.customClasses) {
-					group.customClasses.forEach(function(customClass) {
-						if(typeof (customClass.targetXPathIndex) === 'number') {
-							if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
-								groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
-							} else {
-								groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
-							}
-							delete customClass.targetXPathIndex;
+	if(typeof (options.targetXPath)!== 'undefined') {
+		// everything revolves around an xpath
+		if(Array.isArray(options.targetXPath)) {
+			// group up custom classes according to index
+			var groupedCustomClasses = [];
+			if(options.customClasses) {
+				options.customClasses.forEach(function(customClass) {
+					if(typeof (customClass.targetXPathIndex) === 'number') {
+						if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
+							groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
+						} else {
+							groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
 						}
-					})
+						delete customClass.targetXPathIndex;
+					}
+				})
+			}
+
+			// need to ensure it's array and not string so that code doesnt mistakenly separate chars
+			var renderToPathIsArray = Array.isArray(options.renderToPath);
+			// a group should revolve around targetXPath
+			// break up the array, starting from the first element
+			options.targetXPath.forEach(function(xpath, inner) {
+				// deep clone as config may have nested objects
+				var config = cloneDeep(options);
+
+				// overwrite targetXPath
+				config.targetXPath = xpath;
+
+				// sync up renderToPath array
+				if(renderToPathIsArray && typeof (options.renderToPath[inner]) !== 'undefined') {
+					config.renderToPath = options.renderToPath[inner] ? options.renderToPath[inner] : null;
+				} else {
+					// by default, below parent of target
+					config.renderToPath = "..";
 				}
 
-				// a group should revolve around targetXPath
-				// break up the array, starting from the first element
-				group.targetXPath.forEach(function(xpath, inner) {
-					// deep clone as config may have nested objects
-					var config = cloneDeep(group);
+				// sync up relatedElementActions array
+				if(options.relatedElementActions && 
+					typeof (options.relatedElementActions[inner]) !== 'undefined' && 
+					Array.isArray(options.relatedElementActions[inner])) {
+					config.relatedElementActions = options.relatedElementActions[inner];
+				}
 
-					// overwrite targetXPath
-					config.targetXPath = xpath;
+				// sync up customClasses
+				if(typeof (groupedCustomClasses[inner]) !== 'undefined') {
+					config.customClasses = groupedCustomClasses[inner];
+				}
 
-					// sync up renderToPath array
-					if(renderToPathIsArray && typeof (group.renderToPath[inner]) !== 'undefined') {
-						config.renderToPath = group.renderToPath[inner] ? group.renderToPath[inner] : null;
-					} else {
-						// nullify
-						config.renderToPath = null;
-					}
+				// duplicate ignoredPriceElements string / array if exists
+				if(options.ignoredPriceElements) {
+					config.ignoredPriceElements = options.ignoredPriceElements;
+				}
 
-					// sync up relatedElementActions array
-					if(group.relatedElementActions && 
-						typeof (group.relatedElementActions[inner]) !== 'undefined' && 
-						Array.isArray(group.relatedElementActions[inner])) {
-						config.relatedElementActions = group.relatedElementActions[inner];
-					}
-
-					// sync up customClasses
-					if(typeof (groupedCustomClasses[inner]) !== 'undefined') {
-						config.customClasses = groupedCustomClasses[inner];
-					}
-
-					// duplicate ignoredPriceElements string / array if exists
-					if(group.ignoredPriceElements) {
-						config.ignoredPriceElements = group.ignoredPriceElements;
-					}
-
-					// that's all, append
-					res.push(config);
-				});
-			} else {
-				// must be a single string
-				res.push(group)
-			}
-    	}
-	});
+				// that's all, append
+				res.push(config);
+			});
+		} else {
+			// must be a single string
+			res.push(options);
+		}
+	}
 	return res;
 }
 
 /**
- * This is a helper function to factorize common fields of groups
- * and also place them outside configGroups in order to be compatible
- * with latest structure. 
- * TODO (MAYBE) : Factorize all fields with common values in configGroups
- * and place it as a property of the defaultConfig
- * @param options the sezzle config
- * @return no return. The function mutates the object
+ * This is a helper function to move fields which do not belong to a
+ * config group outside of the group and also place them outside 
+ * configGroups in order to be compatible with latest structure. 
+ * @param options old sezzle config
+ * @return Factorized fields
  */
 exports.factorize = function(options) {
-	const fieldsToFactorize = ["merchantID", "forcedShow", "altLightboxHTML", "apModalHTML", "qpModalHTML"];
-	var choose = {};
+	const fieldsToFactorize = [
+		"merchantID", 
+		"forcedShow", 
+		"minPrice", 
+		"maxPrice", 
+		"numberOfPayments", 
+		"altLightboxHTML", 
+		"apModalHTML", 
+		"qpModalHTML",
+		"noGtm",
+		"noTracking",
+		"testID"
+	];
+
+	var factorized = {};
 
 	// assumption is being made that all these fields are the same across all config groups
 	// it is a reasonable assumption to make as :
@@ -451,21 +520,14 @@ exports.factorize = function(options) {
 	//   so it's reasonable to assume that forcedShow should be the same value for all configs
 	// - as the widget only supports one modal currently, there is no capability of loading multiple modals
 
-	options.configGroups.forEach(function(group) {
-		fieldsToFactorize.forEach(function(field) {
-			if(group[field] !== undefined) {
-				choose[field] = group[field];
-				delete group[field]; 
-			}
-		});
+	fieldsToFactorize.forEach(function(field) {
+		if(options[field] !== undefined) {
+			factorized[field] = options[field];
+			delete options[field];
+		}
 	});
 
-	// insert to outermost layer
-	for(var key in choose) {
-		options[key] = choose[key];
-	}
-
-	return;
+	return factorized;
 }
 
 /**
