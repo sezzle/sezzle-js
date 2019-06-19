@@ -15,6 +15,7 @@
       "#id-5/.class-5"
     ],
     "merchantID": "49261e2d-72af-4358-bf97-3035ce9f11a1",
+    "numberOfPayments": 5,
     "minPrice": 0,
     "maxPrice": 2000000,
     "theme": "light",
@@ -96,8 +97,6 @@
           "#id-4/.class-4",
           "#id-5/.class-5"
         ],
-        "minPrice": 0,
-        "maxPrice": 2000000,
         "theme": "light",
         "widthType": "thin",
         "widgetType": "product-page",
@@ -129,8 +128,6 @@
           "#id-4/.class-4",
           "#id-5/.class-5"
         ],
-        "minPrice": 0,
-        "maxPrice": 2000000,
         "theme": "light",
         "widthType": "thin",
         "widgetType": "product-page",
@@ -167,8 +164,6 @@
           "#id-4/.class-4",
           "#id-5/.class-5"
         ],
-        "minPrice": 0,
-        "maxPrice": 2000000,
         "theme": "light",
         "widthType": "thin",
         "widgetType": "product-page",
@@ -195,6 +190,9 @@
       }
     ],
     "merchantID": "49261e2d-72af-4358-bf97-3035ce9f11a1",
-    "forcedShow": false
+    "forcedShow": false,
+    "numberOfPayments": 5,
+    "minPrice": 0,
+    "maxPrice": 2000000
   }
 }
