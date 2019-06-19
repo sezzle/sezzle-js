@@ -3,7 +3,6 @@ var Helper = require('./helper');
 var SezzleJS = function (options) {
   if (!options) options = {};
 
-<<<<<<< HEAD
   // convert to new config if options passed in is old config
   var isOldConfig = typeof (options.configGroups) === 'undefined';
   if (isOldConfig) options = Helper.makeCompatible(options);
@@ -48,164 +47,6 @@ var SezzleJS = function (options) {
   options.configGroups.forEach(function (configGroup) {
     this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments));
   }.bind(this));
-=======
-  // ensure options is compatible with current version
-  options = Helper.makeCompatible(options);
-
-  // filter off config groups which do not match the current URL
-  options.configGroups = options.configGroups ? options.configGroups.filter(function (configGroup) {
-    // if no URL match is provided, consider the group for backwards compatability reasons
-    return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
-  }) : [];
-
-  this.configGroups = [];
-  options.configGroups.forEach(function (configGroup, index) {
-    this.configGroups.push({});
-
-    // Configurable options
-
-    // targetXPath SHOULD NOT be specified in defaultConfig since
-    // it is like an ID for a configGroup (except if adding the price element class is used)
-    this.configGroups[index].xpath = Helper.breakXPath(configGroup.targetXPath) || [];
-
-    this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
-
-    // This array in which its elements are objects with two keys
-    // relatedPath - this is a xpath of an element related to the price element
-    // action - this is a function triggered when the element has a mutation
-    // initialAction - this is a function to act upon a pre existing element's condition
-    this.configGroups[index].relatedElementActions = configGroup.relatedElementActions || (options.defaultConfig && options.defaultConfig.relatedElementActions) || [];
-
-    this.configGroups[index].ignoredPriceElements = configGroup.ignoredPriceElements || (options.defaultConfig && options.defaultConfig.ignoredPriceElements) || [];
-    if (typeof (this.configGroups[index].ignoredPriceElements) === 'string') {
-      // Only one x-path is given
-      this.configGroups[index].ignoredPriceElements = [Helper.breakXPath(this.configGroups[index].ignoredPriceElements.trim())];
-    } else {
-      // this.configGroups[index].ignoredPriceElements is an array of x-paths
-      this.configGroups[index].ignoredPriceElements = this.configGroups[index].ignoredPriceElements.map(function (path) {
-        return Helper.breakXPath(path.trim());
-      }.bind(this));
-    }
-
-    this.configGroups[index].numberOfPayments = Math.floor(configGroup.numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
-    this.configGroups[index].alignment = configGroup.alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
-    this.configGroups[index].widgetType = configGroup.widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
-    this.configGroups[index].minPrice = configGroup.minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
-    this.configGroups[index].maxPrice = configGroup.maxPrice || (options.defaultConfig && options.defaultConfig.maxPrice) || 250000;
-    this.configGroups[index].bannerURL = configGroup.bannerURL || (options.defaultConfig && options.defaultConfig.bannerURL) || '';
-    this.configGroups[index].bannerClass = configGroup.bannerClass || (options.defaultConfig && options.defaultConfig.bannerClass) || '';
-    this.configGroups[index].bannerLink = configGroup.bannerLink || (options.defaultConfig && options.defaultConfig.bannerLink) || '';
-    this.configGroups[index].fontWeight = configGroup.fontWeight || (options.defaultConfig && options.defaultConfig.fontWeight) | 300;
-    this.configGroups[index].alignmentSwitchMinWidth = configGroup.alignmentSwitchMinWidth || (options.defaultConfig && options.defaultConfig.alignmentSwitchMinWidth); //pixels
-    this.configGroups[index].alignmentSwitchType = configGroup.alignmentSwitchType || (options.defaultConfig && options.defaultConfig.alignmentSwitchType);
-    this.configGroups[index].marginTop = configGroup.marginTop || (options.defaultConfig && options.defaultConfig.marginTop) || 0; //pixels
-    this.configGroups[index].marginBottom = configGroup.marginBottom || (options.defaultConfig && options.defaultConfig.marginBottom) || 0; //pixels
-    this.configGroups[index].marginLeft = configGroup.marginLeft || (options.defaultConfig && options.defaultConfig.marginLeft) || 0; //pixels
-    this.configGroups[index].marginRight = configGroup.marginRight || (options.defaultConfig && options.defaultConfig.marginRight) || 0; //pixels
-    this.configGroups[index].scaleFactor = configGroup.scaleFactor || (options.defaultConfig && options.defaultConfig.scaleFactor);
-    this.configGroups[index].logoSize = configGroup.logoSize || (options.defaultConfig && options.defaultConfig.logoSize) || 1.0;
-    this.configGroups[index].fontFamily = configGroup.fontFamily || (options.defaultConfig && options.defaultConfig.fontFamily) || 'inherit';
-    this.configGroups[index].textColor = configGroup.color || (options.defaultConfig && options.defaultConfig.color) || 'inherit';
-    this.configGroups[index].fontSize = configGroup.fontSize || (options.defaultConfig && options.defaultConfig.fontSize) || 12;
-    this.configGroups[index].maxWidth = configGroup.maxWidth || (options.defaultConfig && options.defaultConfig.maxWidth) || 400; //pixels
-    this.configGroups[index].fixedHeight = configGroup.fixedHeight || (options.defaultConfig && options.defaultConfig.fixedHeight) || 0; //pixels
-    // This is used to get price of element
-    this.configGroups[index].priceElementClass = configGroup.priceElementClass || (options.defaultConfig && options.defaultConfig.priceElementClass) || 'sezzle-price-element';
-    // This is used to tell where to render sezzle element to
-    this.configGroups[index].sezzleWidgetContainerClass = configGroup.sezzleWidgetContainerClass || (options.defaultConfig && options.defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
-    // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
-    this.configGroups[index].splitPriceElementsOn = configGroup.splitPriceElementsOn || (options.defaultConfig && options.defaultConfig.splitPriceElementsOn) || '';
-    // after pay link
-    this.configGroups[index].apLink = configGroup.apLink || (options.defaultConfig && options.defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
-    // This option is to render custom class in sezzle widget
-    // This option contains an array of objects
-    // each of the objects should have two properties
-    // xpath -> the path from the root of sezzle element
-    // className -> a string of classname that is to be added
-    // index -> this is optional, if provided then only the widget with
-    // configGroupIndex -> It's a map to the element that match the configGroup of that index
-    // the same sezzle index value will be effected with the class name
-    // Example : [
-    // {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
-    // {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
-    //]
-    this.configGroups[index].customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ? options.defaultConfig.customClasses : []);
-
-    this.configGroups[index].widgetTemplate = configGroup.altVersionTemplate || (options.defaultConfig && options.defaultConfig.altVersionTemplate);
-    if (this.configGroups[index].widgetTemplate) {
-      this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.split('%%');
-    } else {
-      var defaultWidgetTemplate = 'or ' + this.configGroups[index].numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
-      this.configGroups[index].widgetTemplate = defaultWidgetTemplate.split('%%');
-    }
-
-    if (this.configGroups[index].splitPriceElementsOn) {
-      this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.map(function (subtemplate) {
-        return subtemplate === 'price' ? 'price-split' : subtemplate;
-      });
-    }
-
-    // Search for price elements. If found, assume there is only one in this page
-    this.configGroups[index].hasPriceClassElement = false;
-    this.configGroups[index].priceElements = Array.prototype.slice.
-      call(document.getElementsByClassName(this.configGroups[index].priceElementClass));
-
-    this.configGroups[index].renderElements = Array.prototype.slice.
-      call(document.getElementsByClassName(this.configGroups[index].sezzleWidgetContainerClass));
-
-    if (this.configGroups[index].priceElements.length == 1) {
-      this.configGroups[index].hasPriceClassElement = true;
-    }
-
-    this.configGroups[index].theme = configGroup.theme || 'light';
-    if (this.configGroups[index].theme == 'dark') {
-      this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
-      this.configGroups[index].imageClassName = 'szl-dark-image';
-    } else {
-      this.configGroups[index].imageURL = configGroup.imageUrl || (options.defaultConfig && options.defaultConfig.imageUrl) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
-      this.configGroups[index].imageClassName = 'szl-light-image';
-    }
-
-    this.configGroups[index].hideElements = configGroup.hideElements || (options.defaultConfig && options.defaultConfig.hideElements) || [];
-    if (typeof (this.configGroups[index].hideElements) === 'string') {
-      // Only one x-path is given
-      this.configGroups[index].hideElements = [Helper.breakXPath(this.configGroups[index].hideElements.trim())];
-    } else {
-      // this.configGroups[index].hideElements is an array of x-paths
-      this.configGroups[index].hideElements = this.configGroups[index].hideElements.map(function (path) {
-        return Helper.breakXPath(path.trim());
-      }.bind(this));
-    }
-
-    // variables set by the JS
-    this.configGroups[index].productPrice = null;
-    this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
-
-  }.bind(this));
-
-  // properties that do not belong to a config group
-  this.merchantID = options.merchantID || '';
-  this.forcedShow = options.forcedShow || false;
-  this.altModalHTML = options.altLightboxHTML || '';
-  // if doing widget with both Sezzle or afterpay - the modal to display:
-  this.apModalHTML = options.apModalHTML || '';
-  // if doing widget with both Sezzle or quadpay - the modal to display:
-  this.qpModalHTML = options.qpModalHTML || '';
-  // countries widget should show in
-  this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
-
-  // Non configurable options
-  this._config = { attributes: true, childList: true, characterData: true };
-  // URL to request to get ip of request
-  this.countryFromIPRequestURL = 'https://geoip.sezzle.com/v1/geoip/ipdetails';
-  // URL to request to get css details
-  this.cssForMerchantURL = 'https://widget.sezzle.com/v1/css/price-widget?uuid=' + this.merchantID;
-
-  // Variables set by the js
-  this.countryCode = null;
-  this.ip = null;
-  this.fingerprint = null;
->>>>>>> formatted files following JS code convention
 }
 
 /**
@@ -476,7 +317,6 @@ SezzleJS.prototype.setWidgetSize = function (element, configGroupIndex) {
     element.style.height = this.configGroups[configGroupIndex].fixedHeight + 'px';
     element.style.overflow = 'hidden';
   }
-<<<<<<< HEAD
 }
 
 /**
@@ -490,8 +330,6 @@ SezzleJS.prototype.setWidgetSize = function (element, configGroupIndex) {
 SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
   element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
   element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
-=======
->>>>>>> formatted files following JS code convention
 }
 
 /**
@@ -503,13 +341,8 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
  * @return void
  */
 SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
-<<<<<<< HEAD
 	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
 	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
-=======
-  element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
-  element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
->>>>>>> formatted files following JS code convention
 }
 
 /**
@@ -809,11 +642,7 @@ SezzleJS.prototype.isProductEligible = function (priceText, configGroupIndex) {
   var price = Helper.parsePrice(priceText);
   this.configGroups[configGroupIndex].productPrice = price;
   var priceInCents = price * 100;
-<<<<<<< HEAD
   return priceInCents >= this.minPrice && priceInCents <= this.maxPrice;
-=======
-  return priceInCents >= this.configGroups[configGroupIndex].minPrice && priceInCents <= this.configGroups[configGroupIndex].maxPrice;
->>>>>>> formatted files following JS code convention
 }
 
 /**
@@ -885,11 +714,7 @@ SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
   }.bind(this));
 
   // get the sezzle installment price
-<<<<<<< HEAD
   var sezzleInstallmentPrice = (price / this.numberOfPayments).toFixed(2);
-=======
-  var sezzleInstallmentPrice = (price / this.configGroups[configGroupIndex].numberOfPayments).toFixed(2);
->>>>>>> formatted files following JS code convention
 
   // format the string
   var sezzleInstallmentFormattedPrice = formatter.replace('{price}', sezzleInstallmentPrice);
