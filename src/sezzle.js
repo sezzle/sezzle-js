@@ -340,7 +340,7 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
  * @param configGroupIndex - index of the config group that element belongs to
  * @return void
  */
-SezzleJS.prototype.setLogoSize = function(element, configGroupIndex) {
+SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
 	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
 }
