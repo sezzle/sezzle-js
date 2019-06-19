@@ -174,6 +174,28 @@ exports.groupCustomClasses = function (customClasses) {
 }
 
 /**
+ * Group customClasses by targetXPathIndex
+ * @param customClasses array of customClass objects
+ * @return groupedCustomClasses, an array of array of customClass objects
+ */
+exports.groupCustomClasses = function(customClasses) {
+	var result = [];
+	if(customClasses && Array.isArray(customClasses)) {
+		customClasses.forEach(function(customClass) {
+			if(typeof (customClass.targetXPathIndex) === 'number') {
+				if(typeof (result[customClass.targetXPathIndex]) === 'undefined') {
+					result[customClass.targetXPathIndex] = [customClass];
+				} else {
+					result[customClass.targetXPathIndex].push(customClass);
+				}
+				delete customClass.targetXPathIndex;
+			}
+		});
+	}
+	return result;
+}
+
+/**
  * This is a helper function to move fields which do not belong to a
  * config group outside of the group and also place them outside
  * configGroups in order to be compatible with latest structure.
