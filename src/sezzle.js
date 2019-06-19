@@ -16,6 +16,32 @@ var SezzleJS = function (options) {
 		return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
 	});
 
+	// properties that do not belong to a config group
+  this.merchantID = options.merchantID || '';
+	this.forcedShow = options.forcedShow || false;
+	this.numberOfPayments = options.numberOfPayments || 4;
+	this.minPrice = options.minPrice || 0; // in cents
+	this.maxPrice = options.maxPrice || 250000; // in cents
+  this.altModalHTML = options.altLightboxHTML || '';
+  // if doing widget with both Sezzle or afterpay - the modal to display:
+  this.apModalHTML = options.apModalHTML || '';
+  // if doing widget with both Sezzle or quadpay - the modal to display:
+  this.qpModalHTML = options.qpModalHTML || '';
+  // countries widget should show in
+  this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
+
+  // Non configurable options
+  this._config = { attributes: true, childList: true, characterData: true };
+  // URL to request to get ip of request
+  this.countryFromIPRequestURL = 'https://geoip.sezzle.com/v1/geoip/ipdetails';
+  // URL to request to get css details
+  this.cssForMerchantURL = 'https://widget.sezzle.com/v1/css/price-widget?uuid=' + this.merchantID;
+
+  // Variables set by the js
+  this.countryCode = null;
+  this.ip = null;
+  this.fingerprint = null;
+
 	this.configGroups = [];
 	options.configGroups.forEach(function (configGroup, index) {
 		this.configGroups.push({});
@@ -45,11 +71,8 @@ var SezzleJS = function (options) {
 			}.bind(this));
 		}
 
-		this.configGroups[index].numberOfPayments = Math.floor(configGroup.numberOfPayments) || options.defaultConfig && Math.floor(options.defaultConfig.numberOfPayments) || 4;
 		this.configGroups[index].alignment = configGroup.alignment || (options.defaultConfig && options.defaultConfig.alignment) || 'auto';
 		this.configGroups[index].widgetType = configGroup.widgetType || (options.defaultConfig && options.defaultConfig.widgetType) || 'product-page';
-		this.configGroups[index].minPrice = configGroup.minPrice || (options.defaultConfig && options.defaultConfig.minPrice) || 0;
-		this.configGroups[index].maxPrice = configGroup.maxPrice || (options.defaultConfig && options.defaultConfig.maxPrice) || 250000;
 		this.configGroups[index].bannerURL = configGroup.bannerURL || (options.defaultConfig && options.defaultConfig.bannerURL) || '';
 		this.configGroups[index].bannerClass = configGroup.bannerClass || (options.defaultConfig && options.defaultConfig.bannerClass) || '';
 		this.configGroups[index].bannerLink = configGroup.bannerLink || (options.defaultConfig && options.defaultConfig.bannerLink) || '';
@@ -93,7 +116,7 @@ var SezzleJS = function (options) {
 		if (this.configGroups[index].widgetTemplate) {
 			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.split('%%');
 		} else {
-			var defaultWidgetTemplate = 'or ' + this.configGroups[index].numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
+			var defaultWidgetTemplate = 'or ' + this.numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
 			this.configGroups[index].widgetTemplate = defaultWidgetTemplate.split('%%');
 		}
 
@@ -140,29 +163,6 @@ var SezzleJS = function (options) {
 		this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
 
 	}.bind(this));
-
-  // properties that do not belong to a config group
-  this.merchantID = options.merchantID || '';
-  this.forcedShow = options.forcedShow || false;
-  this.altModalHTML = options.altLightboxHTML || '';
-  // if doing widget with both Sezzle or afterpay - the modal to display:
-  this.apModalHTML = options.apModalHTML || '';
-  // if doing widget with both Sezzle or quadpay - the modal to display:
-  this.qpModalHTML = options.qpModalHTML || '';
-  // countries widget should show in
-  this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
-
-  // Non configurable options
-  this._config = { attributes: true, childList: true, characterData: true };
-  // URL to request to get ip of request
-  this.countryFromIPRequestURL = 'https://geoip.sezzle.com/v1/geoip/ipdetails';
-  // URL to request to get css details
-  this.cssForMerchantURL = 'https://widget.sezzle.com/v1/css/price-widget?uuid=' + this.merchantID;
-
-  // Variables set by the js
-  this.countryCode = null;
-  this.ip = null;
-  this.fingerprint = null;
 }
 
 /**
@@ -745,7 +745,7 @@ SezzleJS.prototype.isProductEligible = function (priceText, configGroupIndex) {
   var price = Helper.parsePrice(priceText);
   this.configGroups[configGroupIndex].productPrice = price;
   var priceInCents = price * 100;
-  return priceInCents >= this.configGroups[configGroupIndex].minPrice && priceInCents <= this.configGroups[configGroupIndex].maxPrice;
+  return priceInCents >= this.minPrice && priceInCents <= this.maxPrice;
 }
 
 /**
@@ -817,7 +817,7 @@ SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
   }.bind(this));
 
   // get the sezzle installment price
-  var sezzleInstallmentPrice = (price / this.configGroups[configGroupIndex].numberOfPayments).toFixed(2);
+  var sezzleInstallmentPrice = (price / this.numberOfPayments).toFixed(2);
 
   // format the string
   var sezzleInstallmentFormattedPrice = formatter.replace('{price}', sezzleInstallmentPrice);
