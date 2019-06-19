@@ -1,28 +1,32 @@
 var Helper = require('./helper');
 
-var SezzleJS = function(options) {
-	if(!options) options = {};
+var SezzleJS = function (options) {
+	if (!options) options = {};
 
-	// ensure options is compatible with current version
-	options = Helper.makeCompatible(options);
+	// convert to new config if options passed in is old config
+	var isOldConfig = typeof (options.configGroups) === 'undefined';
+	if(isOldConfig) options = Helper.makeCompatible(options);
+	
+	// validate config structure
+	Helper.validateConfig(options);
 
 	// filter off config groups which do not match the current URL
-	options.configGroups = options.configGroups ? options.configGroups.filter(function(configGroup) {
+	options.configGroups = options.configGroups.filter(function (configGroup) {
 		// if no URL match is provided, consider the group for backwards compatability reasons
 		return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
-	}) : [];
+	});
 
 	this.configGroups = [];
-	options.configGroups.forEach(function(configGroup, index) {
+	options.configGroups.forEach(function (configGroup, index) {
 		this.configGroups.push({});
 
 		// Configurable options
 
 		// targetXPath SHOULD NOT be specified in defaultConfig since
 		// it is like an ID for a configGroup (except if adding the price element class is used)
-		this.configGroups[index].xpath = Helper.breakXPath(configGroup.targetXPath) || [];
+		this.configGroups[index].xpath = Helper.breakXPath(configGroup.targetXPath);
 
-		this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || null;
+		this.configGroups[index].rendertopath = configGroup.renderToPath || (options.defaultConfig && options.defaultConfig.renderToPath) || '..';
 
 		// This array in which its elements are objects with two keys
 		// relatedPath - this is a xpath of an element related to the price element
@@ -83,7 +87,7 @@ var SezzleJS = function(options) {
 		// {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
 		// {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
 		//]
-		this.configGroups[index].customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ?  options.defaultConfig.customClasses : []);
+		this.configGroups[index].customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (options.defaultConfig && Array.isArray(options.defaultConfig.customClasses) ? options.defaultConfig.customClasses : []);
 
 		this.configGroups[index].widgetTemplate = configGroup.altVersionTemplate || (options.defaultConfig && options.defaultConfig.altVersionTemplate);
 		if (this.configGroups[index].widgetTemplate) {
@@ -94,7 +98,7 @@ var SezzleJS = function(options) {
 		}
 
 		if (this.configGroups[index].splitPriceElementsOn) {
-			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.map(function(subtemplate) {
+			this.configGroups[index].widgetTemplate = this.configGroups[index].widgetTemplate.map(function (subtemplate) {
 				return subtemplate === 'price' ? 'price-split' : subtemplate;
 			});
 		}
@@ -135,7 +139,7 @@ var SezzleJS = function(options) {
 		this.configGroups[index].productPrice = null;
 		this.configGroups[index].widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
 
-  }.bind(this));
+	}.bind(this));
 
 	// properties that do not belong to a config group
 	this.merchantID = options.merchantID || '';
@@ -207,7 +211,7 @@ SezzleJS.prototype.getElementsByXPath = function (xpath, xindex, elements) {
 		} else if (xpath[xindex].indexOf('child') === 0) { // If this is a child indicator
 			var childNumber = xpath[xindex].split('-')[1];
 			var childElement = element.childNodes[childNumber];
-			if (typeof(childElement) !== 'undefined') {
+			if (typeof (childElement) !== 'undefined') {
 				if (childElement.nodeName === '#text') { // if it's a text node we wrap it
 					newSpan = document.createElement('span');
 					newSpan.appendChild(document.createTextNode(childElement.nodeValue));
@@ -439,7 +443,7 @@ SezzleJS.prototype.setWidgetSize = function (element, configGroupIndex) {
  * @param configGroupIndex - index of the config group that element belongs to
  * @return void
  */
-SezzleJS.prototype.setLogoSize = function(element, configGroupIndex) {
+SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
 	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
 }
@@ -484,7 +488,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	this.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
 	this.insertStoreCSSClassInElement(sezzle);
 	this.setElementMargins(sezzle, configGroupIndex);
-	if(this.scaleFactor) this.setWidgetSize(sezzle, configGroupIndex);
+	if (this.scaleFactor) this.setWidgetSize(sezzle, configGroupIndex);
 
 	var node = document.createElement('div');
 	node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
@@ -642,18 +646,18 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 	// Adding main node to sezzel node
 	sezzle.appendChild(node);
 
-	this.configGroups[configGroupIndex].customClasses.forEach(function(customClass) {
+	this.configGroups[configGroupIndex].customClasses.forEach(function (customClass) {
 		if (customClass.xpath && customClass.className) {
-			if (typeof(customClass.index) !== 'number') {
+			if (typeof (customClass.index) !== 'number') {
 				customClass.index = -1; // set the default value
 			}
-			if (typeof(customClass.configGroupIndex) !== 'number') {
+			if (typeof (customClass.configGroupIndex) !== 'number') {
 				customClass.configGroupIndex = -1; // set the default value
 			}
 			if (customClass.index === index || customClass.configGroupIndex === configGroupIndex) {
 				var path = Helper.breakXPath(customClass.xpath);
 				this.getElementsByXPath(path, 0, [sezzle])
-					.forEach(function(el) {
+					.forEach(function (el) {
 						el.className += ' ' + customClass.className;
 					})
 			}
@@ -891,7 +895,7 @@ SezzleJS.prototype.renderModal = function () {
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
 	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
 	// backwards compatability check
-	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
 	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
@@ -922,7 +926,7 @@ SezzleJS.prototype.renderAPModal = function () {
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
 	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
 	// backwards compatability check
-	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
 	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
@@ -953,7 +957,7 @@ SezzleJS.prototype.renderQPModal = function () {
 	// Event listener to prevent close in modal if click happens within sezzle-checkout-modal
 	let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
 	// backwards compatability check
-	if(!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+	if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
 	sezzleModal.addEventListener('click', function (event) {
 		// stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
 		event.stopPropagation();
@@ -964,7 +968,7 @@ SezzleJS.prototype.renderQPModal = function () {
  * This function add events to the button in sezzle widget
  * to open the modal
  */
-SezzleJS.prototype.addClickEventForModal = function(sezzleElement, configGroupIndex) {
+SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupIndex) {
 	var modalLinks = sezzleElement.getElementsByClassName('sezzle-modal-link');
 	Array.prototype.forEach.call(modalLinks, function (modalLink) {
 		modalLink.addEventListener('click', function (event) {
@@ -1090,7 +1094,7 @@ SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
 				viewport.height = screen.height;
 			}
 
-		} catch(error) {
+		} catch (error) {
 			// unable to fetch viewport dimensions
 			console.log(error);
 		}
@@ -1120,7 +1124,7 @@ SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
 					'product_price': productPrice,
 					'sezzle_config': sezzleConfigStr,
 				}, 'https://tracking.sezzle.com');
-			},100);
+			}, 100);
 		}
 	}
 };
@@ -1152,7 +1156,7 @@ SezzleJS.prototype.isMobileBrowser = function () {
  */
 SezzleJS.prototype.init = function () {
 	// no widget to render
-	if(!this.configGroups.length) return;
+	if (!this.configGroups.length) return;
 
 	// Check if the widget should be shown
 	if (this.forcedShow) {
@@ -1181,7 +1185,7 @@ SezzleJS.prototype.init = function () {
 					if (win && !document.sezzleConfig.noGtm) {
 						setTimeout(function () {
 							win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
-						},100);
+						}, 100);
 					}
 				}
 			}
@@ -1193,23 +1197,23 @@ SezzleJS.prototype.init = function () {
  * This function start an observation on related elements to the price element
  * for any change and perform an action based on that
  */
-SezzleJS.prototype.observeRelatedElements = function(priceElement, sezzleElement, targets) {
+SezzleJS.prototype.observeRelatedElements = function (priceElement, sezzleElement, targets) {
 	if (targets) {
-		targets.forEach(function(target) {
-			if (typeof(target.relatedPath) === 'string' &&
-				(typeof(target.action) === 'function' || typeof(target.initialAction) === 'function')) {
+		targets.forEach(function (target) {
+			if (typeof (target.relatedPath) === 'string' &&
+				(typeof (target.action) === 'function' || typeof (target.initialAction) === 'function')) {
 				var elements = this.getElementsByXPath(
 					Helper.breakXPath(target.relatedPath),
 					0,
 					[priceElement]
 				);
 				if (elements.length > 0) {
-					if (typeof(target.action) === 'function') {
-						this.startObserve(elements[0], function(mutation) {
+					if (typeof (target.action) === 'function') {
+						this.startObserve(elements[0], function (mutation) {
 							target.action(mutation, sezzleElement);
 						});
 					}
-					if (typeof(target.initialAction) === 'function') {
+					if (typeof (target.initialAction) === 'function') {
 						target.initialAction(elements[0], sezzleElement);
 					}
 				}
@@ -1241,8 +1245,8 @@ SezzleJS.prototype.initWidget = function () {
 
 	function sezzleWidgetCheckInterval() {
 		// Look for newly added price elements
-		this.configGroups.forEach(function(configGroup, index) {
-			if(configGroup.xpath === []) return;
+		this.configGroups.forEach(function (configGroup, index) {
+			if (configGroup.xpath === []) return;
 			this.getElementsByXPath(configGroup.xpath).forEach(function (e) {
 				if (!e.hasAttribute('data-sezzleindex')) {
 					els.push({
@@ -1263,7 +1267,7 @@ SezzleJS.prototype.initWidget = function () {
 					index, el.configGroupIndex
 				);
 				if (sz) {
-					el.observer = this.startObserve(el.element, function(mutations) {
+					el.observer = this.startObserve(el.element, function (mutations) {
 						this.mutationCallBack.bind(this)(mutations, el.configGroupIndex);
 					}.bind(this));
 					this.addClickEventForModal(sz, el.configGroupIndex);
@@ -1274,13 +1278,13 @@ SezzleJS.prototype.initWidget = function () {
 			}
 		}.bind(this));
 		// refresh the array
-		els = els.filter(function(e) {
+		els = els.filter(function (e) {
 			return e !== undefined;
 		})
 
 		// Find the deleted price elements
 		// remove corresponding Sezzle widgets if exists
-		els.forEach(function(el, index) {
+		els.forEach(function (el, index) {
 			if (el.element.parentElement === null && !el.deleted) { // element is deleted
 				// Stop observing for changes in the element
 				if (el.observer !== null) el.observer.disconnect();
@@ -1296,7 +1300,7 @@ SezzleJS.prototype.initWidget = function () {
 		});
 
 		// Hide elements ex: afterpay
-		for(var index = 0, len = this.configGroups.length; index < len; index++) {
+		for (var index = 0, len = this.configGroups.length; index < len; index++) {
 			this.hideSezzleHideElements(index);
 		}
 
@@ -1304,18 +1308,18 @@ SezzleJS.prototype.initWidget = function () {
 	};
 
 	var allConfigsUsePriceClassElement = true;
-	this.configGroups.forEach(function(configGroup, index) {
+	this.configGroups.forEach(function (configGroup, index) {
 		if (configGroup.hasPriceClassElement) {
 			var sz = this.renderAwesomeSezzle(configGroup.priceElements[0], configGroup.renderElements[0], 0, index);
-			this.startObserve(configGroup.priceElements[0], function(mutations) {
+			this.startObserve(configGroup.priceElements[0], function (mutations) {
 				this.mutationCallBack.bind(this)(mutations, index);
 			});
 		} else {
 			allConfigsUsePriceClassElement = false;
 		}
-	}.bind(this)); 
+	}.bind(this));
 
-	if(!allConfigsUsePriceClassElement) sezzleWidgetCheckInterval.call(this);
+	if (!allConfigsUsePriceClassElement) sezzleWidgetCheckInterval.call(this);
 }
 
 module.exports = SezzleJS;
