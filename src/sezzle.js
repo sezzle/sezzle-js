@@ -714,7 +714,7 @@ SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
   }.bind(this));
 
   // get the sezzle installment price
-  var sezzleInstallmentPrice = (price / this.configGroups[configGroupIndex].numberOfPayments).toFixed(2);
+  var sezzleInstallmentPrice = (price / this.numberOfPayments).toFixed(2);
 
   // format the string
   var sezzleInstallmentFormattedPrice = formatter.replace('{price}', sezzleInstallmentPrice);
