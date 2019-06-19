@@ -14,7 +14,7 @@ exports.validateConfig = function(options) {
 		}
 	}
 
-	// checking fields which MUST be specified in configGroups. (Only one as of now really :D)
+	// checking fields which MUST be specified in configGroups. (Only one as of now :D)
 	const mustInclude = ["targetXPath"];
 	options.configGroups.forEach(function(group) {
 		mustInclude.forEach(function(field) {
@@ -102,19 +102,7 @@ exports.splitConfig = function(options) {
 		// everything revolves around an xpath
 		if(Array.isArray(options.targetXPath)) {
 			// group up custom classes according to index
-			var groupedCustomClasses = [];
-			if(options.customClasses) {
-				options.customClasses.forEach(function(customClass) {
-					if(typeof (customClass.targetXPathIndex) === 'number') {
-						if(typeof (groupedCustomClasses[customClass.targetXPathIndex]) === 'undefined') {
-							groupedCustomClasses[customClass.targetXPathIndex] = [customClass];
-						} else {
-							groupedCustomClasses[customClass.targetXPathIndex].push(customClass);
-						}
-						delete customClass.targetXPathIndex;
-					}
-				})
-			}
+			var groupedCustomClasses = exports.groupCustomClasses(options.customClasses);
 
 			// need to ensure it's array and not string so that code doesnt mistakenly separate chars
 			var renderToPathIsArray = Array.isArray(options.renderToPath);
@@ -161,6 +149,28 @@ exports.splitConfig = function(options) {
 		}
 	}
 	return res;
+}
+
+/**
+ * Group customClasses by targetXPathIndex
+ * @param customClasses array of customClass objects
+ * @return groupedCustomClasses, an array of array of customClass objects
+ */
+exports.groupCustomClasses = function(customClasses) {
+	var result = [];
+	if(customClasses && Array.isArray(customClasses)) {
+		customClasses.forEach(function(customClass) {
+			if(typeof (customClass.targetXPathIndex) === 'number') {
+				if(typeof (result[customClass.targetXPathIndex]) === 'undefined') {
+					result[customClass.targetXPathIndex] = [customClass];
+				} else {
+					result[customClass.targetXPathIndex].push(customClass);
+				}
+				delete customClass.targetXPathIndex;
+			}
+		});
+	}
+	return result;
 }
 
 /**
