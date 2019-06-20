@@ -83,9 +83,9 @@ exports.validateConfig = function (options) {
  */
 exports.makeCompatible = function (options) {
   // place fields which do not belong in a group outside of configGroups
-  var compatible = exports.factorize(options);
+  var compatible = this.factorize(options);
   // split the configs up if necessary
-  compatible.configGroups = exports.splitConfig(options);
+  compatible.configGroups = this.splitConfig(options);
   // should we factorize common field values and place in defaultConfig? I don't think so
   return compatible;
 }
@@ -102,7 +102,7 @@ exports.splitConfig = function (options) {
     // everything revolves around an xpath
     if (Array.isArray(options.targetXPath)) {
       // group up custom classes according to index
-      var groupedCustomClasses = exports.groupCustomClasses(options.customClasses);
+      var groupedCustomClasses = this.groupCustomClasses(options.customClasses);
 
       // need to ensure it's array and not string so that code doesnt mistakenly separate chars
       var renderToPathIsArray = Array.isArray(options.renderToPath);
@@ -197,6 +197,133 @@ exports.factorize = function (options) {
   });
 
   return factorized;
+}
+
+/**
+ * Maps the props of configGroups passed by input into a default configGroup object
+ * @param configGroup input by user
+ * @param defaultConfig default config specified by the user (optional)
+ * @param numberOfPayments number of split payments for the widget
+ * @return default configGroup object, specifying all fields and taking into account overrides by input
+ */
+exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments) {
+  var result = {};
+
+  // targetXPath SHOULD NOT be specified in defaultConfig since
+  // it is like an ID for a configGroup (except if adding the price element class is used)
+  result.xpath = this.breakXPath(configGroup.targetXPath);
+
+  result.rendertopath = configGroup.renderToPath || (defaultConfig && defaultConfig.renderToPath) || '..';
+
+  // This array in which its elements are objects with two keys
+  // relatedPath - this is a xpath of an element related to the price element
+  // action - this is a function triggered when the element has a mutation
+  // initialAction - this is a function to act upon a pre existing element's condition
+  result.relatedElementActions = configGroup.relatedElementActions || (defaultConfig && defaultConfig.relatedElementActions) || [];
+
+  result.ignoredPriceElements = configGroup.ignoredPriceElements || (defaultConfig && defaultConfig.ignoredPriceElements) || [];
+  if (typeof (result.ignoredPriceElements) === 'string') {
+    // Only one x-path is given
+    result.ignoredPriceElements = [this.breakXPath(result.ignoredPriceElements.trim())];
+  } else {
+    // result.ignoredPriceElements is an array of x-paths
+    result.ignoredPriceElements = result.ignoredPriceElements.map(function (path) {
+      return this.breakXPath(path.trim());
+    }.bind(this));
+  }
+
+  result.alignment = configGroup.alignment || (defaultConfig && defaultConfig.alignment) || 'auto';
+  result.widgetType = configGroup.widgetType || (defaultConfig && defaultConfig.widgetType) || 'product-page';
+  result.bannerURL = configGroup.bannerURL || (defaultConfig && defaultConfig.bannerURL) || '';
+  result.bannerClass = configGroup.bannerClass || (defaultConfig && defaultConfig.bannerClass) || '';
+  result.bannerLink = configGroup.bannerLink || (defaultConfig && defaultConfig.bannerLink) || '';
+  result.fontWeight = configGroup.fontWeight || (defaultConfig && defaultConfig.fontWeight) | 300;
+  result.alignmentSwitchMinWidth = configGroup.alignmentSwitchMinWidth || (defaultConfig && defaultConfig.alignmentSwitchMinWidth); //pixels
+  result.alignmentSwitchType = configGroup.alignmentSwitchType || (defaultConfig && defaultConfig.alignmentSwitchType);
+  result.marginTop = configGroup.marginTop || (defaultConfig && defaultConfig.marginTop) || 0; //pixels
+  result.marginBottom = configGroup.marginBottom || (defaultConfig && defaultConfig.marginBottom) || 0; //pixels
+  result.marginLeft = configGroup.marginLeft || (defaultConfig && defaultConfig.marginLeft) || 0; //pixels
+  result.marginRight = configGroup.marginRight || (defaultConfig && defaultConfig.marginRight) || 0; //pixels
+  result.scaleFactor = configGroup.scaleFactor || (defaultConfig && defaultConfig.scaleFactor);
+  result.logoSize = configGroup.logoSize || (defaultConfig && defaultConfig.logoSize) || 1.0;
+  result.fontFamily = configGroup.fontFamily || (defaultConfig && defaultConfig.fontFamily) || 'inherit';
+  result.textColor = configGroup.color || (defaultConfig && defaultConfig.color) || 'inherit';
+  result.fontSize = configGroup.fontSize || (defaultConfig && defaultConfig.fontSize) || 12;
+  result.maxWidth = configGroup.maxWidth || (defaultConfig && defaultConfig.maxWidth) || 400; //pixels
+  result.fixedHeight = configGroup.fixedHeight || (defaultConfig && defaultConfig.fixedHeight) || 0; //pixels
+  // This is used to get price of element
+  result.priceElementClass = configGroup.priceElementClass || (defaultConfig && defaultConfig.priceElementClass) || 'sezzle-price-element';
+  // This is used to tell where to render sezzle element to
+  result.sezzleWidgetContainerClass = configGroup.sezzleWidgetContainerClass || (defaultConfig && defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
+  // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
+  result.splitPriceElementsOn = configGroup.splitPriceElementsOn || (defaultConfig && defaultConfig.splitPriceElementsOn) || '';
+  // after pay link
+  result.apLink = configGroup.apLink || (defaultConfig && defaultConfig.apLink) || 'https://www.afterpay.com/terms-of-service';
+  // This option is to render custom class in sezzle widget
+  // This option contains an array of objects
+  // each of the objects should have two properties
+  // xpath -> the path from the root of sezzle element
+  // className -> a string of classname that is to be added
+  // index -> this is optional, if provided then only the widget with
+  // configGroupIndex -> It's a map to the element that match the configGroup of that index
+  // the same sezzle index value will be effected with the class name
+  // Example : [
+  // {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
+  // {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
+  //]
+  result.customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (defaultConfig && Array.isArray(defaultConfig.customClasses) ? defaultConfig.customClasses : []);
+
+  result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
+  if (result.widgetTemplate) {
+    result.widgetTemplate = result.widgetTemplate.split('%%');
+  } else {
+    var defaultWidgetTemplate = 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
+    result.widgetTemplate = defaultWidgetTemplate.split('%%');
+  }
+
+  if (result.splitPriceElementsOn) {
+    result.widgetTemplate = result.widgetTemplate.map(function (subtemplate) {
+      return subtemplate === 'price' ? 'price-split' : subtemplate;
+    });
+  }
+
+  // Search for price elements. If found, assume there is only one in this page
+  result.hasPriceClassElement = false;
+  result.priceElements = Array.prototype.slice.
+    call(document.getElementsByClassName(result.priceElementClass));
+
+  result.renderElements = Array.prototype.slice.
+    call(document.getElementsByClassName(result.sezzleWidgetContainerClass));
+
+  if (result.priceElements.length == 1) {
+    result.hasPriceClassElement = true;
+  }
+
+  result.theme = configGroup.theme || 'light';
+  if (result.theme == 'dark') {
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
+    result.imageClassName = 'szl-dark-image';
+  } else {
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+    result.imageClassName = 'szl-light-image';
+  }
+
+  result.hideElements = configGroup.hideElements || (defaultConfig && defaultConfig.hideElements) || [];
+  if (typeof (result.hideElements) === 'string') {
+    // Only one x-path is given
+    result.hideElements = [this.breakXPath(result.hideElements.trim())];
+  } else {
+    // result.hideElements is an array of x-paths
+    result.hideElements = result.hideElements.map(function (path) {
+      return this.breakXPath(path.trim());
+    }.bind(this));
+  }
+
+  // variables set by the JS
+  result.productPrice = null;
+  result.widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
+
+  return result;
 }
 
 /**
