@@ -1,4 +1,69 @@
 const Helper = require('./helper');
+var sezzleConfig = require('./sezzle.config.js');
+var cloneDeep = require('lodash.clonedeep');
+
+describe('Backwards compatability function works as expected', () => {
+  test('Properly converts old config structure to new config structure', () => {
+    // deep object comparison
+    expect(sezzleConfig.newConfig).toEqual(Helper.makeCompatible(sezzleConfig.oldConfig));
+  });
+});
+
+describe('Config validator function works as expected', () => {
+  test('Throws an error when configGroups is not an array', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    newConfig.configGroups = 'somethingWhichIsNotAnArray';
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('options.configGroups must be an array');
+  });
+
+  test('Throws an error when configGroups is an empty array', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    newConfig.configGroups = [];
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('options.configGroups must have at least one config object');
+  });
+
+  test('Throws an error when targetXPath is not specified in any one of the config groups', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    delete newConfig.configGroups[0].targetXPath;
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('targetXPath must be specified in all configs in options.configGroups');
+  });
+
+  test('Throws an error when targetXPath is not a string in any one of the config groups', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    newConfig.configGroups[0].targetXPath = [newConfig.configGroups[0].targetXPath];
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('targetXPath must be of type string');
+  });
+
+  test('Throws an error when renderToPath is not a string in any one of the config groups', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    newConfig.configGroups[0].renderToPath = [newConfig.configGroups[0].renderToPath];
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('renderToPath must be of type string');
+  });
+
+  test('Throws an error when a property which does not belong to a config group is being defined in a config group', () => {
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
+    newConfig.configGroups[0].merchantID = 'someMerchantID';
+
+    expect(() => {
+      Helper.validateConfig(newConfig);
+    }).toThrow('merchantID is not a property of a configGroup. Specify this key at the outermost layer');
+  });
+});
 
 describe('Testing isNumeric helper function', () => {
   const testCases = [{

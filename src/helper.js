@@ -1,5 +1,20 @@
 var cloneDeep = require('lodash.clonedeep')
 
+// properties that do not belong to a config group (must have been factorized before)
+const propsNotInConfigGroup = [
+	"merchantID",
+	"forcedShow",
+	"minPrice",
+	"maxPrice",
+	"numberOfPayments",
+	"altLightboxHTML",
+	"apModalHTML",
+	"qpModalHTML",
+	"noGtm",
+	"noTracking",
+	"testID"
+];
+
 /**
  * This is a function to validate configs
  * @param options new config to validate
@@ -41,21 +56,6 @@ exports.validateConfig = function(options) {
 		});
 	});
 
-	// properties that do not belong to a config group (must have been factorized before)
-	const propsNotInConfigGroup = [
-		"merchantID", 
-		"forcedShow", 
-		"minPrice", 
-		"maxPrice", 
-		"numberOfPayments", 
-		"altLightboxHTML", 
-		"apModalHTML", 
-		"qpModalHTML",
-		"noGtm",
-		"noTracking",
-		"testID"
-	];
-
 	// check correct factorization
 	options.configGroups.forEach(function(group) {
 		Object.keys(group).forEach(function(key) {
@@ -73,10 +73,10 @@ exports.validateConfig = function(options) {
 
 /**
  * This is a helper function to convert an old
- * config passed into SezzleJS' constructor to a 
+ * config passed into SezzleJS' constructor to a
  * new one which is compatible with the current
  * SezzleJS version. In other words, this
- * function is used for backwards compatability 
+ * function is used for backwards compatability
  * with older versions.
  * @param options old config passed into SezzleJS' constructor
  * @return compatible object with current SezzleJS version
@@ -124,8 +124,8 @@ exports.splitConfig = function(options) {
 				}
 
 				// sync up relatedElementActions array
-				if(options.relatedElementActions && 
-					typeof (options.relatedElementActions[inner]) !== 'undefined' && 
+				if(options.relatedElementActions &&
+					typeof (options.relatedElementActions[inner]) !== 'undefined' &&
 					Array.isArray(options.relatedElementActions[inner])) {
 					config.relatedElementActions = options.relatedElementActions[inner];
 				}
@@ -175,26 +175,12 @@ exports.groupCustomClasses = function(customClasses) {
 
 /**
  * This is a helper function to move fields which do not belong to a
- * config group outside of the group and also place them outside 
- * configGroups in order to be compatible with latest structure. 
+ * config group outside of the group and also place them outside
+ * configGroups in order to be compatible with latest structure.
  * @param options old sezzle config
  * @return Factorized fields
  */
 exports.factorize = function(options) {
-	const fieldsToFactorize = [
-		"merchantID", 
-		"forcedShow", 
-		"minPrice", 
-		"maxPrice", 
-		"numberOfPayments", 
-		"altLightboxHTML", 
-		"apModalHTML", 
-		"qpModalHTML",
-		"noGtm",
-		"noTracking",
-		"testID"
-	];
-
 	var factorized = {};
 
 	// assumption is being made that all these fields are the same across all config groups
@@ -203,8 +189,7 @@ exports.factorize = function(options) {
 	// - forcedShow is only useful if the country in which the widget is served is not in the supported list
 	//   so it's reasonable to assume that forcedShow should be the same value for all configs
 	// - as the widget only supports one modal currently, there is no capability of loading multiple modals
-
-	fieldsToFactorize.forEach(function(field) {
+	propsNotInConfigGroup.forEach(function(field) {
 		if(options[field] !== undefined) {
 			factorized[field] = options[field];
 			delete options[field];
