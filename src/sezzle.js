@@ -44,7 +44,7 @@ var SezzleJS = function (options) {
 
   // map config group props
   this.configGroups = [];
-  options.configGroups.forEach(function (configGroup, index) {
+  options.configGroups.forEach(function (configGroup) {
     this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments));
   }.bind(this));
 }
