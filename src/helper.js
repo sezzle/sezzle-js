@@ -332,7 +332,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
  * @return boolean [if it's numeric or not]
  */
 exports.isNumeric = function (n) {
-	return !isNaN(parseFloat(n)) && isFinite(n);
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 /**
@@ -341,10 +341,10 @@ exports.isNumeric = function (n) {
  * @returns string[] Ex: ['.', '.class', '#id']
  */
 exports.breakXPath = function (xpath) {
-	return xpath.split('/')
-		.filter(function (subpath) {
-			return subpath !== ''
-		});
+  return xpath.split('/')
+    .filter(function (subpath) {
+      return subpath !== ''
+    });
 }
 
 /**
@@ -353,7 +353,7 @@ exports.breakXPath = function (xpath) {
  * @return boolean [if it's alphabet or not]
  */
 exports.isAlphabet = function (n) {
-	return /^[a-zA-Z()]+$/.test(n);
+  return /^[a-zA-Z()]+$/.test(n);
 }
 
 /**
@@ -363,17 +363,17 @@ exports.isAlphabet = function (n) {
  * @return string
  */
 exports.parsePriceString = function (price, includeComma) {
-	var formattedPrice = '';
-	for (var i = 0; i < price.length; i++) {
-		if (this.isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
-			// If current is a . and previous is a character, it can be something like Rs.
-			// so ignore it
-			if (i > 0 && price[i] == '.' && this.isAlphabet(price[i - 1])) continue;
+  var formattedPrice = '';
+  for (var i = 0; i < price.length; i++) {
+    if (this.isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
+      // If current is a . and previous is a character, it can be something like Rs.
+      // so ignore it
+      if (i > 0 && price[i] == '.' && this.isAlphabet(price[i - 1])) continue;
 
-			formattedPrice += price[i];
-		}
-	}
-	return formattedPrice;
+      formattedPrice += price[i];
+    }
+  }
+  return formattedPrice;
 }
 
 /**
@@ -382,7 +382,7 @@ exports.parsePriceString = function (price, includeComma) {
  * @return float
  */
 exports.parsePrice = function (price) {
-	return parseFloat(this.parsePriceString(price, false));
+  return parseFloat(this.parsePriceString(price, false));
 }
 
 /**
@@ -391,7 +391,7 @@ exports.parsePrice = function (price) {
  * @param referenceNode Element to insert after
  */
 exports.insertAfter = function (el, referenceNode) {
-	referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
 }
 
 /**
@@ -400,9 +400,9 @@ exports.insertAfter = function (el, referenceNode) {
  * @param referenceElement Element to grab parent element
  */
 exports.insertAsFirstChild = function (element, referenceElement) {
-	referenceElement.parentElement.insertBefore(element, referenceElement);
-	//bump up element above nodes which are not element nodes (if any)
-	while (element.previousSibling) {
-		element.parentElement.insertBefore(element, element.previousSibling);
-	}
+  referenceElement.parentElement.insertBefore(element, referenceElement);
+  //bump up element above nodes which are not element nodes (if any)
+  while (element.previousSibling) {
+    element.parentElement.insertBefore(element, element.previousSibling);
+  }
 }
