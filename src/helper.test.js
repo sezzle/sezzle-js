@@ -16,7 +16,7 @@ describe('Config validator function works as expected', () => {
 
     expect(() => {
       Helper.validateConfig(newConfig);
-    }).toThrow('options.configGroups must be an array');
+    }).toThrow('options.configGroups is not an array');
   });
 
   test('Throws an error when configGroups is an empty array', () => {
