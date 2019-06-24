@@ -21,7 +21,6 @@ const propsNotInConfigGroup = [
  * @return nothing. If config is invalid, error is thrown and program execution is stopped.
  */
 exports.validateConfig = function (options) {
-<<<<<<< HEAD
   if (!Array.isArray(options.configGroups)) {
     throw new Error("options.configGroups is not an array");
   } else {
@@ -39,29 +38,9 @@ exports.validateConfig = function (options) {
       }
     });
   });
-=======
-	if (!Array.isArray(options.configGroups)) {
-		throw new Error("options.configGroups must be an array");
-	} else {
-		if (!options.configGroups.length) {
-			throw new Error("options.configGroups must have at least one config object");
-		}
-	}
-
-	// checking fields which MUST be specified in configGroups. (Only one as of now :D)
-	const mustInclude = ["targetXPath"];
-	options.configGroups.forEach(function (group) {
-		mustInclude.forEach(function (field) {
-			if (!group.hasOwnProperty(field)) {
-				throw new Error(field + " must be specified in all configs in options.configGroups");
-			}
-		});
-	});
->>>>>>> 13d51aa... 2 space indentation fix
 
   // type checks for crucial fields
 
-<<<<<<< HEAD
   // expected types for crucial fields in the config
   // may do type checking for all fields in the future but it's just not necessary as of now
   const expectedTypes = {
@@ -85,31 +64,6 @@ exports.validateConfig = function (options) {
       }
     });
   });
-=======
-	// expected types for crucial fields in the config
-	// may do type checking for all fields in the future but it's just not necessary as of now
-	const expectedTypes = {
-		"targetXPath": "string",
-		"renderToPath": "string",
-		"urlMatch": "string"
-	}
-	options.configGroups.forEach(function (group) {
-		Object.keys(expectedTypes).forEach(function (key) {
-			if (group.hasOwnProperty(key) && typeof (group[key]) !== expectedTypes[key]) {
-				throw new Error(key + " must be of type " + expectedTypes[key]);
-			}
-		});
-	});
-
-	// check correct factorization
-	options.configGroups.forEach(function (group) {
-		Object.keys(group).forEach(function (key) {
-			if (propsNotInConfigGroup.includes(key)) {
-				throw new Error(key + " is not a property of a configGroup. Specify this key at the outermost layer");
-			}
-		});
-	});
->>>>>>> 13d51aa... 2 space indentation fix
 
   // if control reaches this point, the config is acceptable. It may not be perfect since the checks
   // are pretty loose, but at least the crucial parts of it are OK. May add more checks in the future.
@@ -128,21 +82,12 @@ exports.validateConfig = function (options) {
  * @return compatible object with current SezzleJS version
  */
 exports.makeCompatible = function (options) {
-<<<<<<< HEAD
   // place fields which do not belong in a group outside of configGroups
   var compatible = this.factorize(options);
   // split the configs up if necessary
   compatible.configGroups = this.splitConfig(options);
   // should we factorize common field values and place in defaultConfig? I don't think so
   return compatible;
-=======
-	// place fields which do not belong in a group outside of configGroups
-	var compatible = exports.factorize(options);
-	// split the configs up if necessary
-	compatible.configGroups = exports.splitConfig(options);
-	// should we factorize common field values and place in defaultConfig? I don't think so
-	return compatible;
->>>>>>> 13d51aa... 2 space indentation fix
 }
 
 /**
@@ -152,7 +97,6 @@ exports.makeCompatible = function (options) {
  * @return split array of configs
  */
 exports.splitConfig = function (options) {
-<<<<<<< HEAD
   var res = [];
   if (typeof (options.targetXPath) !== 'undefined') {
     // everything revolves around an xpath
@@ -178,50 +122,6 @@ exports.splitConfig = function (options) {
           // by default, below parent of target
           config.renderToPath = "..";
         }
-=======
-	var res = [];
-	if (typeof (options.targetXPath) !== 'undefined') {
-		// everything revolves around an xpath
-		if (Array.isArray(options.targetXPath)) {
-			// group up custom classes according to index
-			var groupedCustomClasses = exports.groupCustomClasses(options.customClasses);
-
-			// need to ensure it's array and not string so that code doesnt mistakenly separate chars
-			var renderToPathIsArray = Array.isArray(options.renderToPath);
-			// a group should revolve around targetXPath
-			// break up the array, starting from the first element
-			options.targetXPath.forEach(function (xpath, inner) {
-				// deep clone as config may have nested objects
-				var config = cloneDeep(options);
-
-				// overwrite targetXPath
-				config.targetXPath = xpath;
-
-				// sync up renderToPath array
-				if (renderToPathIsArray && typeof (options.renderToPath[inner]) !== 'undefined') {
-					config.renderToPath = options.renderToPath[inner] ? options.renderToPath[inner] : null;
-				} else {
-					// by default, below parent of target
-					config.renderToPath = "..";
-				}
-
-				// sync up relatedElementActions array
-				if (options.relatedElementActions &&
-					typeof (options.relatedElementActions[inner]) !== 'undefined' &&
-					Array.isArray(options.relatedElementActions[inner])) {
-					config.relatedElementActions = options.relatedElementActions[inner];
-				}
-
-				// sync up customClasses
-				if (typeof (groupedCustomClasses[inner]) !== 'undefined') {
-					config.customClasses = groupedCustomClasses[inner];
-				}
-
-				// duplicate ignoredPriceElements string / array if exists
-				if (options.ignoredPriceElements) {
-					config.ignoredPriceElements = options.ignoredPriceElements;
-				}
->>>>>>> 13d51aa... 2 space indentation fix
 
         // sync up relatedElementActions array
         if (options.relatedElementActions &&
@@ -303,7 +203,6 @@ exports.groupCustomClasses = function (customClasses) {
  * @return Factorized fields
  */
 exports.factorize = function (options) {
-<<<<<<< HEAD
   var factorized = {};
 
   // assumption is being made that all these fields are the same across all config groups
@@ -447,24 +346,6 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   result.widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
 
   return result;
-=======
-	var factorized = {};
-
-	// assumption is being made that all these fields are the same across all config groups
-	// it is a reasonable assumption to make as :
-	// - one config as a whole should only be assigned to one merchantID
-	// - forcedShow is only useful if the country in which the widget is served is not in the supported list
-	//   so it's reasonable to assume that forcedShow should be the same value for all configs
-	// - as the widget only supports one modal currently, there is no capability of loading multiple modals
-	propsNotInConfigGroup.forEach(function (field) {
-		if (options[field] !== undefined) {
-			factorized[field] = options[field];
-			delete options[field];
-		}
-	});
-
-	return factorized;
->>>>>>> 13d51aa... 2 space indentation fix
 }
 
 /**
