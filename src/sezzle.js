@@ -5,7 +5,7 @@ var SezzleJS = function (options) {
 
   // convert to new config if options passed in is old config
   var isOldConfig = typeof (options.configGroups) === 'undefined';
-	if (isOldConfig) options = Helper.makeCompatible(options);
+  if (isOldConfig) options = Helper.makeCompatible(options);
 
   // validate config structure
   Helper.validateConfig(options);
@@ -341,8 +341,8 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
  * @return void
  */
 SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
-	element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
-	element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
+  element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
+  element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
 }
 
 /**
