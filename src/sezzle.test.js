@@ -4,7 +4,7 @@ var sezzleConfig = require('./sezzle.config.js');
 
 describe('Config validator function works as expected', () => {
   test('Throws an error when configGroups is not an array', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     newConfig.configGroups = 'somethingWhichIsNotAnArray';
 
     expect(() => {
@@ -13,7 +13,7 @@ describe('Config validator function works as expected', () => {
   });
 
   test('Throws an error when configGroups is an empty array', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     newConfig.configGroups = [];
 
     expect(() => {
@@ -22,7 +22,7 @@ describe('Config validator function works as expected', () => {
   });
 
   test('Throws an error when targetXPath is not specified in any one of the config groups', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     delete newConfig.configGroups[0].targetXPath;
 
     expect(() => {
@@ -31,7 +31,7 @@ describe('Config validator function works as expected', () => {
   });
 
   test('Throws an error when targetXPath is not a string in any one of the config groups', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     newConfig.configGroups[0].targetXPath = [newConfig.configGroups[0].targetXPath];
 
     expect(() => {
@@ -40,7 +40,7 @@ describe('Config validator function works as expected', () => {
   });
 
   test('Throws an error when renderToPath is not a string in any one of the config groups', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     newConfig.configGroups[0].renderToPath = [newConfig.configGroups[0].renderToPath];
 
     expect(() => {
@@ -49,7 +49,7 @@ describe('Config validator function works as expected', () => {
   });
 
   test('Throws an error when a property which does not belong to a config group is being defined in a config group', () => {
-    const newConfig = cloneDeep(sezzleConfig.new);
+    const newConfig = cloneDeep(sezzleConfig.newConfig);
     newConfig.configGroups[0].merchantID = 'someMerchantID';
 
     expect(() => {
