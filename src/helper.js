@@ -218,9 +218,9 @@ exports.isNumeric = function (n) {
  * @param xpath string Ex: './.class1/#id'
  * @returns string[] Ex: ['.', '.class', '#id']
  */
-exports.breakXPath = function(xpath) {
+exports.breakXPath = function (xpath) {
   return xpath.split('/')
-    .filter(function(subpath) {
+    .filter(function (subpath) {
       return subpath !== ''
     });
 }
@@ -269,7 +269,7 @@ exports.parsePrice = function (price) {
  * @param referenceNode Element to insert after
  */
 exports.insertAfter = function (el, referenceNode) {
-	referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
 }
 
 /**
@@ -278,9 +278,9 @@ exports.insertAfter = function (el, referenceNode) {
  * @param referenceElement Element to grab parent element
  */
 exports.insertAsFirstChild = function (element, referenceElement) {
-	referenceElement.parentElement.insertBefore(element, referenceElement);
-	//bump up element above nodes which are not element nodes (if any)
-	while (element.previousSibling) {
-		element.parentElement.insertBefore(element, element.previousSibling);
-	}
+  referenceElement.parentElement.insertBefore(element, referenceElement);
+  //bump up element above nodes which are not element nodes (if any)
+  while (element.previousSibling) {
+    element.parentElement.insertBefore(element, element.previousSibling);
+  }
 }
