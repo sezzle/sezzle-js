@@ -5,7 +5,7 @@ var SezzleJS = function (options) {
 
   // convert to new config if options passed in is old config
   var isOldConfig = typeof (options.configGroups) === 'undefined';
-  if (isOldConfig) options = Helper.makeCompatible(options);
+	if (isOldConfig) options = Helper.makeCompatible(options);
 
   // validate config structure
   Helper.validateConfig(options);
