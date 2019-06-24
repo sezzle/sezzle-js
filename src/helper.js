@@ -22,7 +22,7 @@ const propsNotInConfigGroup = [
  */
 exports.validateConfig = function (options) {
   if (!Array.isArray(options.configGroups)) {
-    throw new Error("options.configGroups must be an array");
+    throw new Error("options.configGroups is not an array");
   } else {
     if (!options.configGroups.length) {
       throw new Error("options.configGroups must have at least one config object");
@@ -271,7 +271,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   // {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
   // {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
   //]
-  result.customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : (defaultConfig && Array.isArray(defaultConfig.customClasses) ? defaultConfig.customClasses : []);
+  result.customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : [];
 
   result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
   if (result.widgetTemplate) {
