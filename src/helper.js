@@ -320,7 +320,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
     }.bind(this));
   }
 
-  result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || ['Subtotal', 'Total:', 'Sold Out'];
+  result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || (defaultConfig && defaultConfig.ignoredFormattedPriceText) || ['Subtotal', 'Total:', 'Sold Out'];
   if(!Array.isArray(result.ignoredFormattedPriceText)) {
     result.ignoredFormattedPriceText = [result.ignoredFormattedPriceText]
   }
