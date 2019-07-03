@@ -701,15 +701,8 @@ SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
   // Will be used later to replace {price} with price / this.numberOfPayments Eg: ${price} USD
   var formatter = priceText.replace(priceString, '{price}');
 
-  // array of strings that come up inside of elements that we want to make sure to strip out
-  var ignoredPriceStrings = [
-    'Subtotal',
-    'Total:',
-    'Sold Out',
-  ];
-
   // replace other strings not wanted in text
-  ignoredPriceStrings.forEach(function (ignoredString) {
+  this.configGroups[configGroupIndex].ignoredFormattedPriceText.forEach(function (ignoredString) {
     formatter = formatter.replace(ignoredString, '');
   }.bind(this));
 

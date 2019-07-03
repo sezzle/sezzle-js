@@ -300,7 +300,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
     result.hasPriceClassElement = true;
   }
 
-  result.theme = configGroup.theme || 'light';
+  result.theme = configGroup.theme || (defaultConfig && defaultConfig.theme) || 'light';
   if (result.theme == 'dark') {
     result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
     result.imageClassName = 'szl-dark-image';
@@ -318,6 +318,11 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
     result.hideClasses = result.hideClasses.map(function (path) {
       return this.breakXPath(path.trim());
     }.bind(this));
+  }
+
+  result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || ['Subtotal', 'Total:', 'Sold Out'];
+  if(!Array.isArray(result.ignoredFormattedPriceText)) {
+    result.ignoredFormattedPriceText = [result.ignoredFormattedPriceText]
   }
 
   // variables set by the JS
