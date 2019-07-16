@@ -57,6 +57,54 @@ gulp.task('cssupload', function () {
       }))
 });
 
+
+
+
+
+/// MODAL CODE -- NEEDS REVIEW ///
+
+gulp.task('modalupload', function () {
+  // bucket base url https://d3svog4tlx445w.cloudfront.net/
+  var indexPath = './dist/global-modal/global.min.modal.js'
+  return gulp.src(indexPath)
+    .pipe(rename('shopify-app/assets/' + globalModalUploadName))
+    .pipe(s3({
+      Bucket: 'sezzlemedia', //  Required
+      ACL: 'public-read'       //  Needs to be user-defined
+    }, {
+        maxRetries: 5
+      }))
+});
+
+gulp.task('post-modal-to-wrapper', function () {
+  console.log('Posting modal version to shopify gateway')
+  var options = {
+    method: 'POST',
+    uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
+    body: {
+      'version_name': globalModalUploadName
+    },
+    json: true
+  }
+  return rp(options)
+    .then(function (body) {
+      console.log('Posted new modal version to shopify wrapper')
+    })
+    .catch(function (err) {
+      console.log('Post failed with sezzle pay, ')
+      console.log(err);
+    })
+});
+
+//// END MODAL CODE ////
+
+
+
+
+
+
+
+
 gulp.task('post-button-css-to-wrapper', function () {
   console.log('Posting css version to shopify gateway')
   var options = {
@@ -88,7 +136,7 @@ gulp.task('bundlejs', function () {
         filename: buttonUploadName
       },
       optimization: {
-        minimize: true // <---- disables uglify.
+        minimize: false // <---- disables uglify.
       },
       mode: 'production'
     }))
