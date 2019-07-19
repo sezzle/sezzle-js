@@ -96,6 +96,32 @@ gulp.task('post-modal-to-wrapper', function () {
     })
 });
 
+gulp.task('grabversionmodal', function(done) {
+  versionCheck(pjson.modalversion);
+  done();
+})
+
+gulp.task('updatepackagemodal', function() {
+  return updateVersion({modalversion: newVersion});
+})
+
+gulp.task('commitupdatemodal', function() {
+  return gulp.src('./package.json')
+    .pipe(git.commit(`bumped modal version to: ${newVersion}`));
+})
+
+gulp.task('newbranchmodal', function(done) {
+  createBranch(getbranchName('modal'), done);
+})
+
+gulp.task('pushversionmodal', function(done) {
+  pushBranch(getbranchName('modal'), done);
+})
+
+gulp.task('deploymodal', gulp.series('styles', 'modalupload', 'post-button-modal-to-wrapper'));
+
+gulp.task('release-modal', gulp.series('grabversionmodal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
+
 //// END MODAL CODE ////
 
 
