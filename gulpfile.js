@@ -12,11 +12,13 @@ var gulp = require('gulp'),
   git = require('gulp-git'),
   compareVersions = require('compare-versions'),
   exec = require('child_process').exec,
-  jeditor = require("gulp-json-editor");
+	jeditor = require("gulp-json-editor"),
+	htmlmin = require('gulp-htmlmin');
 
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
+var globalModalUploadName = `sezzle-modal${pjson.modalversion}.html`;
 var newVersion = '';
 
 /**
@@ -65,9 +67,9 @@ gulp.task('cssupload', function () {
 
 gulp.task('modalupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
-  var indexPath = './dist/global-modal/global.min.modal.js'
+  var indexPath = './dist/global-modal/global.min.modal.html'
   return gulp.src(indexPath)
-    .pipe(rename('shopify-app/assets/' + globalModalUploadName))
+    .pipe(rename('htmlmin'({ collapseWhitespace: true }) + globalModalUploadName))
     .pipe(s3({
       Bucket: 'sezzlemedia', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
