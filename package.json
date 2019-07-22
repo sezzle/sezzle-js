@@ -10,7 +10,8 @@
     "test": "jest --coverage",
     "build": "gulp bundlejs",
     "release": "gulp release",
-    "release-css": "gulp release-css"
+    "release-css": "gulp release-css",
+    "modal": "http-server ./modal -p 8081"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "gulp-ruby-sass": "^2.1.1",
     "gulp-s3-upload": "1.7.1",
     "gulp-stylelint": "^8.0.0",
+    "http-server": "^0.11.1",
     "jest": "^24.0.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
