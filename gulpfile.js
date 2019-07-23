@@ -334,6 +334,14 @@ gulp.task('deploy', function (done) {
           console.log(stdout);
           done();
         })
+      } else if (versionCommit.indexOf('bumped modal version to:') > -1) {
+        console.log(versionCommit);
+        console.log('Updating Modal version');
+        exec('npx gulp deploymodal', function(err, stdout, stderr) {
+          if (err) throw err;
+          console.log(stdout);
+          done();
+        })
       } else {
         console.log('No version change commit found');
         done();
