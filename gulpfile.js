@@ -69,7 +69,7 @@ gulp.task('modalupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
   var indexPath = './dist/global-modal/global.min.modal.html'
   return gulp.src(indexPath)
-    .pipe(rename('htmlmin'({ collapseWhitespace: true }) + globalModalUploadName))
+    .pipe(rename('htmlmin' + globalModalUploadName ({ collapseWhitespace: true }) ))
     .pipe(s3({
       Bucket: 'sezzlemedia', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
@@ -120,7 +120,7 @@ gulp.task('pushversionmodal', function(done) {
   pushBranch(getbranchName('modal'), done);
 })
 
-gulp.task('deploymodal', gulp.series('styles', 'modalupload', 'post-button-modal-to-wrapper'));
+gulp.task('deploymodal', gulp.series('modalupload', 'post-modal-to-wrapper'));
 
 gulp.task('release-modal', gulp.series('grabversionmodal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
 
