@@ -59,80 +59,6 @@ gulp.task('cssupload', function () {
       }))
 });
 
-
-
-
-
-/// MODAL CODE -- NEEDS REVIEW ///
-
-gulp.task('modalupload', function () {
-  // bucket base url https://d3svog4tlx445w.cloudfront.net/
-  var indexPath = './dist/global-modal/global.min.modal.html'
-  return gulp.src(indexPath)
-    .pipe(rename('htmlmin' + globalModalUploadName ({ collapseWhitespace: true }) ))
-    .pipe(s3({
-      Bucket: 'sezzlemedia', //  Required
-      ACL: 'public-read'       //  Needs to be user-defined
-    }, {
-        maxRetries: 5
-      }))
-});
-
-gulp.task('post-modal-to-wrapper', function () {
-  console.log('Posting modal version to shopify gateway')
-  var options = {
-    method: 'POST',
-    uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
-    body: {
-      'version_name': globalModalUploadName
-    },
-    json: true
-  }
-  return rp(options)
-    .then(function (body) {
-      console.log('Posted new modal version to shopify wrapper')
-    })
-    .catch(function (err) {
-      console.log('Post failed with sezzle pay, ')
-      console.log(err);
-    })
-});
-
-gulp.task('grabversionmodal', function(done) {
-  versionCheck(pjson.modalversion);
-  done();
-})
-
-gulp.task('updatepackagemodal', function() {
-  return updateVersion({modalversion: newVersion});
-})
-
-gulp.task('commitupdatemodal', function() {
-  return gulp.src('./package.json')
-    .pipe(git.commit(`bumped modal version to: ${newVersion}`));
-})
-
-gulp.task('newbranchmodal', function(done) {
-  createBranch(getbranchName('modal'), done);
-})
-
-gulp.task('pushversionmodal', function(done) {
-  pushBranch(getbranchName('modal'), done);
-})
-
-gulp.task('deploymodal', gulp.series('modalupload', 'post-modal-to-wrapper'));
-
-gulp.task('release-modal', gulp.series('grabversionmodal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
-
-//// END MODAL CODE ////
-
-
-
-
-
-
-
-
 gulp.task('post-button-css-to-wrapper', function () {
   console.log('Posting css version to shopify gateway')
   var options = {
@@ -153,6 +79,42 @@ gulp.task('post-button-css-to-wrapper', function () {
     })
 });
 
+
+gulp.task('modalupload', function () {
+  // bucket base url https://d3svog4tlx445w.cloudfront.net/
+  var indexPath = './dist/global-modal/global.min.modal.html'
+  return gulp.src(indexPath)
+    .pipe(rename('htmlmin' + globalModalUploadName ({ collapseWhitespace: true }) ))
+    .pipe(s3({
+      Bucket: 'sezzlemedia', //  Required
+      ACL: 'public-read'       //  Needs to be user-defined
+    }, {
+        maxRetries: 5
+      }))
+});
+
+/**
+ * Tasks for the modal
+ */
+gulp.task('post-modal-to-wrapper', function () {
+  console.log('Posting modal version to shopify gateway')
+  var options = {
+    method: 'POST',
+    uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
+    body: {
+      'version_name': globalModalUploadName
+    },
+    json: true
+  }
+  return rp(options)
+    .then(function (body) {
+      console.log('Posted new modal version to shopify wrapper')
+    })
+    .catch(function (err) {
+      console.log('Post failed with sezzle pay, ')
+      console.log(err);
+    })
+});
 
 /**
  * Tasks for the sezzle-js widget
@@ -224,6 +186,11 @@ gulp.task('grabversioncss', function(done) {
   done();
 })
 
+gulp.task('grabversionmodal', function(done) {
+  versionCheck(pjson.modalversion);
+  done();
+})
+
 function updateVersion(params) {
   return gulp.src(['./package.json', './package-lock.json'])
     .pipe(jeditor(params))
@@ -238,6 +205,10 @@ gulp.task('updatepackagecss', function() {
   return updateVersion({cssversion: newVersion});
 })
 
+gulp.task('updatepackagemodal', function() {
+  return updateVersion({modalversion: newVersion});
+})
+
 gulp.task('commitupdate', function() {
   return gulp.src('./package.json')
     .pipe(git.commit(`bumped js version to: ${newVersion}`));
@@ -246,6 +217,11 @@ gulp.task('commitupdate', function() {
 gulp.task('commitupdatecss', function() {
   return gulp.src('./package.json')
     .pipe(git.commit(`bumped css version to: ${newVersion}`));
+})
+
+gulp.task('commitupdatemodal', function() {
+  return gulp.src('./package.json')
+    .pipe(git.commit(`bumped modal version to: ${newVersion}`));
 })
 
 gulp.task('createtag', function(done) {
@@ -279,6 +255,9 @@ gulp.task('newbranch', function(done) {
 gulp.task('newbranchcss', function(done) {
   createBranch(getbranchName('css'), done);
 })
+gulp.task('newbranchmodal', function(done) {
+  createBranch(getbranchName('modal'), done);
+})
 
 function pushBranch(branchName, done) {
   git.push('origin', branchName, function (err) {
@@ -292,15 +271,20 @@ gulp.task('pushversion', function(done) {
 gulp.task('pushversioncss', function(done) {
   pushBranch(getbranchName('css'), done);
 })
+gulp.task('pushversionmodal', function(done) {
+  pushBranch(getbranchName('modal'), done);
+})
 
 gulp.task('styles', gulp.series('cleancss', 'csscompile'));
 
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
 gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
+gulp.task('deploymodal', gulp.series('modalupload', 'post-modal-to-wrapper'));
 
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitupdate', 'pushversion'));
 gulp.task('release-css', gulp.series('grabversioncss', 'newbranchcss', 'updatepackagecss', 'commitupdatecss', 'pushversioncss'));
+gulp.task('release-modal', gulp.series('grabversionmodal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'))
 
 // CI processes
 gulp.task('deploy', function (done) {
