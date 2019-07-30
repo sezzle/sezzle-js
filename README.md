@@ -1,70 +1,26 @@
 
-### How to use
+### Description
+This javascript can be used for putting Sezzle's widget in websites.
 
-**Add this to the header of any website you want**
+#### Getting Started
+
+1. You will need edit access to your website's code.
+2. Open up your preferred code editor (or through your admin platform).
+3. Open your site in another tab.
+4. Open up and sign in to your Sezzle Merchant Dashboard.
+5. Have your Sezzle merchant ID handy. Your Sezzle merchant ID can be found in your Sezzle Merchant Dashboard under Settings > Business.
+
+#### Integration
+To integrate Sezzle's widget - follow the below steps. You can also request Sezzle integrates the widget for you at no charge through the Merchant Dashboard Setup Checklist. Setup Checklist > Add Widgets to Product Pages. Current turnaround time is 7 business days.
+
+1. Add this to the header (`<head>`) of your website OR at the bottom of your cart and product files - replacing the <your-sezzle-merchant-id-here> with your Sezzle merchant ID.
 ```<script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>```
 
-**Set the document config like so**
-```
-document.sezzleConfig = {
-    targetXPath: '<path-to-price-element>',
-    renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
-    forcedShow: false,
-    alignment: 'left',
-    merchantID: '<your-sezzle-merchant-id-here>',
-    theme: 'light',
-    widthType: 'thin',
-    widgetType: 'product-page',
-    minPrice: 0,
-    maxPrice: 100000,
-    imageUrl: 'example.com/example.png',
-    hideClasses: ['class-to-hide'],
-    priceElementClass: 'class-to-element-which-contains-price',
-    sezzleWidgetContainerClass: 'class-to-element-where-sezzle-element-will-be-rendered',
-    hidePrice: true,
-    altVersionTemplate: 'sezzle is the best %%logo%% %%link%%',
-    fontWeight: 200,
-    alignmentSwitchMinWidth: 800,
-    alignmentSwitchType: ‘right’,
-    maxWidth: 200,
-    marginTop: -20,
-    marginBottom: -20,
-    fontSize: 13
-}
-```
+2. Identify your `targetXPath` and `renderToPath` using the guide below.
 
-### Explanation of each option
-[click here](/widget-options.md)
+`targetXPath` is the path to the element in your webpage from where the product price would be picked up from.
 
-### Description
-This javascript can be used for putting sezzle's widget in websites.
-
-#### Simple
-The most simple way to put sezzle's widget is to following steps:
-1. Add the class `sezzle-price-element` to the price element.
-2. Add a new div with class `sezzle-widget-container`. This is where the sezzle widget will be rendered. So, you might want to put this div just below the price element.
-```
-<div class="sezzle-widget-container">
-</div>
-```
-3. Add the following code at the end of your page.
-```
-<script>
-  document.sezzleConfig = {
-    forcedShow: false,
-    alignment: "right",
-    merchantID: "",
-    theme: "light",
-    merchantID: "your-merchant-id",
-    widgetType: "product-page",
-  };
-</script>
-<script src="https://widget.sezzle.com/v1/javascript/price-widget/initial"></script>
-```
-For further customisation, please check the options at [click here](/widget-options.md)
-
-#### Advanced
-The system can be used to get price from multiple elements and render on multiple paths relative to the price element. The options to look at are `targetXPath` and `renderToPath`.
+`renderToPath` is the path to the element in your webpage where the Sezzle widget will be rendered to. This is relative to targetXPath.
 
 `What is a path?`
 A path is used to reach an element in the document. A path has the following rules:
@@ -80,43 +36,23 @@ If `renderToPath` is `..` - This will render the widget one parent above the pri
 If `renderToPath` is `../..` - This will render the widget two parents above the price element.
 If `renderToPath` is `../../.my-render-element` - This will render the widget two parents above the price element in an element with the class `my-render-element`.
 
-For more details please [click here](/widget-options.md)
+3. Add the following code at the end of your product and cart files, replacing the `<path-to-price-element>` and `<relative-path-to-element-to-which-to-render-this-widget>` with your chosen path.
+```
+<script>
+  document.sezzleConfig = {
+		targetXPath: '<path-to-price-element>',
+    renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
+  }
+</script>
+<script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
+```
+
+For further customization and more details, please check the options at [click here](/widget-options.md)
 
 Note that if you want to use a grayscale Sezzle logo put
 ```
-https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-all-black-sm-100w.png
+https://d3svog4tlx445w.cloudfront.net/branding/Sezzle-logos/png/Sezzle-logo-all-black-sm-100w.png
 ```
-into the `imageUrl` to override the default.
+into the `imageUrl` to override the default color logo.
 
-**When you need to update the CSS or the widget js records**
-We have a system running on redis off of our DB that keeps track of site specific js and css.
-
-The table is widget_server_production.merchant_button_versions - update the records there using the merchant UUID as the key identifier.
-
-Once set, you need to refresh redis for the widget server as such:
-```
-https://widget.sezzle.com/v1/redis/refresh
-```
-
-Done!
-
-## Deploying a new version
-
-1) Update version of js or css (based on new version updating) in the gulpfile.js
-
-1) For js updates:
-
-```bash
-
-npm run release -- --newversion=<version-number>
-
-```
-
-For CSS Updates:
-
-```bash
-
-npm run release-css -- --newversion=<version-number>
-
-```
-These commands will create a new branch with version update. That branch needs to be merged with master. An auto deploy will be triggered.
+If you run into any issues please contact merchantsupport@sezzle.com, or request Sezzle to add the widgets for you through your Merchant Dashboard > Setup Checklist > Add Widgets to Product Pages.
