@@ -725,15 +725,21 @@ SezzleJS.prototype.mutationCallBack = function (mutations, configGroupIndex) {
   mutations
     .filter(function (mutation) { return mutation.type === 'childList' })
     .forEach(function (mutation) {
-      var priceIndex = mutation.target.dataset.sezzleindex;
-      var price = this.getFormattedPrice(mutation.target, configGroupIndex);
-      var sezzlePriceElement = document.getElementsByClassName('sezzleindex-' + priceIndex)[0];
-      if (!/\d/.test(price)) {
-        sezzlePriceElement.parentElement.parentElement.parentElement.classList.add('sezzle-hidden');
-      } else {
-        sezzlePriceElement.parentElement.parentElement.parentElement.classList.remove('sezzle-hidden');
+      try {
+        var priceIndex = mutation.target.dataset.sezzleindex;
+        var price = this.getFormattedPrice(mutation.target, configGroupIndex);
+        var sezzlePriceElement = document.getElementsByClassName('sezzleindex-' + priceIndex)[0];
+        if (sezzlePriceElement) {
+          if (!/\d/.test(price)) {
+            sezzlePriceElement.parentElement.parentElement.parentElement.classList.add('sezzle-hidden');
+          } else {
+            sezzlePriceElement.parentElement.parentElement.parentElement.classList.remove('sezzle-hidden');
+          }
+          sezzlePriceElement.textContent = price;
+        }
+      } catch(e) {
+        console.warn(e);
       }
-      sezzlePriceElement.textContent = price;
     }.bind(this));
 };
 
