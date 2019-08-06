@@ -79,6 +79,16 @@ gulp.task('post-button-css-to-wrapper', function () {
     })
 });
 
+/**
+ * Tasks for the modal
+ */
+
+// minifies html for modal
+gulp.task('minify', function () {
+	return gulp.src('src/*.html')
+	.pipe(htmlmin({ collapseWhitespace: true }))
+	.pipe(gulp.dest('dist/global-modal'));
+})
 
 gulp.task('modalupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
@@ -93,9 +103,6 @@ gulp.task('modalupload', function () {
       }))
 });
 
-/**
- * Tasks for the modal
- */
 gulp.task('post-modal-to-wrapper', function () {
   console.log('Posting modal version to shopify gateway')
   var options = {
@@ -119,6 +126,7 @@ gulp.task('post-modal-to-wrapper', function () {
 /**
  * Tasks for the sezzle-js widget
  */
+
 gulp.task('bundlejs', function () {
   return gulp.src('src/sezzle-init.js')
     .pipe(webpack({
