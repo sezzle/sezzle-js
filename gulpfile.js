@@ -85,9 +85,12 @@ gulp.task('post-button-css-to-wrapper', function () {
 
 // minifies html for modal
 gulp.task('minify', function () {
-	return gulp.src('src/*.html')
+	return gulp.src('./modal/modal.html')
 	.pipe(htmlmin({ collapseWhitespace: true }))
-	.pipe(gulp.dest('dist/global-modal'));
+	.pipe(gulp.dest('dist/global-modal'))
+	.pipe(rename({
+		suffix: '.min'
+	}))
 })
 
 gulp.task('modalupload', function () {
