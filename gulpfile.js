@@ -19,7 +19,7 @@ var gulp = require('gulp'),
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
-var globalModalUploadName = `sezzle-modal${pjson.modalversion}.html`;
+var defaultModalUploadName = `sezzle-modal-default${pjson.modalversion}.html`;
 
 /**
  * Tasks for the CSS
@@ -50,13 +50,13 @@ gulp.task('cssupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
   var indexPath = './dist/global-css/global.min.css'
   return gulp.src(indexPath)
-    .pipe(rename('shopify-app/assets/' + globalCssUploadName))
+    .pipe(rename(`shopify-app/assets/${globalCssUploadName}`))
     .pipe(s3({
       Bucket: 'sezzlemedia', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
     }, {
-        maxRetries: 5
-      }))
+      maxRetries: 5
+    }))
 });
 
 gulp.task('post-button-css-to-wrapper', function () {
@@ -83,24 +83,26 @@ gulp.task('post-button-css-to-wrapper', function () {
  * Tasks for the modal
  */
 
+gulp.task('cleanmodal', function () {
+  return del(['dist/default-modal/**']);
+});
+
 // minifies html for modal
 gulp.task('minify-modal', function () {
-	return gulp.src('./modal/modal.html')
-	.pipe(htmlmin({ collapseWhitespace: true }))
-	.pipe(gulp.dest('dist/global-modal'))
-	.pipe(rename({
-		suffix: '.min'
-	}))
+	return gulp.src('./modals/default-modal.html')
+    .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true }))
+    .pipe(rename(defaultModalUploadName))
+    .pipe(gulp.dest('dist/default-modal'));
 })
 
 gulp.task('modalupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
-  var indexPath = './dist/global-modal/global.min.modal.html'
+  var indexPath = `./dist/default-modal/${defaultModalUploadName}`
   return gulp.src(indexPath)
-    .pipe(rename('htmlmin' + globalModalUploadName ({ collapseWhitespace: true }) ))
+    .pipe(rename(`shopify-app/assets/${defaultModalUploadName}`))
     .pipe(s3({
       Bucket: 'sezzlemedia', //  Required
-      ACL: 'public-read'       //  Needs to be user-defined
+      ACL: 'public-read'     //  Needs to be user-defined
     }, {
       maxRetries: 5
     }))
@@ -112,7 +114,7 @@ gulp.task('post-modal-to-wrapper', function () {
     method: 'POST',
     uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
     body: {
-      'version_name': globalModalUploadName
+      'version_name': defaultModalUploadName
     },
     json: true
   }
@@ -291,7 +293,7 @@ gulp.task('styles', gulp.series('cleancss', 'csscompile'));
 
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
 gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
-gulp.task('deploymodal', gulp.series('minify-modal', 'modalupload', 'post-modal-to-wrapper'));
+gulp.task('deploymodal', gulp.series('cleanmodal', 'minify-modal', 'modalupload', 'post-modal-to-wrapper'));
 
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitupdate', 'pushversion'));
