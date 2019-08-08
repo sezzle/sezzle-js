@@ -13,13 +13,13 @@ var gulp = require('gulp'),
   compareVersions = require('compare-versions'),
   exec = require('child_process').exec,
 	jeditor = require("gulp-json-editor"),
-	htmlmin = require('gulp-htmlmin');
+  htmlmin = require('gulp-htmlmin');
+  argv = require('yargs').argv;
 
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 var globalModalUploadName = `sezzle-modal${pjson.modalversion}.html`;
-var newVersion = '';
 
 /**
  * Tasks for the CSS
@@ -84,7 +84,7 @@ gulp.task('post-button-css-to-wrapper', function () {
  */
 
 // minifies html for modal
-gulp.task('minify', function () {
+gulp.task('minify-modal', function () {
 	return gulp.src('./modal/modal.html')
 	.pipe(htmlmin({ collapseWhitespace: true }))
 	.pipe(gulp.dest('dist/global-modal'))
@@ -102,8 +102,8 @@ gulp.task('modalupload', function () {
       Bucket: 'sezzlemedia', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
     }, {
-        maxRetries: 5
-      }))
+      maxRetries: 5
+    }))
 });
 
 gulp.task('post-modal-to-wrapper', function () {
@@ -176,7 +176,6 @@ gulp.task('post-button-to-widget-server', function () {
 });
 
 function versionCheck(oldVersion) {
-  var argv = require('yargs').argv;
   newVersion = argv.newversion;
   if(typeof(newVersion) === 'boolean' ||
     typeof(newVersion) === 'undefined' ||
@@ -208,37 +207,39 @@ function updateVersion(params) {
     .pipe(gulp.dest('./'));
 }
 
+function commitVersion(type, version) {
+  return gulp.src('./package.json')
+    .pipe(git.commit(`bumped ${type} version to: ${version}`));
+}
+
 gulp.task('updatepackage', function() {
-  return updateVersion({version: newVersion});
+  return updateVersion({version: argv.newversion});
 })
 
 gulp.task('updatepackagecss', function() {
-  return updateVersion({cssversion: newVersion});
+  return updateVersion({cssversion: argv.newversion});
 })
 
 gulp.task('updatepackagemodal', function() {
-  return updateVersion({modalversion: newVersion});
+  return updateVersion({modalversion: argv.newversion});
 })
 
 gulp.task('commitupdate', function() {
-  return gulp.src('./package.json')
-    .pipe(git.commit(`bumped js version to: ${newVersion}`));
+  return commitVersion('js', argv.newversion);
 })
 
 gulp.task('commitupdatecss', function() {
-  return gulp.src('./package.json')
-    .pipe(git.commit(`bumped css version to: ${newVersion}`));
+  return commitVersion('css', argv.newversion);
 })
 
 gulp.task('commitupdatemodal', function() {
-  return gulp.src('./package.json')
-    .pipe(git.commit(`bumped modal version to: ${newVersion}`));
+  return commitVersion('modal', argv.newversion);
 })
 
 gulp.task('createtag', function(done) {
-  git.tag(`v${newVersion}`, '', function (err) {
+  git.tag(`v${argv.newversion}`, '', function (err) {
     if (err) throw err;
-    git.push('origin', `v${newVersion}`, function (err) {
+    git.push('origin', `v${argv.newversion}`, function (err) {
       if (err) throw err;
       done();
     });
@@ -246,7 +247,7 @@ gulp.task('createtag', function(done) {
 })
 
 function getbranchName(type) {
-  return `version-${type}-${newVersion}`;
+  return `version-${type}-${argv.newversion}`;
 }
 function createBranch(branchName, done) {
   git.checkout('master', function(err) {
@@ -290,7 +291,7 @@ gulp.task('styles', gulp.series('cleancss', 'csscompile'));
 
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
 gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
-gulp.task('deploymodal', gulp.series('modalupload', 'post-modal-to-wrapper'));
+gulp.task('deploymodal', gulp.series('minify-modal', 'modalupload', 'post-modal-to-wrapper'));
 
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitupdate', 'pushversion'));

@@ -11,6 +11,7 @@
     "build": "gulp bundlejs",
     "release": "gulp release",
     "release-css": "gulp release-css",
+    "release-modal": "gulp release-modal",
     "modal": "http-server ./modal -p 8081"
   },
   "repository": {
