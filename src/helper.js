@@ -16,6 +16,20 @@ const propsNotInConfigGroup = [
 ];
 
 /**
+ * This function returns widget string based on widgetLanguage if it's defined, else returns 'en' version
+ * @param {*} widgetLanguage Set in sezzle.js
+ * @param {*} numberOfPayments Set in sezzle.js
+ * @returns {String} Widget String
+ */
+const widgetLanguageTranslation = function (widgetLanguage, numberOfPayments) {
+  const translations = {
+    'en': `or ${numberOfPayments} interest-free payments of %%price%% with %%logo%% %%info%%`,
+    'fr-CA': `ou ${numberOfPayments} paiements sans intérêt de %%price%% with %%logo%% %%info%%`
+  }
+  return translations[widgetLanguage] || translations['en']
+}
+
+/**
  * This is a function to validate configs
  * @param options new config to validate
  * @return nothing. If config is invalid, error is thrown and program execution is stopped.
@@ -207,7 +221,7 @@ exports.factorize = function (options) {
  * @param numberOfPayments number of split payments for the widget
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
-exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments) {
+exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, widgetLanguage) {
   var result = {};
 
   // targetXPath SHOULD NOT be specified in defaultConfig since
@@ -278,7 +292,8 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   if (result.widgetTemplate) {
     result.widgetTemplate = result.widgetTemplate.split('%%');
   } else {
-    var defaultWidgetTemplate = 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
+    //var defaultWidgetTemplate = 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
+    var defaultWidgetTemplate = widgetLanguageTranslation(widgetLanguage, numberOfPayments);
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
   }
 
