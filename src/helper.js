@@ -203,7 +203,7 @@ exports.factorize = function (options) {
   // - forcedShow is only useful if the country in which the widget is served is not in the supported list
   //   so it's reasonable to assume that forcedShow should be the same value for all configs
   // - as the widget only supports one modal currently, there is no capability of loading multiple modals
-  
+
   propsNotInConfigGroup.forEach(function (field) {
     if (options[field] !== undefined) {
       factorized[field] = options[field];
@@ -430,10 +430,10 @@ exports.insertAsFirstChild = function (element, referenceElement) {
 /**
  * Returns altVersionTemplate, based on config provided
  * If it's a string, it doesn't do anything and just returns the string
- * If it's an object it will return the key which matches with browserLanguage else returns 'en' key if specified-> 
+ * If it's an object it will return the key which matches with browserLanguage else returns 'en' key if specified->
  *  if en or browserLanguage key both are not present it calls widgetLanguageTranslation with browser Language as 'en'
- * @param {Object, String} widgetTemplate 
- * @param {String} browserLanguage 
+ * @param {Object, String} widgetTemplate
+ * @param {String} browserLanguage
  * @param {Number} numberOfPayments
  * @returns String
  */

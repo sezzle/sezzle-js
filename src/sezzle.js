@@ -40,7 +40,7 @@ var SezzleJS = function (options) {
   this.countryCode = null;
   this.ip = null;
   this.fingerprint = null;
-  
+
   // Widget Language
   this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
   this.browserLanguage = this.browserLanguage.toLowerCase().substring(0, 2);
