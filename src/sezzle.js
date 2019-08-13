@@ -29,7 +29,6 @@ var SezzleJS = function (options) {
   this.qpModalHTML = options.qpModalHTML || '';
   // countries widget should show in
   this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
-
   // Non configurable options
   this._config = { attributes: true, childList: true, characterData: true };
   // URL to request to get ip of request
@@ -41,11 +40,14 @@ var SezzleJS = function (options) {
   this.countryCode = null;
   this.ip = null;
   this.fingerprint = null;
+  
+  // Widget Language
+  this.widgetLanguage = navigator.language || navigator.browserLanguage ||  'en';
 
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
-    this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments));
+    this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments, this.widgetLanguage));
   }.bind(this));
 }
 
