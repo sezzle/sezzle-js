@@ -16,17 +16,17 @@ const propsNotInConfigGroup = [
 ];
 
 /**
- * This function returns widget string based on widgetLanguage if it's defined, else returns 'en' version
- * @param {*} widgetLanguage Set in sezzle.js
- * @param {*} numberOfPayments Set in sezzle.js
- * @returns {String} Widget String
+ * This function returns widget string based on browserLanguage if it's defined, else returns 'en' version
+ * @param {String} browserLanguage Set in sezzle.js
+ * @param {Number} numberOfPayments Set in sezzle.js
+ * @returns {String} Default widget template
  */
-const widgetLanguageTranslation = function (widgetLanguage, numberOfPayments) {
+const widgetLanguageTranslation = function (browserLanguage, numberOfPayments) {
   const translations = {
     'en': `or ${numberOfPayments} interest-free payments of %%price%% with %%logo%% %%info%%`,
-    'fr-CA': `ou ${numberOfPayments} paiements sans intérêt de %%price%% with %%logo%% %%info%%`
+    'fr': `ou ${numberOfPayments} paiements sans intérêt de %%price%% avec %%logo%% %%info%%`
   }
-  return translations[widgetLanguage] || translations['en']
+  return translations[browserLanguage] || translations['en']
 }
 
 /**
@@ -221,7 +221,7 @@ exports.factorize = function (options) {
  * @param numberOfPayments number of split payments for the widget
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
-exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, widgetLanguage) {
+exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, browserLanguage) {
   var result = {};
 
   // targetXPath SHOULD NOT be specified in defaultConfig since
@@ -290,10 +290,9 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
 
   result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
   if (result.widgetTemplate) {
-    result.widgetTemplate = result.widgetTemplate.split('%%');
+    result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, browserLanguage)).split('%%')
   } else {
-    //var defaultWidgetTemplate = 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%';
-    var defaultWidgetTemplate = widgetLanguageTranslation(widgetLanguage, numberOfPayments);
+    var defaultWidgetTemplate = widgetLanguageTranslation(browserLanguage, numberOfPayments);
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
   }
 
@@ -426,4 +425,19 @@ exports.insertAsFirstChild = function (element, referenceElement) {
   while (element.previousSibling) {
     element.parentElement.insertBefore(element, element.previousSibling);
   }
+}
+
+/**
+ * Returns altVersionTemplate, based on config provided
+ * If it's a string, it doesn't do anything 
+ * If it's an object it will return the key which matches with browserLanguage
+ * @param {Object, String} widgetTemplate 
+ * @param {String} browserLanguage 
+ * @returns String
+ */
+function constructWidgetTemplate (widgetTemplate, browserLanguage) {
+  if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
+    return widgetTemplate[browserLanguage] || widgetTemplate['en']
+  }
+  return widgetTemplate
 }

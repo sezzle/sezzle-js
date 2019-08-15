@@ -42,12 +42,13 @@ var SezzleJS = function (options) {
   this.fingerprint = null;
   
   // Widget Language
-  this.widgetLanguage = navigator.language || navigator.browserLanguage ||  'en';
+  this.browserLanguage = navigator.language || navigator.browserLanguage ||  'en';
+  this.browserLanguage = this.browserLanguage.toLowerCase().substring(0,2);
 
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
-    this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments, this.widgetLanguage));
+    this.configGroups.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, this.numberOfPayments, this.browserLanguage));
   }.bind(this));
 }
 
