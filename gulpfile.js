@@ -14,14 +14,21 @@ var gulp = require('gulp'),
   compareVersions = require('compare-versions'),
   exec = require('child_process').exec,
 	jeditor = require("gulp-json-editor"),
-  htmlmin = require('gulp-htmlmin');
-  argv = require('yargs').argv;
-  merge = require('merge-stream');
+  htmlmin = require('gulp-htmlmin'),
+  argv = require('yargs').argv,
+  merge = require('merge-stream'),
   fs = require('fs');
 
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
+
+// babel compilation
+gulp.task('default', function() {
+	return gulp.src('src/sezzle.js')
+		.pipe(babel())
+		.pipe(gulp.dest("dist"));
+});
 
 /**
  * Tasks for the CSS
