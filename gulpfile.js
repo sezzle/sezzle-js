@@ -9,17 +9,19 @@ var gulp = require('gulp'),
   config = { useIAM: true },
   webpack = require('webpack-stream'),
   pjson = require('./package.json'),
+  language = require('./modals/language.json'),
   git = require('gulp-git'),
   compareVersions = require('compare-versions'),
   exec = require('child_process').exec,
 	jeditor = require("gulp-json-editor"),
   htmlmin = require('gulp-htmlmin');
   argv = require('yargs').argv;
+  merge = require('merge-stream');
+  fs = require('fs');
 
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
-var defaultModalUploadName = `sezzle-modal-default${pjson.modalversion}.html`;
 
 /**
  * Tasks for the CSS
@@ -84,28 +86,40 @@ gulp.task('post-button-css-to-wrapper', function () {
  */
 
 gulp.task('cleanmodal', function () {
-  return del(['dist/default-modal/**']);
+  return del(['dist/modals*/**']);
 });
 
 // minifies html for modal
 gulp.task('minify-modal', function () {
-	return gulp.src('./modals/default-modal.html')
-    .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true }))
-    .pipe(rename(defaultModalUploadName))
-    .pipe(gulp.dest('dist/default-modal'));
+  const languages = language[pjson.modalversion];
+  let steams = [];
+  languages.forEach((lang) => {
+    const steam = gulp.src(`./modals/modals-${pjson.modalversion}/modal-${lang}.html`)
+      .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true }))
+      .pipe(rename(`sezzle-modal-${pjson.modalversion}-${lang}.html`))
+      .pipe(gulp.dest(`dist/modals-${pjson.modalversion}`));
+    steams.push(steam);
+  });
+	return merge(steams);
 })
 
 gulp.task('modalupload', function () {
   // bucket base url https://d3svog4tlx445w.cloudfront.net/
-  var indexPath = `./dist/default-modal/${defaultModalUploadName}`
-  return gulp.src(indexPath)
-    .pipe(rename(`shopify-app/assets/${defaultModalUploadName}`))
-    .pipe(s3({
-      Bucket: 'sezzlemedia', //  Required
-      ACL: 'public-read'     //  Needs to be user-defined
-    }, {
-      maxRetries: 5
-    }))
+  const languages = language[pjson.modalversion];
+  let steams = [];
+  languages.forEach((lang) => {
+    var indexPath = `./dist/modals-${pjson.modalversion}/sezzle-modal-${pjson.modalversion}-${lang}.html`;
+    const steam = gulp.src(indexPath)
+      .pipe(rename(`shopify-app/assets/sezzle-modal-${pjson.modalversion}-${lang}.html`))
+      .pipe(s3({
+        Bucket: 'sezzlemedia', //  Required
+        ACL: 'public-read'     //  Needs to be user-defined
+      }, {
+        maxRetries: 5
+      }))
+    steams.push(steam);
+  });
+  return merge(steams);
 });
 
 gulp.task('post-modal-to-wrapper', function () {
@@ -114,7 +128,8 @@ gulp.task('post-modal-to-wrapper', function () {
     method: 'POST',
     uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
     body: {
-      'version_name': defaultModalUploadName
+      'version': `sezzle-modal-${pjson.modalversion}-{%%s%%}.html`,
+      'language': language[pjson.modalversion]
     },
     json: true
   }
@@ -184,7 +199,7 @@ function versionCheck(oldVersion) {
     !(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/.test(newVersion)) ||
     compareVersions(newVersion, oldVersion) < 1
   ) {
-    throw 'Invalid value for newversion'
+    throw 'Invalid value for newversion';
   };
 }
 
@@ -200,6 +215,17 @@ gulp.task('grabversioncss', function(done) {
 
 gulp.task('grabversionmodal', function(done) {
   versionCheck(pjson.modalversion);
+  if (!language[argv.newversion]) {
+    throw 'No language defined for this version';
+  } else {
+    language[argv.newversion].forEach(lang => {
+      fs.access(`./modals/modals-${argv.newversion}/modal-${lang}.html`, (err) => {
+        if (err) {
+          throw `No file found: ./modals/modals-${argv.newversion}/modal-${lang}.html`;
+        }
+      });
+    });
+  }
   done();
 })
 
