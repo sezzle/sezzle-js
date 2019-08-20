@@ -11,8 +11,7 @@
     "build": "gulp bundlejs",
     "release": "gulp release",
     "release-css": "gulp release-css",
-    "release-modal": "gulp release-modal",
-    "modal": "http-server ./modal -p 8081"
+    "release-modal": "gulp release-modal"
   },
   "repository": {
     "type": "git",
@@ -25,7 +24,9 @@
   },
   "homepage": "https://github.com/sezzle/sezzle-js#readme",
   "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
     "compare-versions": "^3.4.0",
+    "copy-webpack-plugin": "^5.0.4",
     "del": "^2.2.2",
     "fancy-log": "^1.3.3",
     "git-last-commit": "^0.3.0",
@@ -41,13 +42,15 @@
     "gulp-ruby-sass": "^2.1.1",
     "gulp-s3-upload": "1.7.1",
     "gulp-stylelint": "^8.0.0",
-    "http-server": "^0.11.1",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^24.0.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rimraf": "^2.6.0",
     "stylelint-config-standard": "^17.0.0",
     "terser": "^3.14.0",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0",
     "webpack-stream": "^5.2.1",
     "yargs": "^12.0.5"
   },
