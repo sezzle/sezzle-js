@@ -290,7 +290,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
 
   result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
   if (result.widgetTemplate) {
-    result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, browserLanguage)).split('%%')
+    result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, browserLanguage, numberOfPayments)).split('%%');
   } else {
     var defaultWidgetTemplate = widgetLanguageTranslation(browserLanguage, numberOfPayments);
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
@@ -429,15 +429,21 @@ exports.insertAsFirstChild = function (element, referenceElement) {
 
 /**
  * Returns altVersionTemplate, based on config provided
- * If it's a string, it doesn't do anything 
- * If it's an object it will return the key which matches with browserLanguage
+ * If it's a string, it doesn't do anything and just returns the string
+ * If it's an object it will return the key which matches with browserLanguage else returns 'en' key if specified-> 
+ *  if en or browserLanguage key both are not present it calls widgetLanguageTranslation with browser Language as 'en'
  * @param {Object, String} widgetTemplate 
  * @param {String} browserLanguage 
+ * @param {Number} numberOfPayments
  * @returns String
  */
-function constructWidgetTemplate (widgetTemplate, browserLanguage) {
+function constructWidgetTemplate (widgetTemplate, browserLanguage, numberOfPayments) {
   if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
-    return widgetTemplate[browserLanguage] || widgetTemplate['en']
+    if (!widgetTemplate['en'] && !widgetTemplate[browserLanguage]) {
+      console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.")
+      return widgetLanguageTranslation(browserLanguage, numberOfPayments) // return default widget template
+    }
+    return widgetTemplate[browserLanguage] || widgetTemplate['en'] // returns specific language if present else return en key
   }
-  return widgetTemplate
+  return widgetTemplate //if widgetTemplate is string
 }
