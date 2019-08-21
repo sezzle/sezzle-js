@@ -42,8 +42,8 @@ var SezzleJS = function (options) {
   this.fingerprint = null;
   
   // Widget Language
-  this.browserLanguage = navigator.language || navigator.browserLanguage ||  'en';
-  this.browserLanguage = this.browserLanguage.toLowerCase().substring(0,2);
+  this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
+  this.browserLanguage = this.browserLanguage.toLowerCase().substring(0, 2);
 
   // map config group props
   this.configGroups = [];
