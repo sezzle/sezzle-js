@@ -24,8 +24,8 @@ var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 
 // babel compilation
-gulp.task('default', function() {
-	return gulp.src('src/sezzle.js')
+gulp.task('babelcompile', function() {
+	return gulp.src('dist/babel-sezzle.js')
 		.pipe(babel())
 		.pipe(gulp.dest("dist"));
 });
