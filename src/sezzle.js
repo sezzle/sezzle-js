@@ -970,7 +970,7 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
 }
 
 SezzleJS.prototype.getModal = function (callback) {
-  if (document.sezzleDefaultModalVersion && document.modalAvailableLanguages) {
+  if (document.sezzleDefaultModalVersion && document.sezzleModalAvailableLanguages) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
       if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -984,8 +984,8 @@ SezzleJS.prototype.getModal = function (callback) {
       }
     }.bind(this);
 
-    // Convert document.modalAvailableLanguages into Array
-    var availableLanguages = document.modalAvailableLanguages.split(',').map(function(singleLanguage) {
+    // Convert document.sezzleModalAvailableLanguages into Array
+    var availableLanguages = document.sezzleModalAvailableLanguages.split(',').map(function(singleLanguage) {
       return singleLanguage.trim();
     });
     var modalLanguage;
@@ -995,7 +995,7 @@ SezzleJS.prototype.getModal = function (callback) {
       modalLanguage = 'en';
     }
 
-    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage) + '.html';
+    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage);
     httpRequest.open('GET', url, true);
     httpRequest.send();
   }
