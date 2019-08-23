@@ -44,10 +44,7 @@ var SezzleJS = function (options) {
   // Widget Language
   this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
   this.browserLanguage = this.browserLanguage.toLowerCase().substring(0, 2);
-
-  //Modal Url
-  this.fetchModalUrl = 
-
+  
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
