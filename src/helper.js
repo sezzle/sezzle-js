@@ -23,8 +23,8 @@ const propsNotInConfigGroup = [
  */
 const widgetLanguageTranslation = function (browserLanguage, numberOfPayments) {
   const translations = {
-    'en': `or ${numberOfPayments} interest-free payments of %%price%% with %%logo%% %%info%%`,
-    'fr': `ou ${numberOfPayments} paiements sans intérêt de %%price%% avec %%logo%% %%info%%`
+    'en': 'or' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
+    'fr': 'ou' + numberOfPayments + ' paiements sans intérêt de %%price%% avec %%logo%% %%info%%'
   }
   return translations[browserLanguage] || translations['en']
 }
@@ -446,4 +446,29 @@ function constructWidgetTemplate (widgetTemplate, browserLanguage, numberOfPayme
     return widgetTemplate[browserLanguage] || widgetTemplate['en'] // returns specific language if present else return en key
   }
   return widgetTemplate //if widgetTemplate is string
+}
+
+// AJAX handler
+exports.ajaxHandler = function makeRequest (method, url) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
+    };
+    xhr.send();
+  });
 }
