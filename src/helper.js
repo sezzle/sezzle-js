@@ -23,8 +23,8 @@ const propsNotInConfigGroup = [
  */
 const widgetLanguageTranslation = function (browserLanguage, numberOfPayments) {
   const translations = {
-    'en': 'or' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
-    'fr': 'ou' + numberOfPayments + ' paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
+    'en': 'or ' + numberOfPayments + 'interest-free payments of %%price%% with %%logo%% %%info%%',
+    'fr': 'ou ' + numberOfPayments + 'paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
   }
   return translations[browserLanguage] || translations['en']
 }

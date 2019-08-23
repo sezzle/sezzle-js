@@ -43,8 +43,8 @@ var SezzleJS = function (options) {
 
   // Widget Language
   this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
-  this.browserLanguage = this.browserLanguage.toLowerCase().substring(0, 2);
-  
+  this.browserLanguage = this.browserLanguage.substring(0, 2).toLowerCase();
+
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
@@ -771,11 +771,7 @@ SezzleJS.prototype.renderModal = function () {
     var modalNode = document.createElement('div');
     modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal';
     modalNode.style.display = 'none';
-    if (this.altModalHTML) {
-      appendModal(this.altModalHTML)
-    } else {
-        this.getModal(function (response) { appendModal(response) })
-      }
+    this.getModal(function (response) { appendModal(response) })
   } else {
     modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
   }
@@ -798,7 +794,7 @@ SezzleJS.prototype.renderModal = function () {
     });
 
     // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-    let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
+    var sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
     // backwards compatability check
     if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
     sezzleModal.addEventListener('click', function (event) {
@@ -975,7 +971,7 @@ SezzleJS.prototype.getModal = function (callback) {
   httpRequest.onreadystatechange = function () {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
       if (httpRequest.status === 200) {
-        let html = httpRequest.response;
+        var html = httpRequest.response;
         callback(html);
       }
       else {
@@ -985,14 +981,14 @@ SezzleJS.prototype.getModal = function (callback) {
   }.bind(this);
 
   // Convert document.modalAvailableLanguages into Array
-  let availableLanguages = document.modalAvailableLanguages.split(",").map(function(singleLanguage) {
+  var availableLanguages = document.modalAvailableLanguages.split(",").map(function(singleLanguage) {
     return singleLanguage.trim();
   });
-  let modalLanguage
+  var modalLanguage
   if(availableLanguages.includes(this.browserLanguage)) modalLanguage = this.browserLanguage;
-  else modalLanguage = availableLanguages[0];
+  else modalLanguage = 'en';
 
-  let url = `https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/` + document.sezzleDefaultModalVersion + '-'  + modalLanguage + '.html';
+  var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%s%}", modalLanguage) + '-'  + modalLanguage + '.html';
   httpRequest.open('GET', url, true);
   httpRequest.send();
 }
