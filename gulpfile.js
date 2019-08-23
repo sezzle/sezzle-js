@@ -23,13 +23,6 @@ var gulp = require('gulp'),
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 
-// babel compilation
-gulp.task('babelcompile', function() {
-	return gulp.src('dist/babel-sezzle.js')
-		.pipe(babel())
-		.pipe(gulp.dest("dist"));
-});
-
 /**
  * Tasks for the CSS
  */
@@ -157,6 +150,20 @@ gulp.task('post-modal-to-wrapper', function () {
 gulp.task('bundlejs', function () {
   return gulp.src('src/sezzle-init.js')
     .pipe(webpack({
+			module: {
+				rules: [
+					{
+						test: /\.m?js$/,
+						exclude: /(node_modules|bower_components)/,
+						use: {
+							loader: 'babel-loader',
+							options: {
+								presets: ['@babel/preset-env']
+							}
+						}
+					}
+				]
+			},
       output: {
         filename: buttonUploadName
       },

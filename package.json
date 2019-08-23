@@ -11,7 +11,8 @@
     "build": "gulp bundlejs",
     "release": "gulp release",
     "release-css": "gulp release-css",
-    "release-modal": "gulp release-modal"
+    "release-modal": "gulp release-modal",
+    "modal": "http-server ./modal -p 8081"
   },
   "repository": {
     "type": "git",
@@ -55,9 +56,18 @@
     "webpack-stream": "^5.2.1",
     "yargs": "^12.0.5"
   },
-  "keywords": ["sezzle", "merchant", "js", "widget"],
+  "keywords": [
+    "sezzle",
+    "merchant",
+    "js",
+    "widget"
+  ],
   "dependencies": {
+    "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
     "gulp-babel": "^8.0.0-beta.2",
     "gulp-htmlmin": "^5.0.1",
     "lodash.clonedeep": "^4.5.0"
