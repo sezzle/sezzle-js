@@ -45,6 +45,9 @@ var SezzleJS = function (options) {
   this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
   this.browserLanguage = this.browserLanguage.toLowerCase().substring(0, 2);
 
+  //Modal Url
+  this.fetchModalUrl = 
+
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
@@ -772,32 +775,21 @@ SezzleJS.prototype.renderModal = function () {
     modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal';
     modalNode.style.display = 'none';
     if (this.altModalHTML) {
-      modalNode.innerHTML = this.altModalHTML;
-      closeModalHandler();
+      appendModal(this.altModalHTML)
     } else {
-        // Convert document.modalAvailableLanguages into Array
-        let availableLanguages = document.modalAvailableLanguages.split(",").map(function(singleLanguage) {
-          return singleLanguage.trim();
-        });
-        let modalLanguage
-        if(availableLanguages.includes(this.browserLanguage)) modalLanguage = this.browserLanguage;
-        else modalLanguage = availableLanguages[0];
-        let url = 'http://localhost:8000/' + document.sezzleDefaultModalVersion + '-'  + modalLanguage + '.html';
-        Helper.ajaxHandler('GET', url)
-        .then(function (response){
-          modalNode.innerHTML = response;
-          closeModalHandler();
-        })
-        .catch(function (error){
-          console.warn("Couldn't load Modal... Error -> ", error)
-        });
+        this.getModal(function (response) { appendModal(response) })
       }
-    document.getElementsByTagName('html')[0].appendChild(modalNode);
   } else {
     modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
   }
 
-  function closeModalHandler () {
+  function appendModal (modalHTML) {
+    modalNode.innerHTML = modalHTML
+    document.getElementsByTagName('html')[0].appendChild(modalNode);
+    closeModalHandler();
+  }
+
+  function closeModalHandler (data) {
       // Event listener for close in modal
     Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function (el) {
       el.addEventListener('click', function () {
@@ -892,11 +884,13 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
       if (!event.target.classList.contains('no-sezzle-info')) {
         var modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
         // Show modal node
-        modalNode.style.display = 'block';
-        // Remove hidden class to show the item
-        modalNode.getElementsByClassName('sezzle-modal')[0].className = 'sezzle-modal';
-        // log on click event
-        this.logEvent('onclick', configGroupIndex);
+        if (modalNode) {
+          modalNode.style.display = 'block';
+          // Remove hidden class to show the item
+          modalNode.getElementsByClassName('sezzle-modal')[0].className = 'sezzle-modal';
+          // log on click event
+          this.logEvent('onclick', configGroupIndex);
+        }
       }
     }.bind(this));
   }.bind(this));
@@ -977,6 +971,33 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
     httpRequest.responseType = 'json';
     httpRequest.send();
   }
+}
+
+SezzleJS.prototype.getModal = function (callback) {
+  var httpRequest = new XMLHttpRequest();
+  httpRequest.onreadystatechange = function () {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        let html = httpRequest.response;
+        callback(html);
+      }
+      else {
+        return console.warn("Can't load the modal because the link provided is not found")
+      }
+    }
+  }.bind(this);
+
+  // Convert document.modalAvailableLanguages into Array
+  let availableLanguages = document.modalAvailableLanguages.split(",").map(function(singleLanguage) {
+    return singleLanguage.trim();
+  });
+  let modalLanguage
+  if(availableLanguages.includes(this.browserLanguage)) modalLanguage = this.browserLanguage;
+  else modalLanguage = availableLanguages[0];
+
+  let url = `https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/` + document.sezzleDefaultModalVersion + '-'  + modalLanguage + '.html';
+  httpRequest.open('GET', url, true);
+  httpRequest.send();
 }
 
 /**
