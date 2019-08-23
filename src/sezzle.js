@@ -988,11 +988,14 @@ SezzleJS.prototype.getModal = function (callback) {
     var availableLanguages = document.modalAvailableLanguages.split(',').map(function(singleLanguage) {
       return singleLanguage.trim();
     });
-    var modalLanguage
-    if(availableLanguages.includes(this.browserLanguage)) modalLanguage = this.browserLanguage;
-    else modalLanguage = 'en';
+    var modalLanguage;
+    if(availableLanguages.indexOf(this.browserLanguage) > -1) {
+       modalLanguage = this.browserLanguage;
+    } else {
+      modalLanguage = 'en';
+    }
 
-    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage) + '-'  + modalLanguage + '.html';
+    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage) + '.html';
     httpRequest.open('GET', url, true);
     httpRequest.send();
   }
