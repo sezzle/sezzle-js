@@ -782,7 +782,7 @@ SezzleJS.prototype.renderModal = function () {
     closeModalHandler();
   }
 
-  function closeModalHandler (data) {
+  function closeModalHandler () {
       // Event listener for close in modal
     Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function (el) {
       el.addEventListener('click', function () {
