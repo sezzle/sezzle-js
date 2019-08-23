@@ -25,7 +25,7 @@
     * Same as `targetXPath`
 
   `forcedShow` (optional)
-  Shows the widget in every country if `true`. Else it shows up only in the `United States`.
+  Shows the widget in every country if `true`. Else it shows up only in the `United States and Canada`.
   * Default - `false`
   * Type - `boolean`
 
@@ -69,16 +69,6 @@
   * Xpath formats
     * Same as `targetXPath`
 
-  `priceElementClass` (optional)
-  Class to the price element. This option is used instead of `targetXPath` to make the integration simple. You can pass this as a class of your choice else it defaults to `sezzle-price-element`. If you have `just one` element in your page with this class added to it(which should be the price element), the system would pick up price using this.
-  * Type - `string`
-  * Default - `sezzle-price-element`
-
-  `sezzleWidgetContainerClass` (optional)
-  Class to the element in which you want to render the sezzle widget. This option is used instead of `renderToPath` to render the sezzle widget simply. This is supposed to be used with `priceElementClass`. You can pass this as a class of your choice else it defaults to `sezzle-widget-container`. You should have one element in your page which has this as a class and then the system would render the widget in that element.
-  * Type - `string`
-  * Default - `sezzle-widget-container`
-
   `altVersionTemplate`(optional)
   This is used to change the text of the widget and also change the arrangement of text, logo and the know more url within the widget. Example, `or 4 interest-free payments with %%price%% %%logo%% %%link%%` will render the default widget. `price`, `logo` and `link` within `%% %%` can be put in different places in the string to change arrangement of each of them.
   * Type - `string`
@@ -88,12 +78,12 @@
     * `logo` - This is used to render Sezzle logo (The url provided in `imageUrl`) in the widget
     * `link` - This is to render an anchor that renders a rext `Learn more` which opens Sezzle info modal on click
     * `info` - This is an info icon that opens Sezzle info modal on click.
-    * `question-mark` - This is also a way to show the Sezzle modal
+    * `question-mark` - This is also a way to show the Sezzle modal.
 
 `fontSize` (optional)
 This sets the font size in pixels.
   * Type - `number`
-  * Default - inherited from the website's stylesheet
+  * Default - `12`
 
 `fontWeight`(optional)
 This is used to set the boldness of the text. 100 is the lightest, 900 is the boldest.
@@ -146,7 +136,7 @@ Amount of space to the left of the widget in pixels.
   * Default - `0`
 
   `scaleFactor` (optional)
-Scales the size of the entire widget down, keeping the same layout.
+Scales the size of the widget logo.
   * Type - `number`
   * Default - `1.0`
 
@@ -155,37 +145,17 @@ Aligns the widget based on the rendertopath element. Options are `auto`, `left`,
   * Type - `string`
   * Default - `auto`
 
-  `bannerClass` (optional)
-The class name of the banner to replace.
-  * Type - `string`
-  * Default - `empty`
-
-  `bannerURL` (optional)
-The URL of the banner image.
-  * Type - `string`
-  * Default - `empty`
-
-  `bannerLink` (optional)
-The url that opens upon click of the banner.
-  * Type - `string`
-  * Default - `empty`
-
   `splitPriceElementsOn` (optional)
 For use on variant prices, and/or when prices are separated by strings.
   * Type - `string`
   * Default - `empty`
 
-  `afterpayModalClickURL` (optional)
-The URL that opens in a new tab for dual installs with afterpay upon click of modal - when merchant wants just one widget showing both.
-  * Type - `string`
-  * Default - `https://www.afterpay.com/terms-of-service?soft_redirect=true`
-
-	`numberOfPayments` (optional)
-The number of payments displayed which the price is split by. Should NOT be changed unless an agreement is in place.
-  * Type - `number`
-  * Default - 4
-
 	`ignoredPriceElements` (optional)
-Price elements to ignore when displaying widgets.
+Price elements to ignore when displaying widgets. The ignored element must be within the price element.
   * Type - `array of strings`
   * Default - `[]`
+
+	`countryCodes` (optional)
+Countries that the widget will show in. To show in all countries it is better to use `forcedShow: true`.
+  * Type - `array of strings`
+  * Default - `['US', 'CA']`
