@@ -129,7 +129,7 @@ gulp.task('post-modal-to-wrapper', function () {
     uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
     body: {
       'version': `sezzle-modal-${pjson.modalversion}-{%%s%%}.html`,
-      'language': language[pjson.modalversion]
+      'languages': language[pjson.modalversion]
     },
     json: true
   }
