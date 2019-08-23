@@ -782,7 +782,7 @@ SezzleJS.prototype.renderModal = function () {
         let modalLanguage
         if(availableLanguages.includes(this.browserLanguage)) modalLanguage = this.browserLanguage;
         else modalLanguage = availableLanguages[0];
-        let url = `http://localhost:8000/${document.sezzleDefaultModalVersion}-${modalLanguage}.html`;
+        let url = 'http://localhost:8000/' + document.sezzleDefaultModalVersion + '-'  + modalLanguage + '.html';
         Helper.ajaxHandler('GET', url)
         .then(function (response){
           modalNode.innerHTML = response;
