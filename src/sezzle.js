@@ -388,7 +388,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   this.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
   this.insertStoreCSSClassInElement(sezzle);
   this.setElementMargins(sezzle, configGroupIndex);
-  if (this.scaleFactor) this.setWidgetSize(sezzle, configGroupIndex);
+  if (this.configGroups[configGroupIndex].scaleFactor) this.setWidgetSize(sezzle, configGroupIndex);
 
   var node = document.createElement('div');
   node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
@@ -771,15 +771,9 @@ SezzleJS.prototype.renderModal = function () {
     var modalNode = document.createElement('div');
     modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal';
     modalNode.style.display = 'none';
-    this.getModal(function (response) { appendModal(response) })
+    this.getModal(modalNode, closeModalHandler);
   } else {
     modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
-  }
-
-  function appendModal (modalHTML) {
-    modalNode.innerHTML = modalHTML
-    document.getElementsByTagName('html')[0].appendChild(modalNode);
-    closeModalHandler();
   }
 
   function closeModalHandler () {
@@ -969,14 +963,16 @@ SezzleJS.prototype.getCSSVersionForMerchant = function (callback) {
   }
 }
 
-SezzleJS.prototype.getModal = function (callback) {
+SezzleJS.prototype.getModal = function (modalNode, callback) {
   if (document.sezzleDefaultModalVersion && document.sezzleModalAvailableLanguages) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
       if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
-          var html = httpRequest.response;
-          callback(html);
+          // append the html to the modal node
+          modalNode.innerHTML = httpRequest.responseText
+          document.getElementsByTagName('html')[0].appendChild(modalNode);
+          callback();
         }
         else {
           return console.warn("Can't load the modal because the link provided is not found");
