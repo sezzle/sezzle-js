@@ -970,7 +970,7 @@ SezzleJS.prototype.getModal = function (modalNode, callback) {
       if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
           // append the html to the modal node
-          modalNode.innerHTML = httpRequest.responseText
+          modalNode.innerHTML = httpRequest.response;
           document.getElementsByTagName('html')[0].appendChild(modalNode);
           callback();
         }
