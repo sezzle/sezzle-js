@@ -360,7 +360,8 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   var index = index || 0;
 
   // Do not render this product if it is not eligible
-  if (!this.isProductEligible(element.textContent, configGroupIndex)) return false;
+  var priceText = this.getPriceText(element, configGroupIndex);
+  if (!this.isProductEligible(priceText, configGroupIndex)) return false;
   // Do not render if sezzle ignored price element
   if (element.classList.contains('sezzle-ignored-price-element')) return false;
   // Set data index to each price element for tracking
@@ -404,7 +405,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
       case 'price':
         var priceSpanNode = document.createElement('span');
         priceSpanNode.className = 'sezzle-payment-amount sezzle-button-text sezzleindex-' + index;
-        var priceValueText = document.createTextNode(this.getFormattedPrice(element, configGroupIndex));
+        var priceValueText = document.createTextNode(this.getFormattedPrice(element, configGroupIndex, priceText));
         priceSpanNode.appendChild(priceValueText);
         sezzleButtonText.appendChild(priceSpanNode);
         break;
@@ -506,7 +507,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         var priceSplitText = '';
         if (priceElemTexts.length == 1) { //if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
           //give the original element in the case there might be some ignored elements present
-          priceSplitText = this.getFormattedPrice(element, configGroupIndex);
+          priceSplitText = this.getFormattedPrice(element, configGroupIndex, priceText);
         } else {
           var priceElems = [];
           priceElemTexts.forEach(function (text) {
@@ -690,9 +691,11 @@ SezzleJS.prototype.getPriceText = function (element, configGroupIndex) {
 /**
  * Formats a price as Sezzle needs it
  * @param element Element that contains price text
+ * @param configGroupIndex index of the config group which element belongs to
+ * @param priceText (optional) if defined, it contains the proper price text parsed from element
  */
-SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
-  priceText = this.getPriceText(element, configGroupIndex);
+SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex, priceText) {
+  if(!priceText) priceText = this.getPriceText(element, configGroupIndex);
 
   // Get the price string - useful for formtting Eg: 120.00(string)
   var priceString = Helper.parsePriceString(priceText, true);
