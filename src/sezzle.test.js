@@ -1,6 +1,6 @@
 const SezzleJS = require('./sezzle');
 const Helper = require('./helper');
-var sezzleConfig = require('./sezzle.config.js');
+const sezzleConfig = require('./sezzle.config.js');
 
 describe('Constructor correctly sets the parameters', () => {
   test('Properly sets xpath value when there are multiple configs in the configGroups array', () => {
