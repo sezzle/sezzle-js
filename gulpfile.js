@@ -19,7 +19,6 @@ var gulp = require('gulp'),
   merge = require('merge-stream'),
   fs = require('fs');
 
-
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 
@@ -154,7 +153,7 @@ gulp.task('bundlejs', function () {
 				rules: [
 					{
 						test: /\.m?js$/,
-						exclude: /(node_modules|bower_components)/,
+						exclude: /(node_modules)/,
 						use: {
 							loader: 'babel-loader',
 							options: {

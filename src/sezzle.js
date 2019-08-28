@@ -1,6 +1,5 @@
-var Helper = require('./helper');
-
-var SezzleJS = function (options) {
+const Helper = require('./helper');
+const SezzleJS = function (options) {
   if (!options) options = {};
 
   // convert to new config if options passed in is old config
