@@ -136,7 +136,7 @@ SezzleJS.prototype.loadCSS = function (callback) {
     var link = document.createElement('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';
-    link.href = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + version;
+    link.href = 'https://media.sezzle.com/shopify-app/assets/' + version;
     head.appendChild(link);
     link.onload = callback;
   }.bind(this));
@@ -993,7 +993,7 @@ SezzleJS.prototype.getModal = function (modalNode, callback) {
       modalLanguage = 'en';
     }
 
-    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage);
+    var url = 'https://media.sezzle.com/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage);
     httpRequest.open('GET', url, true);
     httpRequest.send();
   }
