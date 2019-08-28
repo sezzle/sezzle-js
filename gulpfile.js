@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
   sass = require('gulp-ruby-sass'),
   autoprefixer = require('gulp-autoprefixer'),
-  cssnano = require('gulp-cssnano'),
+  cssnano = require('cssnano'),
+  postcss = require('gulp-postcss'),
   rename = require('gulp-rename'),
   del = require('del'),
   s3 = require('gulp-s3-upload')(config),
@@ -34,17 +35,16 @@ gulp.task('cleancss', function () {
 // compiles scss and minifies
 gulp.task('csscompile', function () {
   return sass('./styles/global.scss', {
-    style: 'expanded'
-  })
-    .pipe(autoprefixer('last 2 version'))
-    .pipe(gulp.dest('dist/global-css'))
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(cssnano({
-      zindex: false
-    }))
-    .pipe(gulp.dest('dist/global-css'))
+      style: 'expanded'
+    }
+  )
+  .pipe(autoprefixer('last 2 version'))
+  .pipe(gulp.dest('dist/global-css'))
+  .pipe(rename({
+    suffix: '.min'
+  }))
+  .pipe(postcss([cssnano()]))
+  .pipe(gulp.dest('dist/global-css'))
 });
 
 gulp.task('cssupload', function () {
