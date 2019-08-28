@@ -14,7 +14,7 @@ var gulp = require('gulp'),
   git = require('gulp-git'),
   compareVersions = require('compare-versions'),
   exec = require('child_process').exec,
-	jeditor = require("gulp-json-editor"),
+  jeditor = require("gulp-json-editor"),
   htmlmin = require('gulp-htmlmin'),
   argv = require('yargs').argv,
   merge = require('merge-stream'),
@@ -35,16 +35,16 @@ gulp.task('cleancss', function () {
 // compiles scss and minifies
 gulp.task('csscompile', function () {
   return sass('./styles/global.scss', {
-      style: 'expanded'
-    }
+    style: 'expanded'
+  }
   )
-  .pipe(autoprefixer('last 2 version'))
-  .pipe(gulp.dest('dist/global-css'))
-  .pipe(rename({
-    suffix: '.min'
-  }))
-  .pipe(postcss([cssnano()]))
-  .pipe(gulp.dest('dist/global-css'))
+    .pipe(autoprefixer('last 2 version'))
+    .pipe(gulp.dest('dist/global-css'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(postcss([cssnano()]))
+    .pipe(gulp.dest('dist/global-css'))
 });
 
 gulp.task('cssupload', function () {
@@ -56,8 +56,8 @@ gulp.task('cssupload', function () {
       Bucket: 'sezzlemedia', //  Required
       ACL: 'public-read'       //  Needs to be user-defined
     }, {
-      maxRetries: 5
-    }))
+        maxRetries: 5
+      }))
 });
 
 gulp.task('post-button-css-to-wrapper', function () {
@@ -149,20 +149,20 @@ gulp.task('post-modal-to-wrapper', function () {
 gulp.task('bundlejs', function () {
   return gulp.src('src/sezzle-init.js')
     .pipe(webpack({
-			module: {
-				rules: [
-					{
-						test: /\.m?js$/,
-						exclude: /(node_modules)/,
-						use: {
-							loader: 'babel-loader',
-							options: {
-								presets: ['@babel/preset-env']
-							}
-						}
-					}
-				]
-			},
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env']
+              }
+            }
+          }
+        ]
+      },
       output: {
         filename: buttonUploadName
       },
@@ -207,8 +207,8 @@ gulp.task('post-button-to-widget-server', function () {
 
 function versionCheck(oldVersion) {
   newVersion = argv.newversion;
-  if(typeof(newVersion) === 'boolean' ||
-    typeof(newVersion) === 'undefined' ||
+  if (typeof (newVersion) === 'boolean' ||
+    typeof (newVersion) === 'undefined' ||
     !(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/.test(newVersion)) ||
     compareVersions(newVersion, oldVersion) < 1
   ) {
@@ -216,17 +216,17 @@ function versionCheck(oldVersion) {
   };
 }
 
-gulp.task('grabversion', function(done) {
+gulp.task('grabversion', function (done) {
   versionCheck(pjson.version);
   done();
 })
 
-gulp.task('grabversioncss', function(done) {
+gulp.task('grabversioncss', function (done) {
   versionCheck(pjson.cssversion);
   done();
 })
 
-gulp.task('grabversionmodal', function(done) {
+gulp.task('grabversionmodal', function (done) {
   versionCheck(pjson.modalversion);
   if (!language[argv.newversion]) {
     throw 'No language defined for this version';
@@ -253,31 +253,31 @@ function commitVersion(type, version) {
     .pipe(git.commit(`bumped ${type} version to: ${version}`));
 }
 
-gulp.task('updatepackage', function() {
-  return updateVersion({version: argv.newversion});
+gulp.task('updatepackage', function () {
+  return updateVersion({ version: argv.newversion });
 })
 
-gulp.task('updatepackagecss', function() {
-  return updateVersion({cssversion: argv.newversion});
+gulp.task('updatepackagecss', function () {
+  return updateVersion({ cssversion: argv.newversion });
 })
 
-gulp.task('updatepackagemodal', function() {
-  return updateVersion({modalversion: argv.newversion});
+gulp.task('updatepackagemodal', function () {
+  return updateVersion({ modalversion: argv.newversion });
 })
 
-gulp.task('commitupdate', function() {
+gulp.task('commitupdate', function () {
   return commitVersion('js', argv.newversion);
 })
 
-gulp.task('commitupdatecss', function() {
+gulp.task('commitupdatecss', function () {
   return commitVersion('css', argv.newversion);
 })
 
-gulp.task('commitupdatemodal', function() {
+gulp.task('commitupdatemodal', function () {
   return commitVersion('modal', argv.newversion);
 })
 
-gulp.task('createtag', function(done) {
+gulp.task('createtag', function (done) {
   git.tag(`v${argv.newversion}`, '', function (err) {
     if (err) throw err;
     git.push('origin', `v${argv.newversion}`, function (err) {
@@ -291,24 +291,24 @@ function getbranchName(type) {
   return `version-${type}-${argv.newversion}`;
 }
 function createBranch(branchName, done) {
-  git.checkout('master', function(err) {
+  git.checkout('master', function (err) {
     if (err) throw err;
     git.pull('origin', 'master', function (err) {
       if (err) throw err;
-      git.checkout(branchName, {args:'-b'}, function (err) {
+      git.checkout(branchName, { args: '-b' }, function (err) {
         if (err) throw err;
         done();
       });
     });
   })
 }
-gulp.task('newbranch', function(done) {
+gulp.task('newbranch', function (done) {
   createBranch(getbranchName('js'), done);
 })
-gulp.task('newbranchcss', function(done) {
+gulp.task('newbranchcss', function (done) {
   createBranch(getbranchName('css'), done);
 })
-gulp.task('newbranchmodal', function(done) {
+gulp.task('newbranchmodal', function (done) {
   createBranch(getbranchName('modal'), done);
 })
 
@@ -318,13 +318,13 @@ function pushBranch(branchName, done) {
     done();
   });
 }
-gulp.task('pushversion', function(done) {
+gulp.task('pushversion', function (done) {
   pushBranch(getbranchName('js'), done);
 })
-gulp.task('pushversioncss', function(done) {
+gulp.task('pushversioncss', function (done) {
   pushBranch(getbranchName('css'), done);
 })
-gulp.task('pushversionmodal', function(done) {
+gulp.task('pushversionmodal', function (done) {
   pushBranch(getbranchName('modal'), done);
 })
 
@@ -358,7 +358,7 @@ gulp.task('deploy', function (done) {
       if (versionCommit.indexOf('bumped js version to:') > -1) {
         console.log(versionCommit);
         console.log('Updating JS version');
-        exec('npx gulp deploywidget', function(err, stdout, stderr) {
+        exec('npx gulp deploywidget', function (err, stdout, stderr) {
           if (err) throw err;
           console.log(stdout);
           done();
@@ -366,7 +366,7 @@ gulp.task('deploy', function (done) {
       } else if (versionCommit.indexOf('bumped css version to:') > -1) {
         console.log(versionCommit);
         console.log('Updating CSS version');
-        exec('npx gulp deploycss', function(err, stdout, stderr) {
+        exec('npx gulp deploycss', function (err, stdout, stderr) {
           if (err) throw err;
           console.log(stdout);
           done();
@@ -374,7 +374,7 @@ gulp.task('deploy', function (done) {
       } else if (versionCommit.indexOf('bumped modal version to:') > -1) {
         console.log(versionCommit);
         console.log('Updating Modal version');
-        exec('npx gulp deploymodal', function(err, stdout, stderr) {
+        exec('npx gulp deploymodal', function (err, stdout, stderr) {
           if (err) throw err;
           console.log(stdout);
           done();
