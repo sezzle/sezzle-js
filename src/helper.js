@@ -10,6 +10,7 @@ const propsNotInConfigGroup = [
   "altLightboxHTML",
   "apModalHTML",
   "qpModalHTML",
+  "zpModalHTML",
   "noGtm",
   "noTracking",
   "testID"

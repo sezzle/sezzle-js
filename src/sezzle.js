@@ -1,6 +1,5 @@
-var Helper = require('./helper');
-
-var SezzleJS = function (options) {
+const Helper = require('./helper');
+const SezzleJS = function (options) {
   if (!options) options = {};
 
   // convert to new config if options passed in is old config
@@ -27,6 +26,8 @@ var SezzleJS = function (options) {
   this.apModalHTML = options.apModalHTML || '';
   // if doing widget with both Sezzle or quadpay - the modal to display:
   this.qpModalHTML = options.qpModalHTML || '';
+   // if doing widget with both Sezzle or zippay - the modal to display:
+   this.zpModalHTML = options.zpModalHTML || '';
   // countries widget should show in
   this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
   // Non configurable options
@@ -137,7 +138,7 @@ SezzleJS.prototype.loadCSS = function (callback) {
     var link = document.createElement('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';
-    link.href = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + version;
+    link.href = 'https://media.sezzle.com/shopify-app/assets/' + version;
     head.appendChild(link);
     link.onload = callback;
   }.bind(this));
@@ -361,7 +362,8 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
   var index = index || 0;
 
   // Do not render this product if it is not eligible
-  if (!this.isProductEligible(element.textContent, configGroupIndex)) return false;
+  var priceText = this.getPriceText(element, configGroupIndex);
+  if (!this.isProductEligible(priceText, configGroupIndex)) return false;
   // Do not render if sezzle ignored price element
   if (element.classList.contains('sezzle-ignored-price-element')) return false;
   // Set data index to each price element for tracking
@@ -405,7 +407,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
       case 'price':
         var priceSpanNode = document.createElement('span');
         priceSpanNode.className = 'sezzle-payment-amount sezzle-button-text sezzleindex-' + index;
-        var priceValueText = document.createTextNode(this.getFormattedPrice(element, configGroupIndex));
+        var priceValueText = document.createTextNode(this.getFormattedPrice(element, configGroupIndex, priceText));
         priceSpanNode.appendChild(priceValueText);
         sezzleButtonText.appendChild(priceSpanNode);
         break;
@@ -474,30 +476,44 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
 
       case 'quadpay-logo':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+        qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-logo-grey':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+        qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-grayscale.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-logo-white':
         var qpNode = document.createElement('img');
-        qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+        qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-white.png';
         sezzleButtonText.appendChild(qpNode);
         break;
 
       case 'quadpay-info-icon':
-        var quadpayInfoIconNode = document.createElement('code');
-        quadpayInfoIconNode.className = 'quadpay-modal-info-link no-sezzle-info';
-        quadpayInfoIconNode.innerHTML = '&#9432;';
-        sezzleButtonText.appendChild(quadpayInfoIconNode);
+        var qpInfoIconNode = document.createElement('code');
+        qpInfoIconNode.className = 'qp-modal-info-link no-sezzle-info';
+        qpInfoIconNode.innerHTML = '&#9432;';
+        sezzleButtonText.appendChild(qpInfoIconNode);
+        break;
+
+      case 'zippay-logo':
+        var zpNode = document.createElement('img');
+        zpNode.className = 'sezzle-zippay-logo zp-modal-info-link no-sezzle-info';
+        zpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/zp-logo-widget.png';
+        sezzleButtonText.appendChild(zpNode);
+        break;
+
+      case 'zippay-info-icon':
+        var zpInfoIconNode = document.createElement('code');
+        zpInfoIconNode.className = 'zp-modal-info-link no-sezzle-info';
+        zpInfoIconNode.innerHTML = '&#9432;';
+        sezzleButtonText.appendChild(zpInfoIconNode);
         break;
 
       case 'price-split':
@@ -507,7 +523,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         var priceSplitText = '';
         if (priceElemTexts.length == 1) { //if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
           //give the original element in the case there might be some ignored elements present
-          priceSplitText = this.getFormattedPrice(element, configGroupIndex);
+          priceSplitText = this.getFormattedPrice(element, configGroupIndex, priceText);
         } else {
           var priceElems = [];
           priceElemTexts.forEach(function (text) {
@@ -691,9 +707,11 @@ SezzleJS.prototype.getPriceText = function (element, configGroupIndex) {
 /**
  * Formats a price as Sezzle needs it
  * @param element Element that contains price text
+ * @param configGroupIndex index of the config group which element belongs to
+ * @param priceText (optional) if defined, it contains the proper price text parsed from element
  */
-SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex) {
-  priceText = this.getPriceText(element, configGroupIndex);
+SezzleJS.prototype.getFormattedPrice = function (element, configGroupIndex, priceText) {
+  if(!priceText) priceText = this.getPriceText(element, configGroupIndex);
 
   // Get the price string - useful for formtting Eg: 120.00(string)
   var priceString = Helper.parsePriceString(priceText, true);
@@ -772,8 +790,6 @@ SezzleJS.prototype.renderModal = function () {
     modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal';
     modalNode.style.display = 'none';
     this.getModal(modalNode, closeModalHandler);
-  } else {
-    modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
   }
 
   function closeModalHandler () {
@@ -799,64 +815,23 @@ SezzleJS.prototype.renderModal = function () {
 }
 
 /**
- * This function renders the Afterpay modal based on if you include ap-modal-info-link
- * Also adds the event for open and close modals
- * to respective buttons
+ * This function renders a third party modal based on if you include {third-party-name}-modal-info-link
+ * Also adds the event listener for close modal (event listener for open modal is added in addClickEventForModal)
  */
-SezzleJS.prototype.renderAPModal = function () {
+SezzleJS.prototype.renderThirdPartyModal = function (name) {
   var modalNode = document.createElement('div');
-  modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal sezzle-ap-modal';
+  modalNode.className = 'close-' + name + '-modal sezzle-' + name + '-modal';
   modalNode.style = 'position: center';
   modalNode.style.display = 'none';
-  modalNode.innerHTML = this.apModalHTML;
+  modalNode.innerHTML = this[name + 'ModalHTML'];
   document.getElementsByTagName('html')[0].appendChild(modalNode);
 
-  // Event listener for close in modal
-  Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function (el) {
+  // Event listener for close modal
+  Array.prototype.forEach.call(document.getElementsByClassName('close-' + name + '-modal'), function (el) {
     el.addEventListener('click', function () {
-      // Display the modal node
+      // close the modal
       modalNode.style.display = 'none';
     });
-  });
-
-  // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-  let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
-  // backwards compatability check
-  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
-  sezzleModal.addEventListener('click', function (event) {
-    // stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
-    event.stopPropagation();
-  });
-}
-
-/**
- * This function renders the Quadpay modal based on if you include quadpay-modal-info-link
- * Also adds the event for open and close modals
- * to respective buttons
- */
-SezzleJS.prototype.renderQPModal = function () {
-  var modalNode = document.createElement('div');
-  modalNode.className = 'sezzle-checkout-modal-lightbox close-sezzle-modal sezzle-qp-modal';
-  modalNode.style = 'position: center';
-  modalNode.style.display = 'none';
-  modalNode.innerHTML = this.qpModalHTML;
-  document.getElementsByTagName('html')[0].appendChild(modalNode);
-
-  // Event listener for close in modal
-  Array.prototype.forEach.call(document.getElementsByClassName('close-sezzle-modal'), function (el) {
-    el.addEventListener('click', function () {
-      // Display the modal node
-      modalNode.style.display = 'none';
-    });
-  });
-
-  // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
-  let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
-  // backwards compatability check
-  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
-  sezzleModal.addEventListener('click', function (event) {
-    // stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
-    event.stopPropagation();
   });
 }
 
@@ -897,13 +872,24 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
   }.bind(this));
 
   // for QuadPay
-  var qpModalLinks = sezzleElement.getElementsByClassName('quadpay-modal-info-link');
+  var qpModalLinks = sezzleElement.getElementsByClassName('qp-modal-info-link');
   Array.prototype.forEach.call(qpModalLinks, function (modalLink) {
     modalLink.addEventListener('click', function () {
       // Show modal node
       document.getElementsByClassName('sezzle-qp-modal')[0].style.display = 'block';
       // log on click event
       this.logEvent('onclick-quadpay', configGroupIndex);
+    }.bind(this));
+  }.bind(this));
+
+  // for ZipPay
+  var zpModalLinks = sezzleElement.getElementsByClassName('zp-modal-info-link');
+  Array.prototype.forEach.call(zpModalLinks, function (modalLink) {
+    modalLink.addEventListener('click', function () {
+      // Show modal node
+      document.getElementsByClassName('sezzle-zp-modal')[0].style.display = 'block';
+      // log on click event
+      this.logEvent('onclick-zippay', configGroupIndex);
     }.bind(this));
   }.bind(this));
 }
@@ -991,7 +977,7 @@ SezzleJS.prototype.getModal = function (modalNode, callback) {
       modalLanguage = 'en';
     }
 
-    var url = 'https://d3svog4tlx445w.cloudfront.net/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage);
+    var url = 'https://media.sezzle.com/shopify-app/assets/' + document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage);
     httpRequest.open('GET', url, true);
     httpRequest.send();
   }
@@ -1170,11 +1156,15 @@ SezzleJS.prototype.initWidget = function () {
     this.renderModal();
     // only render APModal if ap-modal-link exists
     if (document.getElementsByClassName('ap-modal-info-link').length > 0) {
-      this.renderAPModal();
+      this.renderThirdPartyModal('ap');
     }
-    // only render QPModal if ap-modal-link exists
-    if (document.getElementsByClassName('quadpay-modal-info-link').length > 0) {
-      this.renderQPModal();
+    // only render QPModal if qp-modal-link exists
+    if (document.getElementsByClassName('qp-modal-info-link').length > 0) {
+      this.renderThirdPartyModal('qp');
+    }
+    // only render ZPModal if zp-modal-link exists
+    if (document.getElementsByClassName('zp-modal-info-link').length > 0) {
+      this.renderThirdPartyModal('zp');
     }
   };
 
