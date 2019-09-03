@@ -26,8 +26,8 @@ const SezzleJS = function (options) {
   this.apModalHTML = options.apModalHTML || '';
   // if doing widget with both Sezzle or quadpay - the modal to display:
   this.qpModalHTML = options.qpModalHTML || '';
-   // if doing widget with both Sezzle or zippay - the modal to display:
-   this.zpModalHTML = options.zpModalHTML || '';
+  // if doing widget with both Sezzle or zippay - the modal to display:
+  this.zpModalHTML = options.zpModalHTML || '';
   // countries widget should show in
   this.supportedCountryCodes = options.supportedCountryCodes || ['US', 'IN', 'CA'];
   // Non configurable options
