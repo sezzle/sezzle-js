@@ -52,64 +52,6 @@
 			height: 140px !important;
 		}
 	}
-
-	.container {
-		margin: 0px 0px 0px -41px;
-	}
-	.progressbar {
-		counter-reset: step;
-	}
-	.progressbar li {
-		list-style-type: none;
-		width: 25%;
-		float: left;
-		font-size: 12px;
-		position: relative;
-		text-align: center;
-	}
-	.progressbar li:before {
-		width: 16px;
-		height: 16px;
-		content: "";
-		line-height: 30px;
-		border: 2px solid #7d7d7d;
-		display: block;
-		text-align: center;
-		margin: 0 auto 10px auto;
-		border-radius: 50%;
-		background-color: #D1FACD;
-	}
-	.progressbar li:after {
-		width: 100%;
-		height: 3px;
-		content: '';
-		position: absolute;
-		background-color: #7d7d7d;
-		top: 8px;
-		left: -50%;
-		z-index: -1;
-	}
-	.progressbar li:first-child:after {
-		content: none;
-	}
-	.progressbar li.active:before {
-		border-color: #92E289;
-	}
-	.progressbar li.active + li:after {
-		background-color: #92E289;
-	}
-	
-	.column {
-		float: left;
-		width: 49%;
-		text-align: center;
-	}
-
-	.row:after {
-		content: "";
-		display: table;
-		clear: both;
-	}
 </style>
 <div class="sezzle-checkout-modal-hidden">
 	<div class="sezzle-modal" id="sezzle-modal"
@@ -128,17 +70,6 @@
 				<div class="sezzle-modal-title-text-center"
 					style="text-transform: none; font-family: Raleway; font-size: 18px; font-weight: 500; line-height: 1.24; text-align: center; color: #000000; margin-bottom: 20px; margin-top: 10px">
 					<h3>Obtenez ce que vous voulez tout de suite.<br />Payez dans la durée.</h3>
-				</div>
-			</div>
-			<div class="sezzle-row modal-point" style="text-align: center; margin-bottom: 90px;">
-				<p style="margin-bottom: 20px; font-weight: 500;">4 versements. 6 semaines. 0% d'intérêts.</p>
-				<div class="container" style="margin-bottom: 100px;">
-					<ul class="progressbar">
-						<li class="active">25% <br>aujourd'hui</li>
-						<li class="active">25% <br>dans 2 semaines</li>
-						<li class="active">25% <br>dans 4 semaines</li>
-						<li class="active">25% <br>dans 6 semaines</li>
-					</ul>
 				</div>
 			</div>
 			<div class="sezzle-row modal-point">
@@ -241,34 +172,6 @@
 					<p class="sezzle-description"
 						style="text-transform: none; font-family: Raleway; font-size: 14px; font-weight: 500; line-height: 1.29; text-align: center; color: #44474b; margin-bottom: 25px;">
 						L'inscription ne prend que quelques minutes. Vous connaîtrez immédiatement le montant alloué pour vos achats. </p>
-				</div>
-			</div>
-			<div class="sezzle-row modal-point" style="margin-top: 20px;">
-				<div class="row">
-					<div class="column" style="border-right: 0.5px solid #E7E7E7">
-						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="179.89158123640874 231.027027027027 128 127.99999999999997" width="90" height="90"><defs><path d="M304.89 294.03C304.89 328.25 277.11 356.03 242.89 356.03C208.67 356.03 180.89 328.25 180.89 294.03C180.89 259.81 208.67 232.03 242.89 232.03C277.11 232.03 304.89 259.81 304.89 294.03Z" id="ah4yydTAy"></path><text id="fkVGgqBt1" x="216.62" y="360.2" font-size="16" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -2.771609313655174 -55.00551413482472)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="225" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">sur 5</tspan></text><style id="opensansnormalnormal">
-						</style><text id="j6Kxni9eW" x="210.88" y="277.5" font-size="49" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -3.0084317573541988 -30.30281143212226)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="210.88" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">4,8</tspan></text></defs><g><g><use xlink:href="#ah4yydTAy" opacity="1" fill="#455897" fill-opacity="1"></use></g><g id="c1fwAvUsFy"><use xlink:href="#fkVGgqBt1" opacity="1" fill="#ffffff" fill-opacity="1"></use></g><g id="a7GkHIlaNs"><use xlink:href="#j6Kxni9eW" opacity="1" fill="#ffffff" fill-opacity="1"></use></g></g></svg>
-						<p style="color: #8d949e; font-size: 14px; font-weight: 500;">+ de 1000 recommandations</p>
-						<span>
-							<svg xmlns="http://www.w3.org/2000/svg" width="81" height="24" viewBox="0 0 81 16">
-								<path fill="#3B5998" fill-rule="nonzero" d="M41.7 7.771c-.668 0-1.15.219-1.64.442v5.046c.47.044.737.044 1.182.044 1.605 0 1.825-.733 1.825-1.758v-2.41c0-.756-.251-1.364-1.366-1.364zm-10.66-.275c-1.115 0-1.369.61-1.369 1.366v.424h2.735v-.424c0-.756-.254-1.366-1.367-1.366zm-20.654 5.252c0 .598.283.908.906.908.67 0 1.066-.218 1.554-.441v-1.197h-1.463c-.693 0-.997.128-.997.73zM52.072 7.77c-1.116 0-1.503.608-1.503 1.364v2.761c0 .759.387 1.368 1.503 1.368 1.112 0 1.502-.61 1.502-1.368v-2.76c0-.757-.39-1.365-1.502-1.365zM4.918 15.844h-3.28V7.92H0v-2.73h1.64v-1.64C1.64 1.325 2.563 0 5.192 0H7.38v2.73H6.013c-1.023 0-1.09.382-1.09 1.094l-.005 1.367h2.478l-.29 2.73H4.919v7.923zm11.209.02h-2.734l-.118-.69a6.275 6.275 0 0 1-3.096.802c-2.005 0-3.072-1.336-3.072-3.185 0-2.18 1.245-2.959 3.472-2.959h2.267v-.471c0-1.113-.127-1.44-1.843-1.44H8.2l.274-2.73h3.065c3.764 0 4.589 1.187 4.589 4.192v6.481zm9.295-7.743c-1.701-.29-2.19-.355-3.008-.355-1.47 0-1.914.324-1.914 1.57v2.357c0 1.246.444 1.57 1.914 1.57.818 0 1.307-.064 3.008-.357v2.663c-1.49.334-2.46.421-3.281.421-3.521 0-4.92-1.848-4.92-4.517V9.56c0-2.672 1.399-4.523 4.92-4.523.82 0 1.79.088 3.28.423V8.12zm10.263 3.352h-6.014v.22c0 1.246.444 1.57 1.914 1.57 1.321 0 2.128-.064 3.826-.357v2.663c-1.638.334-2.491.421-4.098.421-3.521 0-4.921-1.848-4.921-4.517V9.286c0-2.336 1.038-4.249 4.647-4.249 3.608 0 4.646 1.891 4.646 4.249v2.187zm10.661.05c0 2.58-.739 4.462-5.215 4.462-1.617 0-2.565-.141-4.35-.415V.82l3.28-.546v5.16c.708-.263 1.625-.397 2.46-.397 3.278 0 3.825 1.467 3.825 3.825v2.661zm10.51.056c0 2.226-.921 4.385-4.774 4.385-3.854 0-4.792-2.159-4.792-4.385V9.43c0-2.227.938-4.386 4.792-4.386 3.853 0 4.774 2.159 4.774 4.386v2.15zm10.502 0c0 2.226-.922 4.385-4.774 4.385-3.854 0-4.792-2.159-4.792-4.385V9.43c0-2.227.938-4.386 4.792-4.386 3.852 0 4.774 2.159 4.774 4.386v2.15zm10.778 4.265h-3.554l-3.005-5.008v5.008h-3.28V.82l3.28-.546v9.672l3.005-4.755h3.554l-3.281 5.189 3.281 5.464zM62.573 7.77c-1.114 0-1.5.608-1.5 1.364v2.761c0 .759.386 1.368 1.5 1.368 1.113 0 1.506-.61 1.506-1.368v-2.76c0-.757-.393-1.365-1.506-1.365zm17.435 6.204c.552 0 .992.45.992 1.01A.996.996 0 0 1 80.004 16a1.002 1.002 0 0 1-1.002-1.014c0-.562.449-1.011 1.002-1.011h.004zm-.004.157c-.445 0-.81.382-.81.854 0 .48.365.857.814.857.45.004.808-.377.808-.853 0-.475-.359-.858-.808-.858h-.004zm-.189 1.442h-.18v-1.128c.095-.013.185-.026.32-.026.17 0 .282.036.351.085.066.05.102.126.102.233 0 .149-.098.238-.22.275v.008c.1.019.166.108.19.273a.937.937 0 0 0 .07.28h-.188c-.027-.037-.054-.14-.077-.289-.026-.143-.099-.197-.242-.197h-.125v.486zm0-.624h.13c.148 0 .274-.055.274-.194 0-.099-.071-.197-.273-.197-.06 0-.1.004-.13.008v.383z"/>
-							</svg>
-						</span>
-					</div>
-					<div class="column" style="border-left: 0.5px solid #E7E7E7">
-						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="179.89158123640874 231.027027027027 128 127.99999999999997" width="90" height="90"><defs><path d="M304.89 294.03C304.89 328.25 277.11 356.03 242.89 356.03C208.67 356.03 180.89 328.25 180.89 294.03C180.89 259.81 208.67 232.03 242.89 232.03C277.11 232.03 304.89 259.81 304.89 294.03Z" id="dNDTNiyFf"></path><text id="b2gHm2DUCt" x="210.88" y="277.5" font-size="49" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -3.0084317573541988 -30.30281143212226)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="213" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">9,7</tspan></text><style id="opensansnormalnormal">
-						</style><text id="b14LvjjY3k" x="216.62" y="360.2" font-size="16" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -5.98073281590217 -54.883892513202994)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="225" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">sur 10</tspan></text></defs><g><g><use xlink:href="#dNDTNiyFf" opacity="1" fill="#00ba75" fill-opacity="1"></use></g><g id="d3gw1P1dsl"><use xlink:href="#b2gHm2DUCt" opacity="1" fill="#ffffff" fill-opacity="1"></use></g><g id="a2pJn18hUQ"><use xlink:href="#b14LvjjY3k" opacity="1" fill="#ffffff" fill-opacity="1"></use></g></g></svg>
-						<p style="color: #8d949e; font-size: 14px; font-weight: 500;">+ de 1900 évaluations</p>
-						<span>
-							<svg xmlns="http://www.w3.org/2000/svg" width="96" height="24" viewBox="0 0 96 24">
-								<g fill="none" fill-rule="nonzero">
-									<path fill="#000" d="M25.27 8.546h9.696v1.832h-3.818v10.33h-2.092v-10.33h-3.802l.016-1.832zm9.28 3.357h1.79v1.702h.031c.064-.243.176-.47.336-.697.16-.227.351-.438.59-.616.224-.195.48-.34.768-.454.271-.114.559-.179.846-.179.224 0 .384.017.463.017.08.016.176.032.256.032v1.865c-.128-.032-.272-.049-.415-.065-.144-.016-.272-.032-.416-.032-.32 0-.623.065-.91.194-.288.13-.527.325-.75.568-.209.26-.384.567-.512.94s-.192.811-.192 1.298v4.183h-1.917l.032-8.756zm13.865 8.805H46.53v-1.232H46.5c-.24.454-.592.794-1.055 1.07a2.751 2.751 0 0 1-1.421.405c-1.134 0-1.965-.275-2.476-.86-.511-.567-.767-1.442-.767-2.594v-5.594h1.917v5.4c0 .778.144 1.33.447 1.638.288.324.703.486 1.23.486.4 0 .735-.065 1.006-.195.272-.13.496-.291.655-.502.176-.211.288-.47.368-.762.08-.292.111-.617.111-.957v-5.108h1.917v8.805h-.016zm3.259-2.822c.064.568.271.957.639 1.2.367.228.814.341 1.326.341.175 0 .383-.016.607-.049.223-.032.447-.08.639-.162.207-.08.367-.194.495-.357a.84.84 0 0 0 .175-.6c-.016-.243-.095-.454-.271-.616-.176-.162-.384-.275-.64-.389a5.475 5.475 0 0 0-.894-.243c-.335-.065-.67-.146-1.022-.227a10.915 10.915 0 0 1-1.038-.292 2.96 2.96 0 0 1-.895-.47 2.015 2.015 0 0 1-.623-.746c-.16-.308-.24-.665-.24-1.12 0-.486.113-.875.352-1.2a2.56 2.56 0 0 1 .879-.778c.351-.194.75-.34 1.182-.421a6.67 6.67 0 0 1 1.23-.114c.447 0 .878.049 1.278.146.399.097.782.243 1.102.47.335.211.607.503.814.844.224.34.352.762.416 1.248h-1.997c-.096-.47-.303-.778-.623-.94a2.54 2.54 0 0 0-1.134-.243c-.128 0-.304.016-.48.032a2.788 2.788 0 0 0-.526.13c-.16.065-.304.162-.416.275a.654.654 0 0 0-.175.47c0 .244.08.422.24.568.159.146.367.26.638.373.256.098.56.179.895.243.335.065.687.146 1.038.227.351.082.687.179 1.022.292.336.114.64.26.895.47.255.195.479.438.639.73.16.292.24.665.24 1.087 0 .519-.113.957-.352 1.33-.24.356-.543.664-.91.891-.368.228-.8.39-1.247.503-.463.097-.91.162-1.357.162a5.64 5.64 0 0 1-1.518-.194 3.838 3.838 0 0 1-1.214-.568 2.712 2.712 0 0 1-.798-.957c-.192-.373-.304-.827-.32-1.362h1.933v.016h.016zm6.31-5.983h1.453v-2.66h1.917v2.643h1.725v1.444h-1.725v4.702c0 .211.016.373.032.536.016.146.064.275.112.373.063.097.16.178.271.227.128.048.288.08.511.08.128 0 .272 0 .4-.016.127-.016.271-.032.399-.064v1.508c-.208.032-.415.048-.623.065-.208.032-.4.032-.623.032-.511 0-.91-.049-1.214-.146a1.739 1.739 0 0 1-.719-.422 1.516 1.516 0 0 1-.351-.697 5.615 5.615 0 0 1-.112-.973v-5.19h-1.454V11.87v.033zm6.437 0h1.805v1.2h.032c.271-.52.639-.876 1.118-1.103.479-.227.99-.34 1.565-.34.687 0 1.278.113 1.79.372.51.244.926.568 1.261 1.006.335.421.591.924.75 1.492.16.567.256 1.184.256 1.816 0 .6-.08 1.168-.223 1.719-.16.551-.384 1.054-.687 1.476a3.414 3.414 0 0 1-1.166 1.021c-.48.26-1.022.39-1.661.39-.272 0-.56-.033-.831-.082a3.496 3.496 0 0 1-.799-.243 2.858 2.858 0 0 1-.703-.438c-.223-.178-.399-.389-.543-.616h-.032v4.395h-1.916V11.903h-.016zm6.692 4.41c0-.389-.047-.778-.16-1.15a2.956 2.956 0 0 0-.462-.99 2.57 2.57 0 0 0-.751-.697 2.019 2.019 0 0 0-1.039-.26c-.798 0-1.405.276-1.82.843-.4.568-.607 1.33-.607 2.27 0 .455.047.86.16 1.233.111.373.255.697.478.973.208.276.464.487.767.649a2.14 2.14 0 0 0 1.038.243c.448 0 .8-.097 1.103-.276.303-.178.543-.421.75-.697.192-.292.336-.616.416-.99.08-.388.127-.761.127-1.15zm3.37-7.767h1.918v1.832h-1.917V8.546zm0 3.357h1.918v8.805h-1.917v-8.805zm3.627-3.357h1.917v12.162H78.11V8.546zm7.763 12.405c-.687 0-1.31-.113-1.853-.356a4.205 4.205 0 0 1-1.374-.957 4.18 4.18 0 0 1-.846-1.476 5.844 5.844 0 0 1-.304-1.865c0-.665.096-1.28.304-1.848.191-.568.479-1.054.846-1.476a3.83 3.83 0 0 1 1.374-.957 4.785 4.785 0 0 1 1.853-.357c.687 0 1.31.114 1.853.357.543.227.99.552 1.374.957.367.405.654.908.846 1.476.192.567.304 1.183.304 1.848 0 .681-.096 1.298-.304 1.865a4.606 4.606 0 0 1-.846 1.476 3.83 3.83 0 0 1-1.374.957 4.727 4.727 0 0 1-1.853.356zm0-1.54c.415 0 .799-.097 1.102-.276.32-.178.56-.421.767-.713.207-.292.351-.633.447-.99a4.512 4.512 0 0 0 0-2.254 2.928 2.928 0 0 0-.447-.989 2.44 2.44 0 0 0-.767-.697 2.226 2.226 0 0 0-1.102-.276c-.415 0-.799.098-1.102.276a2.46 2.46 0 0 0-.767.697 2.928 2.928 0 0 0-.447.99 4.48 4.48 0 0 0 0 2.253c.096.373.24.698.447.99.208.292.463.535.767.713.32.195.687.276 1.102.276zm4.952-7.508h1.453v-2.66h1.917v2.643h1.725v1.444h-1.725v4.702c0 .211.016.373.032.536.016.146.064.275.112.373.064.097.16.178.271.227.128.048.288.08.511.08.128 0 .272 0 .4-.016s.271-.032.4-.064v1.508c-.209.032-.416.048-.624.065-.207.032-.4.032-.623.032-.51 0-.91-.049-1.214-.146a1.739 1.739 0 0 1-.719-.422 1.516 1.516 0 0 1-.351-.697 5.615 5.615 0 0 1-.112-.973v-5.19h-1.453V11.87v.033z"/>
-									<path fill="#00B67A" d="M23.034 8.546h-8.77L11.564.08 8.85 8.546.08 8.53l7.093 5.238-2.715 8.464 7.092-5.237 7.092 5.237-2.7-8.464z"/>
-									<path fill="#005128" d="M16.548 15.681l-.607-1.913-4.376 3.227z"/>
-								</g>
-							</svg>
-						</span>
-					</div>
 				</div>
 			</div>
 			<div class="bg_footer"
