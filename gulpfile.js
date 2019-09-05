@@ -19,7 +19,10 @@ var gulp = require('gulp'),
   htmlmin = require('gulp-htmlmin'),
   argv = require('yargs').argv,
   merge = require('merge-stream'),
-  fs = require('fs');
+  fs = require('fs'),
+  htmllint = require('gulp-htmllint'),
+	fancyLog = require('fancy-log'),
+	colors = require('ansi-colors');
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
@@ -286,6 +289,21 @@ function commitReleaseVersion(type, version) {
     .pipe(git.commit(`bumped ${type} version to: ${version}`));
 }
 
+gulp.task('validate-modal', function(done) {
+  language[argv.newversion].forEach(lang => {
+	  return gulp.src(`./modals/modals-${argv.newversion}/modal-${lang}.html`)
+      .pipe(htmllint({}, (filepath, issues) => {
+        if (issues.length > 0) {
+          issues.forEach(function (issue) {
+            fancyLog(colors.cyan('[gulp-htmllint] ') + colors.white(filepath + ' [' + issue.line + ',' + issue.column + ']: ') + colors.red('(' + issue.code + ') ' + issue.msg));
+          });
+          throw `Fix the  lintings: ./modals/modals-${argv.newversion}/modal-${lang}.html`;
+        }
+        done();
+      }));
+  });
+});
+
 gulp.task('updatepackage', function() {
   return updateVersion({version: argv.newversion});
 });
@@ -386,7 +404,7 @@ gulp.task('deploymodal', gulp.series('cleanmodal', 'minify-modal', 'modalupload'
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitrelease', 'pushversion'));
 gulp.task('release-css', gulp.series('grabversioncss', 'newbranchcss', 'updatepackagecss', 'commitupdatecss', 'pushversioncss'));
-gulp.task('release-modal', gulp.series('grabversionmodal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
+gulp.task('release-modal', gulp.series('grabversionmodal', 'validate-modal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
 
 
 
