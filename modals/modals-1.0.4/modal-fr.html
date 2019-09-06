@@ -51,13 +51,13 @@
 		}
 	}
 
-	.container {
+	.szl-container {
 		margin: 0px 0px 0px -41px;
 	}
-	.progressbar {
+	.szl-progressbar {
 		counter-reset: step;
 	}
-	.progressbar li {
+	.szl-progressbar li {
 		list-style-type: none;
 		width: 25%;
 		float: left;
@@ -65,7 +65,7 @@
 		position: relative;
 		text-align: center;
 	}
-	.progressbar li:before {
+	.szl-progressbar li:before {
 		width: 16px;
 		height: 16px;
 		content: "";
@@ -77,7 +77,7 @@
 		border-radius: 50%;
 		background-color: #D1FACD;
 	}
-	.progressbar li:after {
+	.szl-progressbar li:after {
 		width: 100%;
 		height: 3px;
 		content: '';
@@ -87,13 +87,13 @@
 		left: -50%;
 		z-index: -1;
 	}
-	.progressbar li:first-child:after {
+	.szl-progressbar li:first-child:after {
 		content: none;
 	}
-	.progressbar li.active:before {
+	.szl-progressbar li.active:before {
 		border-color: #92E289;
 	}
-	.progressbar li.active + li:after {
+	.szl-progressbar li.active + li:after {
 		background-color: #92E289;
 	}
 </style>
@@ -121,9 +121,9 @@
 				</div>
 			</div>
 			<div class="sezzle-row modal-point" style="text-align: center; margin-bottom: 90px;">
-				<p style="margin-bottom: 20px; font-weight: 500;">4 versements. 6 semaines. 0% d'intérêts.</p>
-				<div class="container" style="margin-bottom: 100px;">
-					<ul class="progressbar">
+				<p style="margin-bottom: 20px; font-weight: 500; font-size: 16px;">4 versements. 6 semaines. 0% d'intérêts.</p>
+				<div class="szl-container" style="margin-bottom: 100px;">
+					<ul class="szl-progressbar">
 						<li class="active">25% <br>aujourd'hui</li>
 						<li class="active">25% <br>dans 2 semaines</li>
 						<li class="active">25% <br>dans 4 semaines</li>
@@ -245,7 +245,7 @@
 					Vous n’avez qu'à choisir Sezzle au moment de régler.</div>
 				<div class="sezzle-footer-text-link"
 					style="text-transform: none; font-family: Raleway, sans-serif; font-size: 11px; font-weight: 500; line-height: 1.48; text-align: center; color: #44474b; margin: 0 25px; padding-bottom: 20px;">
-					Sous réserve d'approbation. <a href="" style="color:black; border-bottom: 1px solid #E7E7E7;">Conditions contractuelles complètes</a> </div>
+					Sous réserve d'approbation. <a href="https://legal.sezzle.com/user" style="color:black; border-bottom: 1px solid #E7E7E7;">Conditions contractuelles complètes</a> </div>
 			</div>
 		</div>
 	</div>
