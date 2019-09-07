@@ -263,7 +263,7 @@ gulp.task('grabversioncss', function (done) {
 });
 
 gulp.task('grabversionmodal', function (done) {
-  versionCheck(pjson.modalversion);
+  versionCheck('0.0.0'); // any of the modal versions can be released irrespective of numbers
   if (!language[argv.newversion]) {
     throw 'No language defined for this version';
   } else {
