@@ -11,6 +11,7 @@ var gulp = require('gulp'),
   webpack = require('webpack-stream'),
   pjson = require('./package.json'),
   uh = require('./update_history.json'),
+  rh = require('./release_history.json'),
   language = require('./modals/language.json'),
   git = require('gulp-git'),
   compareVersions = require('compare-versions'),
@@ -291,7 +292,10 @@ gulp.task('grabversioncss', function (done) {
 });
 
 gulp.task('grabversionmodal', function (done) {
-  versionCheck('0.0.0'); // any of the modal versions can be released irrespective of numbers
+  // versionCheck('0.0.0'); // any of the modal versions can be released irrespective of numbers
+  if (rh[argv.newversion]) {
+    throw 'Can not be released again. Try updating';
+  }
   if (!language[argv.newversion]) {
     throw 'No language defined for this version';
   } else {
@@ -432,13 +436,19 @@ gulp.task('deploymodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-m
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitrelease', 'pushversion'));
 gulp.task('release-css', gulp.series('grabversioncss', 'newbranchcss', 'updatepackagecss', 'commitupdatecss', 'pushversioncss'));
-gulp.task('release-modal', gulp.series('grabversionmodal', 'validate-modal', 'newbranchmodal', 'updatepackagemodal', 'commitupdatemodal', 'pushversionmodal'));
+gulp.task('release-modal', gulp.series('grabversionmodal', 'validate-modal', 'newbranchmodal', 'updatepackagemodal', 'logrelease-modal', 'commitupdatemodal', 'pushversionmodal'));
 
 
 
 // Update modal existing version
 function logUpdateHistory(params) {
   return gulp.src(['./update_history.json'])
+    .pipe(jeditor(params))
+    .pipe(gulp.dest('./'));
+}
+
+function logReleaseHistory(params) {
+  return gulp.src(['./release_history.json'])
     .pipe(jeditor(params))
     .pipe(gulp.dest('./'));
 }
@@ -484,6 +494,12 @@ gulp.task('logupdate-modal', function() {
   param[`modal-${argv.updateversion}`] = (new Date()).toUTCString();
   param['modal'] = argv.updateversion;
   return logUpdateHistory(param);
+});
+
+gulp.task('logrelease-modal', function() {
+  let param = {};
+  param[`modal-${argv.newversion}`] = (new Date()).toUTCString();
+  return logReleaseHistory(param);
 });
 
 gulp.task('commitupdate-modal', function() {
