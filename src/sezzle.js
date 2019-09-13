@@ -334,15 +334,17 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
   element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
 }
 
+
+
 /**
- * Add padding to logo Element incase its provided by the config
+ * Add styling to logo Element incase its provided by the config
  * @param element - logo element
- * @param element - element to set the padding  to
+ * @param element - element to set styles on 
  * @param configGroupIndex - index of the config group that element belongs to
  * @return void
  */
-SezzleJS.prototype.setLogoPadding = function (element, configGroupIndex) {
-  element.style.padding = `0 ${this.configGroups[configGroupIndex].logoPadding} px`;
+SezzleJS.prototype.setLogoStyle = function (element, configGroupIndex) {
+  element.style = this.configGroups[configGroupIndex].logoStyle;
 }
 
 
@@ -415,7 +417,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         logoNode.src = this.configGroups[configGroupIndex].imageURL;
         sezzleButtonText.appendChild(logoNode);
         this.setLogoSize(logoNode, configGroupIndex);
-        if(this.confiGroups[configGroupIndex].logoPadding != 0) this.setLogoPadding(logoNode, configGroupIndex)
+        if(this.confiGroups[configGroupIndex].logoStyle != {}) this.setLogoStyle(logoNode, configGroupIndex)
         break;
       // changed from learn-more to link as that is what current altVersionTemplates use
       case 'link':
