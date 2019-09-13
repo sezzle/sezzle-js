@@ -24,7 +24,7 @@
 			margin-left: 30% !important;
 		}
 
-		.bg_footer {
+		.sezzle-bg_footer {
 			height: 100px !important;
 			padding: 20px 30px !important;
 		}
@@ -48,18 +48,18 @@
 	}
 
 	@media (max-width: 320px) {
-		.bg_footer {
+		.sezzle-bg_footer {
 			height: 140px !important;
 		}
 	}
 
-	.container {
+	#sezzle-modal .sezzle-container {
 		margin: 0px 0px 0px -41px;
 	}
-	.progressbar {
+	#sezzle-modal .sezzle-progressbar {
 		counter-reset: step;
 	}
-	.progressbar li {
+	#sezzle-modal .sezzle-progressbar li {
 		list-style-type: none;
 		width: 25%;
 		float: left;
@@ -67,7 +67,7 @@
 		position: relative;
 		text-align: center;
 	}
-	.progressbar li:before {
+	#sezzle-modal .sezzle-progressbar li:before {
 		width: 16px;
 		height: 16px;
 		content: "";
@@ -79,7 +79,7 @@
 		border-radius: 50%;
 		background-color: #D1FACD;
 	}
-	.progressbar li:after {
+	#sezzle-modal .sezzle-progressbar li:after {
 		width: 100%;
 		height: 3px;
 		content: '';
@@ -89,22 +89,21 @@
 		left: -50%;
 		z-index: -1;
 	}
-	.progressbar li:first-child:after {
+	#sezzle-modal .sezzle-progressbar li:first-child:after {
 		content: none;
 	}
-	.progressbar li.active:before {
+	#sezzle-modal .sezzle-progressbar li.active:before {
 		border-color: #92E289;
 	}
-	.progressbar li.active + li:after {
+	#sezzle-modal .sezzle-progressbar li.active + li:after {
 		background-color: #92E289;
 	}
-	.column {
+	#sezzle-modal .sezzle-column {
 		float: left;
 		width: 49%;
 		text-align: center;
 	}
-
-	.row:after {
+	#sezzle-modal .szl-row:after {
 		content: "";
 		display: table;
 		clear: both;
@@ -129,14 +128,14 @@
 			</div>
 			<div class="sezzle-modal-title-top">
 				<div class="sezzle-modal-title-text-center"
-					style="text-transform: none; font-family: Raleway; font-size: 18px; font-weight: 500; line-height: 1.24; text-align: center; color: #000000; margin-bottom: 20px; margin-top: 10px">
-					<h3>Get what you want now.<br />Pay over time.</h3>
+					style="text-transform: none; font-family: Raleway; font-size: 18px; font-weight: 600; line-height: 1.24; text-align: center; color: #000000; margin-bottom: 20px; margin-top: 10px">
+					Get what you want now.<br />Pay over time.
 				</div>
 			</div>
-			<div class="sezzle-row modal-point" style="text-align: center; margin-bottom: 90px;">
+			<div class="sezzle-row modal-point" style="text-align: center;">
 				<p style="margin-bottom: 20px; font-weight: 500;">4 installments. 6 weeks. 0% interest.</p>
-				<div class="container" style="margin-bottom: 100px;">
-					<ul class="progressbar">
+				<div class="sezzle-container" style="margin-bottom: 100px;">
+					<ul class="sezzle-progressbar">
 						<li class="active">25% <br>today</li>
 						<li class="active">25% <br>in 2 weeks</li>
 						<li class="active">25% <br>in 4 weeks</li>
@@ -247,8 +246,8 @@
 				</div>
 			</div>
 			<div class="sezzle-row modal-point" style="margin-top: 20px;">
-				<div class="row">
-					<div class="column" style="border-right: 0.5px solid #E7E7E7">
+				<div class="szl-row">
+					<div class="sezzle-column" style="border-right: 0.5px solid #E7E7E7">
 						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="179.89158123640874 231.027027027027 128 127.99999999999997" width="90" height="90"><defs><path d="M304.89 294.03C304.89 328.25 277.11 356.03 242.89 356.03C208.67 356.03 180.89 328.25 180.89 294.03C180.89 259.81 208.67 232.03 242.89 232.03C277.11 232.03 304.89 259.81 304.89 294.03Z" id="ah4yydTAy"></path><text id="fkVGgqBt1" x="216.62" y="360.2" font-size="16" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -2.771609313655174 -55.00551413482472)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="220" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">out of 5</tspan></text><style id="opensansnormalnormal">
 						</style><text id="j6Kxni9eW" x="210.88" y="277.5" font-size="49" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -3.0084317573541988 -30.30281143212226)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="210.88" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">4.8</tspan></text></defs><g><g><use xlink:href="#ah4yydTAy" opacity="1" fill="#455897" fill-opacity="1"></use></g><g id="c1fwAvUsFy"><use xlink:href="#fkVGgqBt1" opacity="1" fill="#ffffff" fill-opacity="1"></use></g><g id="a7GkHIlaNs"><use xlink:href="#j6Kxni9eW" opacity="1" fill="#ffffff" fill-opacity="1"></use></g></g></svg>
 						<p style="color: #8d949e; font-size: 14px; font-weight: 500;">1000+ recommendations</p>
@@ -258,7 +257,7 @@
 							</svg>
 						</span>
 					</div>
-					<div class="column" style="border-left: 0.5px solid #E7E7E7">
+					<div class="sezzle-column" style="border-left: 0.5px solid #E7E7E7">
 						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="179.89158123640874 231.027027027027 128 127.99999999999997" width="90" height="90"><defs><path d="M304.89 294.03C304.89 328.25 277.11 356.03 242.89 356.03C208.67 356.03 180.89 328.25 180.89 294.03C180.89 259.81 208.67 232.03 242.89 232.03C277.11 232.03 304.89 259.81 304.89 294.03Z" id="dNDTNiyFf"></path><text id="b2gHm2DUCt" x="210.88" y="277.5" font-size="49" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -3.0084317573541988 -30.30281143212226)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="210.88" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">4.9</tspan></text><style id="opensansnormalnormal">
 						</style><text id="b14LvjjY3k" x="216.62" y="360.2" font-size="16" font-family="HelveticaNeue" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 -5.98073281590217 -54.883892513202994)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="220" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">out of 5</tspan></text></defs><g><g><use xlink:href="#dNDTNiyFf" opacity="1" fill="#00ba75" fill-opacity="1"></use></g><g id="d3gw1P1dsl"><use xlink:href="#b2gHm2DUCt" opacity="1" fill="#ffffff" fill-opacity="1"></use></g><g id="a2pJn18hUQ"><use xlink:href="#b14LvjjY3k" opacity="1" fill="#ffffff" fill-opacity="1"></use></g></g></svg>
 						<p style="color: #8d949e; font-size: 14px; font-weight: 500;">1900+ shopper reviews</p>
@@ -274,7 +273,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="bg_footer"
+			<div class="sezzle-bg_footer"
 				style="margin: 40px -30px -30px; padding-top: 20px; height: auto; background-color: #f4f4f4;">
 				<div class="sezzle-buy-now"
 					style=" height: 24px; text-transform: none; font-family: Raleway; font-size: 16px; font-weight: 500; letter-spacing: 1.6px; text-align: center; color: #000000;">
