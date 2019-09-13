@@ -1,114 +1,3 @@
-<style>
-	@import url("https://fonts.googleapis.com/css?family=Raleway:500,700");
-
-	.sezzle-no-thanks:hover {
-		transition: 0.15s;
-		cursor: pointer;
-	}
-
-	@media (max-width: 650px) {
-		.sezzle-modal {
-			position: relative;
-			top: 0 !important;
-			left: 0;
-			padding: 50px 0px 0px;
-			height: 100%;
-			max-width: 100%;
-			min-width: 320px;
-			overflow: auto;
-			margin-left: -50% !important;
-			margin-top: 0 !important;
-		}
-
-		.sezzle-modal-logo {
-			margin-left: 30% !important;
-		}
-
-		.bg_footer {
-			height: 100px !important;
-			padding: 20px 30px !important;
-		}
-
-		.sezzle-footer-text-link {
-			line-height: 1.68 !important;
-			padding-bottom: 0 !important;
-		}
-	}
-
-	@media(height: 812px) {
-		.sezzle-modal {
-			height: 95%;
-		}
-	}
-
-	@media(height: 823px) {
-		.sezzle-modal {
-			height: 90%;
-		}
-	}
-
-	@media (max-width: 320px) {
-		.bg_footer {
-			height: 140px !important;
-		}
-	}
-
-	.container {
-		margin: 0px 0px 0px -41px;
-	}
-	.progressbar {
-		counter-reset: step;
-	}
-	.progressbar li {
-		list-style-type: none;
-		width: 25%;
-		float: left;
-		font-size: 12px;
-		position: relative;
-		text-align: center;
-	}
-	.progressbar li:before {
-		width: 16px;
-		height: 16px;
-		content: "";
-		line-height: 30px;
-		border: 2px solid #7d7d7d;
-		display: block;
-		text-align: center;
-		margin: 0 auto 10px auto;
-		border-radius: 50%;
-		background-color: #D1FACD;
-	}
-	.progressbar li:after {
-		width: 100%;
-		height: 3px;
-		content: '';
-		position: absolute;
-		background-color: #7d7d7d;
-		top: 8px;
-		left: -50%;
-		z-index: -1;
-	}
-	.progressbar li:first-child:after {
-		content: none;
-	}
-	.progressbar li.active:before {
-		border-color: #92E289;
-	}
-	.progressbar li.active + li:after {
-		background-color: #92E289;
-	}
-	.column {
-		float: left;
-		width: 49%;
-		text-align: center;
-	}
-	.row:after {
-		content: "";
-		display: table;
-		clear: both;
-	}
-</style>
 <div class="sezzle-checkout-modal-hidden">
 	<div class="sezzle-modal" id="sezzle-modal"
 		style="width: 100%; position: absolute; top: 50%; left: 50%; margin-top: -340px; margin-left: -220px; z-index:99999998;background-color:#fff; box-shadow: 0 10px 20px rgba(5, 31, 52, 0.19), 0 6px 6px rgba(5, 31, 52, 0.2); color: #000; text-transform: none; font-family: Raleway; transition: all 0.4s ease; max-width: 440px;">
@@ -128,14 +17,14 @@
 			</div>
 			<div class="sezzle-modal-title-top">
 				<div class="sezzle-modal-title-text-center"
-					style="text-transform: none; font-family: Raleway; font-size: 18px; font-weight: 500; line-height: 1.24; text-align: center; color: #000000; margin-bottom: 20px; margin-top: 10px">
-					<h3>Get what you want now.<br />Pay over time.</h3>
+					style="text-transform: none; font-family: Raleway; font-size: 18px; font-weight: 600; line-height: 1.24; text-align: center; color: #000000; margin-bottom: 20px; margin-top: 10px">
+					Get what you want now.<br />Pay over time.
 				</div>
 			</div>
 			<div class="sezzle-row modal-point" style="text-align: center; margin-bottom: 90px;">
 				<p style="margin-bottom: 20px; font-weight: 500;">4 installments. 6 weeks. 0% interest.</p>
-				<div class="container" style="margin-bottom: 100px;">
-					<ul class="progressbar">
+				<div class="szl-container" style="margin-bottom: 100px;">
+					<ul class="szl-progressbar">
 						<li class="active">25% <br>today</li>
 						<li class="active">25% <br>in 2 weeks</li>
 						<li class="active">25% <br>in 4 weeks</li>
@@ -271,7 +160,7 @@
 					Just Select Sezzle at Checkout </div>
 				<div class="sezzle-footer-text-link"
 					style="text-transform: none; font-family: Raleway, sans-serif; font-size: 11px; font-weight: 500; line-height: 1.48; text-align: center; color: #44474b; margin: 0 25px; padding-bottom: 20px;">
-					Subject to Approval. <a href="" style="color:black; border-bottom: 1px solid #E7E7E7;">Click here for Complete Terms</a> </div>
+					Subject to Approval. <a href="https://legal.sezzle.com/user" target="_blank" rel="noopener" style="color:black; border-bottom: 1px solid #E7E7E7;">Click here for Complete Terms</a> </div>
 			</div>
 		</div>
 	</div>

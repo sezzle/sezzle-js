@@ -98,15 +98,4 @@
     .szl-progressbar li.active + li:after {
         background-color: #92E289;
     }
-    .column {
-        float: left;
-        width: 49%;
-        text-align: center;
-    }
-
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
 }
