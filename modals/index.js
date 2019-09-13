@@ -1,3 +1,13 @@
+function includeCSS(callback) {
+  var head = document.head;
+  var link = document.createElement('link');
+  link.type = 'text/css';
+  link.rel = 'stylesheet';
+  link.href = `modals-${process.env.VERSION}/modal.css`;
+  head.appendChild(link);
+  link.onload = callback;
+}
+
 function includeHTML() {
   file = `modals-${process.env.VERSION}/modal-${process.env.LANGUAGE}.html`;
   var z, i, elmnt, xhttp;
@@ -19,4 +29,5 @@ function includeHTML() {
     return;
   }
 }
-includeHTML();
+
+includeCSS(includeHTML);
