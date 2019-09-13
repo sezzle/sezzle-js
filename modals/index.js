@@ -6,6 +6,7 @@ function includeCSS(callback) {
   link.href = `modals-${process.env.VERSION}/modal.css`;
   head.appendChild(link);
   link.onload = callback;
+  link.onerror = callback;
 }
 
 function includeHTML() {
