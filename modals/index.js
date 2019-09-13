@@ -3,7 +3,7 @@ function includeCSS(callback) {
   var link = document.createElement('link');
   link.type = 'text/css';
   link.rel = 'stylesheet';
-  link.href = `modals-${process.env.VERSION}/modal.css`;
+  link.href = `modals-${process.env.VERSION}/modal.scss`;
   head.appendChild(link);
   link.onload = callback;
   link.onerror = callback;
