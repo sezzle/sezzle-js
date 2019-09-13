@@ -335,17 +335,16 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 }
 
 /**
- * Scale the widget size using CSS transforms
- * The transform origin is set to 'top {this.alignment}'
- * scale() scales the element appropriately, maintaining the aspect ratio
+ * Add padding to logo Element incase its provided by the config
  * @param element - logo element
+ * @param element - element to set the padding  to
  * @param configGroupIndex - index of the config group that element belongs to
  * @return void
  */
-SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
-  element.style.transformOrigin = 'top ' + this.configGroups[configGroupIndex].alignment;
-  element.style.transform = 'scale(' + this.configGroups[configGroupIndex].logoSize + ')'
+SezzleJS.prototype.setLogoPadding = function (element, configGroupIndex) {
+  element.style.padding = `0 ${this.configGroups[configGroupIndex].logoPadding} px`;
 }
+
 
 /**
  * This function will set Sezzle's elements with
@@ -416,6 +415,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         logoNode.src = this.configGroups[configGroupIndex].imageURL;
         sezzleButtonText.appendChild(logoNode);
         this.setLogoSize(logoNode, configGroupIndex);
+        if(this.confiGroups[configGroupIndex].logoPadding != 0) this.setLogoPadding(logoNode, configGroupIndex)
         break;
       // changed from learn-more to link as that is what current altVersionTemplates use
       case 'link':

@@ -261,6 +261,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   result.marginRight = configGroup.marginRight || (defaultConfig && defaultConfig.marginRight) || 0; //pixels
   result.scaleFactor = configGroup.scaleFactor || (defaultConfig && defaultConfig.scaleFactor);
   result.logoSize = configGroup.logoSize || (defaultConfig && defaultConfig.logoSize) || 1.0;
+  result.logoPadding = configGroup.logoPadding || (defaultConfig && defaultConfig.logoPadding) || 0;
   result.fontFamily = configGroup.fontFamily || (defaultConfig && defaultConfig.fontFamily) || 'inherit';
   result.textColor = configGroup.color || (defaultConfig && defaultConfig.color) || 'inherit';
   result.fontSize = configGroup.fontSize || (defaultConfig && defaultConfig.fontSize) || 12;
