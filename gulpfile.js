@@ -348,6 +348,12 @@ gulp.task('updatepackagemodal', function() {
   return updateVersion({modalversion: argv.newversion});
 });
 
+gulp.task('logrelease-modal', function() {
+  let param = {};
+  param[`modal-${argv.newversion}`] = (new Date()).toUTCString();
+  return logReleaseHistory(param);
+});
+
 gulp.task('commitrelease', function() {
   return commitReleaseVersion('js', argv.newversion);
 });
@@ -494,12 +500,6 @@ gulp.task('logupdate-modal', function() {
   param[`modal-${argv.updateversion}`] = (new Date()).toUTCString();
   param['modal'] = argv.updateversion;
   return logUpdateHistory(param);
-});
-
-gulp.task('logrelease-modal', function() {
-  let param = {};
-  param[`modal-${argv.newversion}`] = (new Date()).toUTCString();
-  return logReleaseHistory(param);
 });
 
 gulp.task('commitupdate-modal', function() {
