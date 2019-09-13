@@ -22,7 +22,8 @@ var gulp = require('gulp'),
   fs = require('fs'),
   htmllint = require('gulp-htmllint'),
 	fancyLog = require('fancy-log'),
-	colors = require('ansi-colors');
+  colors = require('ansi-colors'),
+  gap = require('gulp-append-prepend');
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
@@ -89,15 +90,35 @@ gulp.task('post-button-css-to-wrapper', function () {
  */
 
 gulp.task('cleanmodal', function () {
-  return del(['dist/modals*/**']);
+  return del(['dist/modal*/**']);
+});
+
+gulp.task('csscompile-modal', function () {
+  return sass(`./modals/modals-${pjson.modalversion}/modal.scss`, {
+    style: 'expanded'
+  })
+  .pipe(autoprefixer('last 2 version'))
+  .pipe(gulp.dest('dist/modal-css'))
+  .pipe(rename({
+    suffix: '.min'
+  }))
+  .pipe(postcss([cssnano()]))
+  .pipe(gulp.dest('dist/modal-css'))
 });
 
 // minifies html for modal
 gulp.task('minify-modal', function () {
   const languages = language[pjson.modalversion];
   let steams = [];
+  var style = ''
+  try {
+    style = fs.readFileSync('./dist/modal-css/modal.min.css', 'utf8');
+  } catch (err) {
+    style = '';
+  }
   languages.forEach((lang) => {
     const steam = gulp.src(`./modals/modals-${pjson.modalversion}/modal-${lang}.html`)
+      .pipe(gap.prependText('<style>\n' + style + '\n</style>'))
       .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true }))
       .pipe(rename(`sezzle-modal-${pjson.modalversion}-${lang}.html`))
       .pipe(gulp.dest(`dist/modals-${pjson.modalversion}`));
@@ -109,8 +130,15 @@ gulp.task('minify-modal', function () {
 gulp.task('minify-modal-update', function () {
   const languages = language[uh.modal];
   let steams = [];
+  var style = ''
+  try {
+    style = fs.readFileSync('./dist/modal-css/modal.min.css', 'utf8');
+  } catch (err) {
+    style = '';
+  }
   languages.forEach((lang) => {
     const steam = gulp.src(`./modals/modals-${uh.modal}/modal-${lang}.html`)
+      .pipe(gap.prependText('<style>\n' + style + '\n</style>'))
       .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true }))
       .pipe(rename(`sezzle-modal-${uh.modal}-${lang}.html`))
       .pipe(gulp.dest(`dist/modals-${uh.modal}`));
@@ -399,7 +427,7 @@ gulp.task('styles', gulp.series('cleancss', 'csscompile'));
 
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
 gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
-gulp.task('deploymodal', gulp.series('cleanmodal', 'minify-modal', 'modalupload', 'post-modal-to-wrapper'));
+gulp.task('deploymodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-modal', 'modalupload', 'post-modal-to-wrapper'));
 
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitrelease', 'pushversion'));
@@ -471,7 +499,7 @@ gulp.task('pushversionmodal-modal', function (done) {
 });
 
 gulp.task('update-modal', gulp.series('modal-version-check-for-update', 'branchupdate-modal', 'logupdate-modal', 'commitupdate-modal', 'pushversionmodal-modal'));
-gulp.task('deployupdatemodal', gulp.series('cleanmodal', 'minify-modal-update', 'modalupload-update'));
+gulp.task('deployupdatemodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-modal-update', 'modalupload-update'));
 
 // CI processes
 gulp.task('deploy', function (done) {
