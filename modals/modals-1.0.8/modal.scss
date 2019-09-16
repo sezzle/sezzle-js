@@ -9,8 +9,7 @@
     @media (max-width: 650px) {
         .sezzle-modal {
             position: relative;
-            display: table;
-            top: 0 !important;
+            // top: 0 !important;
             left: 0;
             // padding: 50px 0px 0px;
             // height: 100%;
@@ -104,8 +103,5 @@
     }
     .modal-point h2 {
         margin: 0 0 5px 0;
-    }
-    #sezzle-modal {
-       display: table; 
     }
 }
