@@ -14,7 +14,8 @@ const SezzleJS = function (options) {
     // if no URL match is provided, consider the group for backwards compatability reasons
     return !configGroup.urlMatch || RegExp(configGroup.urlMatch).test(window.location.href);
   });
-
+  // config
+  this.config = options;
   // properties that do not belong to a config group
   this.merchantID = options.merchantID || '';
   this.forcedShow = options.forcedShow || false;
@@ -34,6 +35,10 @@ const SezzleJS = function (options) {
   this.countryFromIPRequestURL = 'https://geoip.sezzle.com/v1/geoip/ipdetails';
   // URL to request to get css details
   this.cssForMerchantURL = 'https://widget.sezzle.com/v1/css/price-widget?uuid=' + this.merchantID;
+  // no tracking
+  this.noTracking = !!options.noTracking;
+  // no gtm
+  this.noGtm = !!options.noGtm;
 
   // Variables set by the js
   this.countryCode = null;
@@ -339,7 +344,7 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 /**
  * Add styling to logo Element incase its provided by the config
  * @param element - logo element
- * @param element - element to set styles on 
+ * @param element - element to set styles on
  * @param configGroupIndex - index of the config group that element belongs to
  * @return void
  */
@@ -417,7 +422,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index
         logoNode.src = this.configGroups[configGroupIndex].imageURL;
         sezzleButtonText.appendChild(logoNode);
         this.setLogoSize(logoNode, configGroupIndex);
-        if(this.confiGroups[configGroupIndex].logoStyle != {}) this.setLogoStyle(logoNode, configGroupIndex)
+        if(this.configGroups[configGroupIndex].logoStyle != {}) this.setLogoStyle(logoNode, configGroupIndex)
         break;
       // changed from learn-more to link as that is what current altVersionTemplates use
       case 'link':
@@ -1020,7 +1025,7 @@ SezzleJS.prototype.hideSezzleHideElements = function (configGroupIndex) {
 */
 SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
   // We only log event when it's allowed to
-  if (document.sezzleConfig && !document.sezzleConfig.noTracking) {
+  if (!this.noTracking) {
     var viewport = {
       width: null,
       height: null
@@ -1038,9 +1043,7 @@ SezzleJS.prototype.logEvent = function (eventName, configGroupIndex) {
       console.log(error);
     }
     var sezzleConfigStr = null
-    if (document.sezzleConfig) {
-      sezzleConfigStr = JSON.stringify(document.sezzleConfig);
-    }
+    sezzleConfigStr = JSON.stringify(this.config);
     var win = window.frames.szl;
     if (win) {
       var cartId = this.getCookie('cart');
@@ -1106,7 +1109,7 @@ SezzleJS.prototype.init = function () {
       // only inject Google tag manager for clients visiting from the United States or Canada
       if (countryCode === 'US' || 'CA') {
         var win = window.frames.szl;
-        if (win && !document.sezzleConfig.noGtm) {
+        if (win && !this.noGtm) {
           // win.postMessage('initGTMScript', 'http://localhost:9001/');
           win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
         }
@@ -1121,7 +1124,7 @@ SezzleJS.prototype.init = function () {
         // only inject Google tag manager for clients visiting from the United States or Canada
         if (countryCode === 'US' || 'CA') {
           var win = window.frames.szl;
-          if (win && !document.sezzleConfig.noGtm) {
+          if (win && !this.noGtm) {
             setTimeout(function () {
               win.postMessage('initGTMScript', 'https://tracking.sezzle.com');
             }, 100);
