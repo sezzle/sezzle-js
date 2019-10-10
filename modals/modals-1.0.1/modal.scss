@@ -54,11 +54,9 @@
     }
 
     .szl-container {
-        margin: 0px 0px 0px -41px;
+        margin: 0 auto;
     }
-    .szl-progressbar {
-        counter-reset: step;
-    }
+    
     .szl-progressbar li {
         list-style-type: none;
         width: 25%;
