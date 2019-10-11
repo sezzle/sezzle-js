@@ -880,9 +880,9 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
       if (!event.target.classList.contains('no-sezzle-info')) {
         var modalNode
         // Makes sure to get rid of AP & QP modals in our Sezzle modal event listener
-        document.querySelectorAll('.sezzle-checkout-modal-lightbox').forEach(function(a){
-          if(!a.classList.contains('sezzle-ap-modal' || 'sezzle-qp-modal')) {
-            modalNode = a
+        document.querySelectorAll('.sezzle-checkout-modal-lightbox').forEach(function(element){
+          if(!element.classList.contains('sezzle-ap-modal' || 'sezzle-qp-modal')) {
+            modalNode = element
           }
         });
         if (modalNode) {
@@ -892,8 +892,9 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
 
           if (modals.length) {
             modals[0].className = 'sezzle-modal';
-          } // log on click event
+          } 
 
+          // log on click event
           this.logEvent('onclick', configGroupIndex);
         }
       }
