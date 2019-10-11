@@ -831,7 +831,7 @@ SezzleJS.prototype.renderAPModal = function () {
   // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
   let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
   // backwards compatability check
-  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0]
   sezzleModal.addEventListener('click', function (event) {
     // stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
     event.stopPropagation();
@@ -862,7 +862,7 @@ SezzleJS.prototype.renderQPModal = function () {
   // Event listener to prevent close in modal if click happens within sezzle-checkout-modal
   let sezzleModal = document.getElementsByClassName('sezzle-modal')[0]
   // backwards compatability check
-  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal')[0]
+  if (!sezzleModal) sezzleModal = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0]
   sezzleModal.addEventListener('click', function (event) {
     // stop propagating the event to the parent sezzle-checkout-modal-lightbox to prevent the closure of the modal
     event.stopPropagation();
@@ -878,16 +878,22 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
   Array.prototype.forEach.call(modalLinks, function (modalLink) {
     modalLink.addEventListener('click', function (event) {
       if (!event.target.classList.contains('no-sezzle-info')) {
-        var modalNode = document.getElementsByClassName('sezzle-checkout-modal-lightbox')[0];
-        // Show modal node
+        var modalNode
+        // Makes sure to get rid of AP & QP modals in our Sezzle modal event listener
+        document.querySelectorAll('.sezzle-checkout-modal-lightbox').forEach(function(a){
+          if(!a.classList.contains('sezzle-ap-modal' || 'sezzle-qp-modal')) {
+            modalNode = a
+          }
+        });
         if (modalNode) {
-          modalNode.style.display = 'block';
-          // Remove hidden class to show the item
+          modalNode.style.display = 'block'; // Remove hidden class to show the item
+
           var modals = modalNode.getElementsByClassName('sezzle-modal');
+
           if (modals.length) {
             modals[0].className = 'sezzle-modal';
-          }
-          // log on click event
+          } // log on click event
+
           this.logEvent('onclick', configGroupIndex);
         }
       }
