@@ -158,7 +158,7 @@ SezzleJS.prototype.addCSSAlignment = function (element, configGroupIndex) {
     var queryString = '(min-width: ' + this.configGroups[configGroupIndex].alignmentSwitchMinWidth + 'px)';
     var mq = window.matchMedia(queryString);
     if (!mq.matches) {
-      newAlignment = this.confiGroups[configGroupIndex].alignmentSwitchType
+      newAlignment = this.configGroups[configGroupIndex].alignmentSwitchType
     }
   }
   switch (newAlignment || this.configGroups[configGroupIndex].alignment) {
@@ -892,7 +892,7 @@ SezzleJS.prototype.addClickEventForModal = function (sezzleElement, configGroupI
 
           if (modals.length) {
             modals[0].className = 'sezzle-modal';
-          } 
+          }
 
           // log on click event
           this.logEvent('onclick', configGroupIndex);
