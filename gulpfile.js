@@ -245,7 +245,7 @@ gulp.task('bundlejs', function () {
         filename: buttonUploadName
       },
       optimization: {
-        minimize: true // <---- disables uglify.
+        minimize: false // <---- disables uglify.
       },
       mode: 'production'
     }))
@@ -586,4 +586,34 @@ gulp.task('deploy', function (done) {
       done();
     }
   })
+});
+
+// Bundle tracker
+
+gulp.task('bundleTrackerJS', function () {
+  return gulp.src('src/ShopifyTracker/tracker.js')
+    .pipe(webpack({
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env']
+              }
+            }
+          }
+        ]
+      },
+      output: {
+        filename: 'shopifyTracker.js'
+      },
+      optimization: {
+        minimize: false // <---- disables uglify.
+      },
+      mode: 'production'
+    }))
+    .pipe(gulp.dest('dist/'));
 });
