@@ -16,17 +16,17 @@ const propsNotInConfigGroup = [
 ];
 
 /**
- * This function returns widget string based on browserLanguage if it's defined, else returns 'en' version
- * @param {String} browserLanguage Set in sezzle.js
+ * This function returns widget string based on language if it's defined, else returns 'en' version
+ * @param {String} language Set in sezzle.js
  * @param {Number} numberOfPayments Set in sezzle.js
  * @returns {String} Default widget template
  */
-const widgetLanguageTranslation = function (browserLanguage, numberOfPayments) {
+const widgetLanguageTranslation = function (language, numberOfPayments) {
   const translations = {
     'en': 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
     'fr': 'ou ' + numberOfPayments + ' paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
   }
-  return translations[browserLanguage] || translations['en']
+  return translations[language] || translations['en']
 }
 
 /**
@@ -219,9 +219,10 @@ exports.factorize = function (options) {
  * @param configGroup input by user
  * @param defaultConfig default config specified by the user (optional)
  * @param numberOfPayments number of split payments for the widget
+ * @param language this is the language which the widget  uses
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
-exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, browserLanguage) {
+exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, language) {
   var result = {};
 
   // targetXPath SHOULD NOT be specified in defaultConfig since
@@ -291,9 +292,9 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
 
   result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
   if (result.widgetTemplate) {
-    result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, browserLanguage, numberOfPayments)).split('%%');
+    result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, language, numberOfPayments)).split('%%');
   } else {
-    var defaultWidgetTemplate = widgetLanguageTranslation(browserLanguage, numberOfPayments);
+    var defaultWidgetTemplate = widgetLanguageTranslation(language, numberOfPayments);
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
   }
 
@@ -431,20 +432,20 @@ exports.insertAsFirstChild = function (element, referenceElement) {
 /**
  * Returns altVersionTemplate, based on config provided
  * If it's a string, it doesn't do anything and just returns the string
- * If it's an object it will return the key which matches with browserLanguage else returns 'en' key if specified->
- *  if en or browserLanguage key both are not present it calls widgetLanguageTranslation with browser Language as 'en'
+ * If it's an object it will return the key which matches with language else returns 'en' key if specified->
+ *  if en or language key both are not present it calls widgetLanguageTranslation with browser Language as 'en'
  * @param {Object, String} widgetTemplate
- * @param {String} browserLanguage
+ * @param {String} language
  * @param {Number} numberOfPayments
  * @returns String
  */
-function constructWidgetTemplate (widgetTemplate, browserLanguage, numberOfPayments) {
+function constructWidgetTemplate (widgetTemplate, language, numberOfPayments) {
   if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
-    if (!widgetTemplate['en'] && !widgetTemplate[browserLanguage]) {
+    if (!widgetTemplate['en'] && !widgetTemplate[language]) {
       console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.")
-      return widgetLanguageTranslation(browserLanguage, numberOfPayments) // return default widget template
+      return widgetLanguageTranslation(language, numberOfPayments) // return default widget template
     }
-    return widgetTemplate[browserLanguage] || widgetTemplate['en'] // returns specific language if present else return en key
+    return widgetTemplate[language] || widgetTemplate['en'] // returns specific language if present else return en key
   }
   return widgetTemplate //if widgetTemplate is string
 }
