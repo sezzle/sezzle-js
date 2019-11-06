@@ -588,8 +588,7 @@ gulp.task('deploy', function (done) {
   })
 });
 
-// Bundle tracker
-
+// Tracker tasks
 gulp.task('bundleTrackerJS', function () {
   return gulp.src('src/ShopifyTracker/tracker.js')
     .pipe(webpack({
@@ -617,3 +616,5 @@ gulp.task('bundleTrackerJS', function () {
     }))
     .pipe(gulp.dest('dist/'));
 });
+
+//TODO: Add Gulp task to upload .dist/shopifyTracker.js
