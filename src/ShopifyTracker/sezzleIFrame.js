@@ -1,4 +1,4 @@
-exports.sezzleIFrame = function () {
+exports.sezzleIFrame = new Promise (function (resolve) {
     if (!window.frames.szl) {
         var sz_iframe = document.createElement('iframe');
         sz_iframe.width = 0;
@@ -6,7 +6,7 @@ exports.sezzleIFrame = function () {
         sz_iframe.style.display = 'none';
         sz_iframe.style.visibility = 'hidden';
         sz_iframe.name='szl';
-        sz_iframe.onload = () => document.dispatchEvent(new CustomEvent('SEZZLE_IFRAME_LOADED'))
+        sz_iframe.onload = () => resolve(sz_iframe);
         sz_iframe.src = 'https://tracking.sezzle.com';
         var count = 0;
         function renderSezzleIframe() {
@@ -24,4 +24,4 @@ exports.sezzleIFrame = function () {
         }
         renderSezzleIframe();
     }
-};
+});

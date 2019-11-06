@@ -62,16 +62,12 @@ const shopifyTracker = (function () {
 })();
 
 if (typeof(Shopify) === 'object' && Object.keys(Shopify).length > 0 && Shopify.shop) {
-    // Don't call iframe on cart and product pages
-    ( /(cart|product)/ ).test(currentURL) ? null : sezzleIFrame.sezzleIFrame();
-
-    // Track once the  iframe is loaded
-    document.addEventListener('SEZZLE_IFRAME_LOADED', () => {
+    sezzleIFrame.sezzleIFrame.then(success => {
         if (/collection/.test(currentURL)) shopifyTracker.trackCollections();
         if (/thank_you/.test(currentURL)) shopifyTracker.trackSuccess();
 
         //TODO: if (/cart/.test(currentURL)) window.addEventListener('unload', shopifyTracker.trackCart());
         //TODO: if (/product/.test(currentURL)) shopifyTracker.trackProduct();
         //TODO: if (/payment_method/.test(currentURL)) shopifyTracker.trackPayment();
-    })
+    });
 }
