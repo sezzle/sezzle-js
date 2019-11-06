@@ -611,7 +611,7 @@ gulp.task('bundleTrackerJS', function () {
         filename: 'shopifyTracker.js'
       },
       optimization: {
-        minimize: false // <---- disables uglify.
+        minimize: true // <---- disables uglify.
       },
       mode: 'production'
     }))
