@@ -245,7 +245,7 @@ gulp.task('bundlejs', function () {
         filename: buttonUploadName
       },
       optimization: {
-        minimize: false // <---- disables uglify.
+        minimize: true // <---- disables uglify.
       },
       mode: 'production'
     }))
