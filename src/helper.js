@@ -26,7 +26,7 @@ const widgetLanguageTranslation = function (language, numberOfPayments) {
     'en': 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
     'fr': 'ou ' + numberOfPayments + ' paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
   }
-  return translations[language] || translations['en']
+  return translations[language] || translations['en'];
 }
 
 /**
@@ -35,6 +35,7 @@ const widgetLanguageTranslation = function (language, numberOfPayments) {
  * @return nothing. If config is invalid, error is thrown and program execution is stopped.
  */
 exports.validateConfig = function (options) {
+  console.log(options)
   if (!Array.isArray(options.configGroups)) {
     throw new Error("options.configGroups is not an array");
   } else {
@@ -443,9 +444,9 @@ function constructWidgetTemplate (widgetTemplate, language, numberOfPayments) {
   if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
     if (!widgetTemplate['en'] && !widgetTemplate[language]) {
       console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.")
-      return widgetLanguageTranslation(language, numberOfPayments) // return default widget template
+      return widgetLanguageTranslation(language, numberOfPayments); // return default widget template
     }
-    return widgetTemplate[language] || widgetTemplate['en'] // returns specific language if present else return en key
+    return widgetTemplate[language] || widgetTemplate['en']; // returns specific language if present else return en key
   }
   return widgetTemplate //if widgetTemplate is string
 }

@@ -46,7 +46,6 @@ const SezzleJS = function (options) {
   this.ip = null;
   this.fingerprint = null;
 
-  
   // Widget Language
   this.browserLanguage = navigator.language || navigator.browserLanguage || 'en';
   this.browserLanguage = this.browserLanguage.substring(0, 2).toLowerCase();
@@ -54,15 +53,18 @@ const SezzleJS = function (options) {
 
   switch(typeof(options.language)){
     case 'string':
-      this.language = options.language
+      this.language = options.language;
       break;
     case 'function':
-      this.language = options.language()
+      this.language = options.language();
       break;
     default:
-      this.language = options.browserLanguage
+      this.language = this.browserLanguage;
   }
 
+  if(this.language  !== 'en' && this.language !== 'fr'){
+    this.language = this.browserLanguage;
+  }
   // map config group props
   this.configGroups = [];
   options.configGroups.forEach(function (configGroup) {
