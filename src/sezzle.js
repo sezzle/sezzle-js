@@ -62,7 +62,7 @@ const SezzleJS = function (options) {
       this.language = this.browserLanguage;
   }
 
-  if(this.language  !== 'en' && this.language !== 'fr'){
+  if(this.language  !== 'en' || this.language !== 'fr'){
     this.language = this.browserLanguage;
   }
   // map config group props
