@@ -448,9 +448,53 @@ gulp.task('pushversionmodal', function (done) {
 
 gulp.task('styles', gulp.series('cleancss', 'csscompile'));
 
+// Tracker tasks
+gulp.task('bundletracker', function () {
+  return gulp.src('src/ShopifyTracker/tracker.js')
+    .pipe(webpack({
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env']
+              }
+            }
+          }
+        ]
+      },
+      output: {
+        filename: 'shopifyTracker.js'
+      },
+      optimization: {
+        minimize: true // <---- disables uglify.
+      },
+      mode: 'production'
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+
+//TODO: Add Gulp task to upload ./dist/shopifyTracker.js
+gulp.task('uploadtracker', function () {
+  // bucket base url https://d3svog4tlx445w.cloudfront.net/
+  var indexPath = `./dist/shopifyTracker.js`;
+  return gulp.src(indexPath)
+    .pipe(rename(`tracking/assets/tracking.js`))
+    .pipe(s3({
+      Bucket: 'sezzlemedia', //  Required
+      ACL: 'public-read'     //  Needs to be user-defined
+    }, {
+      maxRetries: 5
+    }))
+});
+
 gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
 gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
 gulp.task('deploymodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-modal', 'modalupload', 'post-modal-to-wrapper'));
+gulp.task('deploytracker', gulp.series('bundletracker', 'uploadtracker'));
 
 // local processes
 gulp.task('release', gulp.series('grabversion', 'newbranch', 'updatepackage', 'commitrelease', 'pushversion'));
@@ -577,6 +621,13 @@ gulp.task('deploy', function (done) {
           console.log(stdout);
           done();
         })
+      } else if (versionCommit.indexOf('updated tracker:') > -1) {
+        console.log('Updating Tracker');
+        exec('npx gulp deploytracker', function (err, stdout, stderr) {
+          if (err) throw err;
+          console.log(stdout);
+          done();
+        })
       } else {
         console.log('No version change commit found');
         done();
@@ -587,34 +638,3 @@ gulp.task('deploy', function (done) {
     }
   })
 });
-
-// Tracker tasks
-gulp.task('bundleTrackerJS', function () {
-  return gulp.src('src/ShopifyTracker/tracker.js')
-    .pipe(webpack({
-      module: {
-        rules: [
-          {
-            test: /\.m?js$/,
-            exclude: /(node_modules)/,
-            use: {
-              loader: 'babel-loader',
-              options: {
-                presets: ['@babel/preset-env']
-              }
-            }
-          }
-        ]
-      },
-      output: {
-        filename: 'shopifyTracker.js'
-      },
-      optimization: {
-        minimize: true // <---- disables uglify.
-      },
-      mode: 'production'
-    }))
-    .pipe(gulp.dest('dist/'));
-});
-
-//TODO: Add Gulp task to upload .dist/shopifyTracker.js
