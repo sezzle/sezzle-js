@@ -47,6 +47,39 @@ If `renderToPath` is `../../.my-render-element` - This will render the widget tw
 <script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
 ```
 
+4. Usinig the language feature is pretty simple. You can pass either a string or a function (which returns a string).
+    Right now we support only english ('en') or french ('fr').
+    An example would help you understand this better.
+
+    Using as String:
+  ```
+    <script>
+      document.sezzleConfig = {
+        targetXPath: '<path-to-price-element>',
+        renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
+        language:'fr'
+      }
+    </script>
+    <script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
+  ```
+
+     Using as function:
+  ```
+    <script>
+      document.sezzleConfig = {
+        targetXPath: '<path-to-price-element>',
+        renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
+        language:()=>{
+          if (<your-logic>){
+            return 'en'
+          }
+          return 'fr'
+          
+        }
+      }
+    </script>
+    <script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
+  ```
 For further customization and more details, please check the options at [click here](/widget-options.md)
 
 Note that if you want to use a grayscale Sezzle logo put
