@@ -1,6 +1,7 @@
 {
   "name": "sezzle-js",
   "version": "5.1.2",
+  "trackerversion": "1.0.0",
   "cssversion": "2.0.10",
   "modalversion": "1.0.8",
   "description": "Sezzle Sales Widget Price Watcher",
@@ -13,7 +14,8 @@
     "release-css": "gulp release-css",
     "release-modal": "gulp release-modal",
     "update-modal": "gulp update-modal",
-    "modal": "http-server ./modal -p 8081"
+    "modal": "http-server ./modal -p 8081",
+    "build-tracker": "gulp bundleTrackerJS"
   },
   "repository": {
     "type": "git",

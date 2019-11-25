@@ -25,7 +25,6 @@ var gulp = require('gulp'),
 	fancyLog = require('fancy-log'),
   colors = require('ansi-colors'),
   gap = require('gulp-append-prepend');
-
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
 
@@ -586,4 +585,50 @@ gulp.task('deploy', function (done) {
       done();
     }
   })
+});
+
+// Tasks for Banner
+// Creates a minified bundle file
+gulp.task('bundle-banner', function () {
+  return gulp.src('src/sezzleBanner/index.js')
+    .pipe(webpack({
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env']
+              }
+            }
+          }
+        ]
+      },
+      output: {
+        filename: 'banner.js',
+        library: 'sezzleBanner',
+        libraryTarget: 'var',
+      },
+      optimization: {
+        minimize: false // <---- disables uglify.
+      },
+      mode: 'production'
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+
+// upload task for banner js
+gulp.task('banner-upload', function () {
+  // bucket base url https://d3svog4tlx445w.cloudfront.net/
+  var indexPath = './dist/banner.js'
+  return gulp.src(indexPath)
+    .pipe(rename(`shopify-app/assets/sezzlebanner.js`))
+    .pipe(s3({
+      Bucket: 'sezzlemedia', //  Required
+      ACL: 'public-read'       //  Needs to be user-defined
+    }, {
+        maxRetries: 5
+      }))
 });
