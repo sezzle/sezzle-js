@@ -1,12 +1,11 @@
-import sezzleBannerDark from './sezzleBannerDark';
-import sezzleBannerLight from './sezzleBannerLight';
+import sezzleBannerDark from './sezzleBannerDark.html';
+import sezzleBannerLight from './sezzleBannerLight.html';
 
 export const awesomeSezzleBanner = (function () {
     let bannerStatus = 'mini', toShowBanner = true, ajaxCall = new XMLHttpRequest(),
         sezzleBannerActionNode, sezzleExtendedBanner, bannerConfig, sezzleBannerClose, sezzleBannerContainer, sezzleBannerHeader;
 
     const init = (config) => {
-        console.log('Got the config', config)
         initializeConfig(config);
         checkIfURLSchemeMatches();
         toShowBanner ? checkIfCountryIsSupported(countryCode => callbackCountrySupport(countryCode)) : null;

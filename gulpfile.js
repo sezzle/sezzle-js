@@ -654,7 +654,12 @@ gulp.task('bundle-banner', function () {
                 presets: ['@babel/preset-env']
               }
             }
-          }
+          },
+          {
+            test: /\.html$/,
+            exclude: /node_modules/,
+            use: {loader: 'html-loader'}
+        }
         ]
       },
       output: {
