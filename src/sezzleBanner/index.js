@@ -3,31 +3,85 @@ import sezzleBannerLight from './sezzleBannerLight.html';
 
 export const awesomeSezzleBanner = (function () {
     let bannerStatus = 'mini', toShowBanner = true, ajaxCall = new XMLHttpRequest(),
-        sezzleBannerActionNode, sezzleExtendedBanner, bannerConfig, sezzleBannerClose, sezzleBannerContainer, sezzleBannerHeader;
+        sezzleBannerActionNode, sezzleExtendedBanner, bannerConfig, sezzleBannerClose,
+        sezzleBannerContainer, sezzleBannerHeader;
 
     const init = (config) => {
         initializeConfig(config);
-        checkIfURLSchemeMatches();
+        if (!bannerConfig) return; // Return if there banner config couldn't be set
+        initializeTracker();
+        checkIfURLSchemeMatches()
         toShowBanner ? checkIfCountryIsSupported(countryCode => callbackCountrySupport(countryCode)) : null;
     };
 
     const initializeConfig = (config) => {
-        // Default Config
+        if (!config.merchantId) {
+            console.warn('Sezzle Banner Config requires merchant id');
+            return;
+        };
+
         bannerConfig = {
             theme: config.theme || 'light',
             supportedCountryCodes: config.supportedCountryCodes || ['US', 'IN', 'CA'],
-            urlMatch: config.urlMatch,
-            noTrack: false,
-            noGTM: false,
+            urlMatch: config.urlMatch || ['homepage'],
+            track: config.track || true,
             altBannerHTML: config.altBannerHTML,
             width: config.width,
-            headerHeight: config.headerHeight
+            headerHeight: config.headerHeight,
+            merchantId: config.merchantId
         };
     };
+    
+    // Loads the sezzle tracker to log events on banner learn more and close action
+    const initializeTracker = () => {
+		if (!window.frames.szl) {
+			var sz_iframe = document.createElement('iframe');
+			sz_iframe.width = 0;
+			sz_iframe.height = 0;
+			sz_iframe.style.display = 'none';
+			sz_iframe.style.visibility = 'hidden';
+			sz_iframe.name='szl';
+			sz_iframe.src = 'https://tracking.sezzle.com';
+			var count = 0;
+			function renderSezzleIframe() {
+				setTimeout(function() {
+					if (count >= 20) {
+						return;
+					};
+					if (document.body) {
+						document.body.appendChild(sz_iframe);
+					} else {
+						count++;
+						renderSezzleIframe();
+					}
+				}, 100);
+			}
+			renderSezzleIframe();
+		}
+	
+    };
 
+    /**
+     * Expects bannerConfig.urlMatch to be an array
+     * @returns true if the current browser url matches to config else sets toShowBanner to false and 
+     *          banner doesn't renders
+     */
     const checkIfURLSchemeMatches = () => {
-        if (!bannerConfig.urlMatch && window.location.pathname === '/') return
-        else if (window.location.href.indexOf(bannerConfig.urlMatch) > -1)  return
+        if (bannerConfig.urlMatch.constructor !== Array) {
+            console.warn('urlMatch in sezzle banner config has to be an array!');
+            toShowBanner = false;
+            return;
+        }
+
+        let shouldRender = true;
+
+        bannerConfig.urlMatch.find(url => {
+            if (url === 'homepage' && window.location.pathname === '/') shouldRender = true;
+            else if (window.location.href.indexOf(url) > -1) shouldRender = true;
+            else shouldRender = false;
+        });
+
+        if (shouldRender) return;
         else toShowBanner = false;
     };
 
@@ -49,7 +103,9 @@ export const awesomeSezzleBanner = (function () {
     };
 
     const callbackCountrySupport = (countryCode) => {
-        bannerConfig.supportedCountryCodes.indexOf(countryCode) !== -1 ? renderBanner() : console.log("Hiding sezzle banner because country not supported");
+        bannerConfig.supportedCountryCodes.indexOf(countryCode) !== -1
+            ? renderBanner()
+            : console.log("Hiding sezzle banner because country not supported");
     };
 
     const renderBanner = () => {
@@ -85,6 +141,7 @@ export const awesomeSezzleBanner = (function () {
                     sezzleExtendedBanner.classList.add('sezzle-open');
                     bannerStatus = 'extended';
                     actionElement.innerHTML = 'Close';
+                    logEvent('sezzle-banner-maximised');
                 }
                 // Banner is in extended mode
                 else {
@@ -96,7 +153,10 @@ export const awesomeSezzleBanner = (function () {
             });
         });
         // Close sezzle banner entirely
-        sezzleBannerClose.addEventListener('click', () => document.querySelector('.sezzle-banner-container').style.display ='none');
+        sezzleBannerClose.addEventListener('click', () => {
+            document.querySelector('.sezzle-banner-container').style.display ='none'
+            logEvent('sezzle-banner-closed');
+        });
     };
 
     const applyCSSStyles = () => {
@@ -109,9 +169,29 @@ export const awesomeSezzleBanner = (function () {
         }
     };
 
+    const logEvent = (eventName) => {
+        if (bannerConfig.track) {
+            if (window.frames.szl) {
+                setTimeout(function () {
+                    window.frames.szl.postMessage({
+                      'event_name': eventName,
+                      'merchant_site': window.location.hostname,
+                      'user_agent': navigator.userAgent,
+                      'merchant_uuid': bannerConfig.merchantID,
+                      'page_url': window.location.href,
+                      'sezzle_banner_config': bannerConfig,
+                    }, 'https://tracking.sezzle.com');
+                  }, 100);
+            }
+        }
+    }
+
     return { init }
 
  })();
- 
-// Send config through init()
-// awesomeSezzleBanner.init();
+
+/**
+ * Send config through init() after running gulp task 'bundle-banner'. This file is exposed as var sezzleBanner
+ * by webpack so as to be used as a library!
+ * @example sezzleBanner.awesomeSezzleBanner.init({config object});
+ */

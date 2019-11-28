@@ -658,7 +658,7 @@ gulp.task('bundle-banner', function () {
           {
             test: /\.html$/,
             exclude: /node_modules/,
-            use: {loader: 'html-loader'}
+            use: {loader: 'html-loader', options: {minimize: true}}
         }
         ]
       },
@@ -668,7 +668,7 @@ gulp.task('bundle-banner', function () {
         libraryTarget: 'var',
       },
       optimization: {
-        minimize: false // <---- disables uglify.
+        minimize: true // <---- disables uglify.
       },
       mode: 'production'
     }))
