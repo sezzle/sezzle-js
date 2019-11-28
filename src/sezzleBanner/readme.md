@@ -50,16 +50,11 @@
  * Example -> `sezzleBanner.awesomeSezzleBanner.init({config})`
   
 ## Usage 
-```<script  type="text/javascript"  src="<script_url>"></script>
+```
+<script  type="text/javascript"  src="<script_url>"></script>
 
 <script  type="text/javascript">
-
-sezzleBanner.awesomeSezzleBanner.init({
-
-// Here goes the config
-
-theme:  'dark',
-
-})
-
+    sezzleBanner.awesomeSezzleBanner.init({
+    theme:  'dark',
+    })
 </script>
