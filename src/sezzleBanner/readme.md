@@ -33,16 +33,24 @@
 
   
 
-`urlMatch` -> String
+`urlMatch` -> Array
 
-* Default is homepage path -> '/'
+* Default is `homepage`
 
-* Pass in page names to make it work on other pages eg: 'collection', 'product' etc.
+* Pass in page names to make it work on other pages eg: `['homepage', 'cart', 'collections']`
 
+
+`track` -> Boolean
+
+* Track when user clicks on learn more and closes the banner
+
+
+## For Devs
+ * Send config through init() after running gulp task 'bundle-banner'. This file is exposed as var sezzleBanner by webpack so as to be used    as a library!
+ * Example -> `sezzleBanner.awesomeSezzleBanner.init({config})`
   
 ## Usage 
-```
-<script  type="text/javascript"  src="<script_url>"></script>
+```<script  type="text/javascript"  src="<script_url>"></script>
 
 <script  type="text/javascript">
 
@@ -54,4 +62,4 @@ theme:  'dark',
 
 })
 
-</script>```
+</script>
