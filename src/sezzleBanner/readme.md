@@ -40,7 +40,9 @@
 * Pass in page names to make it work on other pages eg: `['homepage', 'cart', 'collections']`
 
 
-`track` -> Boolean
+`noTracking` -> Boolean
+
+* Default to false
 
 * Track when user clicks on learn more and closes the banner
 

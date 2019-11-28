@@ -24,7 +24,7 @@ export const awesomeSezzleBanner = (function () {
             theme: config.theme || 'light',
             supportedCountryCodes: config.supportedCountryCodes || ['US', 'IN', 'CA'],
             urlMatch: config.urlMatch || ['homepage'],
-            track: config.track || true,
+            noTracking: config.noTracking || false,
             altBannerHTML: config.altBannerHTML,
             width: config.width,
             headerHeight: config.headerHeight,
@@ -170,7 +170,7 @@ export const awesomeSezzleBanner = (function () {
     };
 
     const logEvent = (eventName) => {
-        if (bannerConfig.track) {
+        if (!bannerConfig.noTracking) {
             if (window.frames.szl) {
                 setTimeout(function () {
                     window.frames.szl.postMessage({
