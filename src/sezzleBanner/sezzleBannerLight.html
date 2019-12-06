@@ -55,7 +55,6 @@
 }
 
 .extended-mid-row {
-    margin-top: 36px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -153,6 +152,11 @@
     position: absolute;
     z-index: -1;
 }
+.sezzle-banner-container .svg-background-mobile {
+    display: none;
+    position: absolute;
+    z-index: -1;
+}
 .banner-height-minimized {
     height: 61px;
 }
@@ -219,6 +223,12 @@
         letter-spacing: -0.13px;
         line-height: 16px;
     }
+    .sezzle-banner-container .svg-background-mobile {
+        display: block;
+    }
+    .sezzle-banner-container .svg-background {
+        display: none;
+    }
     .extended-sezzle-features .sezzle-feature-heading {
         margin-top: 8px;
     }
@@ -230,6 +240,7 @@
     
 <div class="sezzle-banner-container">
 <div id="sezzle-extended-banner">
+    <!-- background svg for desktop -->
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544 2000" preserveAspectRatio="none" version="1.1" class="svg-background">
         <defs>
             <path xmlns="http://www.w3.org/2000/svg" d="M6.5,0 L537.5,0 C540.813708,-6.08718376e-16 543.5,2.6862915 543.5,6 L543.5,339 L543.5,339 L0.5,339 L0.5,6 C0.5,2.6862915 3.1862915,6.08718376e-16 6.5,0 Z" id="path-1"/>
@@ -239,6 +250,17 @@
             </linearGradient>
         </defs>
         <path xmlns="http://www.w3.org/2000/svg" d="M-23.0199521,71.2225653 C25.9800479,85.2225653 142.980048,110.222565 291.980048,55.2225653 C370.122939,26.3778742 453.216669,31.1576396 541.26124,69.5618618 C557.178265,76.5047196 583.348495,181.476991 619.77193,384.478675 L-53.5618097,395.733665 C-65.8672379,170.059599 -55.6866187,61.889232 -23.0199521,71.2225653 Z" id="Path-2" fill="url(#gradient)" transform="translate(280.579768, 187.198974) rotate(3.000000) translate(-280.579768, -216.198974) "/>    
+    </svg>
+    <!-- background svg for mobile -->
+    <svg viewBox="0 0 320 657" version="1.1" class="svg-background-mobile">
+        <defs>
+            <path d="M5.4,0 L287.8,0 C290.449596,0.00351133823 292.598061,2.15040585 292.60351,4.79999872 L293,547 L293,547 L1,547 L0.603510054,4.79999872 C0.598062734,2.14903519 2.74552386,-0.00156893883 5.39648995,-0.00350748808 C5.39765996,-0.00350834367 5.39882998,-0.00350877146 5.4,0 Z" id="path-1"></path>
+            <linearGradient x1="59.5893566%" y1="8.93554688%" x2="90.3374197%" y2="50%" id="linearGradient-4">
+                <stop stop-color="#E9FAEF" stop-opacity="0.841947115" offset="0%"></stop>
+                <stop stop-color="#CEF3DA" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <path d="M44.6166469,84.5042066 C79.2885277,101.507997 162.073253,131.89111 267.466629,65.312774 C322.740072,30.3958371 381.529039,36.2443267 443.833529,82.8582426 C455.097166,91.2852793 473.652359,218.557934 499.499108,464.676208 L23.1334384,477.88214 C14.3409903,204.294324 21.5020598,73.1683462 44.6166469,84.5042066 Z" fill="url(#linearGradient-4)" transform="translate(259.499108, 260.382140) rotate(7.000000) translate(-330.499108, -300.382140) "></path>
     </svg>
     <div class="sezzle-banner-header">
         <div class="sezzle-logo">
