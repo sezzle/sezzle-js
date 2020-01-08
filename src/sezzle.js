@@ -1,4 +1,4 @@
-const Helper = require('./helper');  
+const Helper = require('./helper');
 
 const SezzleJS = function (options) {
   if (!options) options = {};
@@ -348,7 +348,7 @@ SezzleJS.prototype.setLogoSize = function (element, configGroupIndex) {
 SezzleJS.prototype.setLogoStyle = function (element, configGroupIndex) {
   Object.keys(this.configGroups[configGroupIndex].logoStyle).forEach(key=>{
     element.style[key] = this.configGroups[configGroupIndex].logoStyle[key];
-   
+
  });
 };
 
@@ -361,7 +361,7 @@ SezzleJS.prototype.setLogoStyle = function (element, configGroupIndex) {
  * @param configGroupIndex Index of the config group
  * @return void
  */
-SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, configGroupIndex, index = 0) {
+SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, index = 0, configGroupIndex) {
   // Do not render this product if it is not eligible
   var priceText = this.getPriceText(element, configGroupIndex);
   if (!this.isProductEligible(priceText, configGroupIndex)) return false;
@@ -526,10 +526,7 @@ SezzleJS.prototype.renderAwesomeSezzle = function (element, renderelement, confi
       if (typeof (customClass.index) !== 'number') {
         customClass.index = -1; // set the default value
       }
-      if (typeof (customClass.configGroupIndex) !== 'number') {
-        customClass.configGroupIndex = -1; // set the default value
-      }
-      if (customClass.index === index || customClass.configGroupIndex === configGroupIndex) {
+      if (customClass.index === index || customClass.index === -1) {
         var path = Helper.breakXPath(customClass.xpath);
         this.getElementsByXPath(path, 0, [sezzle])
           .forEach(function (el) {
