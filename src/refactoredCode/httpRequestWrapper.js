@@ -1,11 +1,11 @@
 /**
  * Wrapper to make AJAX calls
- * @param {string} method 
- * @param {string} url 
+ * @param {string} method
+ * @param {string} url
 */
 const httpRequestWrapper = (method, url) => {
     return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
