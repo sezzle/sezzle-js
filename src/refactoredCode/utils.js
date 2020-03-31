@@ -1,6 +1,5 @@
 import { state } from './sezzleWidgetState';
-// import { getElementsByXPath } from './coreFunctions';
-import Helper from '../helper';
+import { parsePriceString, parsePrice } from '../helper';
 import httpRequestWrapper from './httpRequestWrapper';
 
 const utils = {
@@ -51,7 +50,7 @@ const utils = {
 	 * @param price Price of product
 	 */
 	isProductEligible(priceText, configGroupIndex) {
-		const price = Helper.parsePrice(priceText);
+		const price = parsePrice(priceText);
 		state.configGroups[configGroupIndex].productPrice = price;
 		const priceInCents = price * 100;
 		return priceInCents >= state.minPrice && priceInCents <= state.maxPrice;
@@ -112,9 +111,9 @@ const utils = {
 	getFormattedPrice(element, configGroupIndex, priceText) {
 		if (!priceText) priceText = this.getPriceText(element, configGroupIndex);
 		// Get the price string - useful for formtting Eg: 120.00(string)
-		const priceString = Helper.parsePriceString(priceText, true);
+		const priceString = parsePriceString(priceText, true);
 		// Get the price in float from the element - useful for calculation Eg : 120.00(float)
-		const price = Helper.parsePrice(priceText);
+		const price = parsePrice(priceText);
 		// Will be used later to replace {price} with price / this.numberOfPayments Eg: ${price} USD
 		let formatter = priceText.replace(priceString, '{price}');
 		// replace other strings not wanted in text

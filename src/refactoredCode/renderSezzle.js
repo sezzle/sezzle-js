@@ -1,6 +1,6 @@
 import {state} from './sezzleWidgetState';
 import utils from './utils';
-import Helper from '../helper';
+import { breakXPath, insertAsFirstChild, insertAfter } from '../helper';
 import logEvent from './eventLogger';
 
 /**
@@ -228,7 +228,7 @@ const renderAwesomeSezzle = (element, renderelement, index = 0, configGroupIndex
           customClass.index = -1; // set the default value
         }
         if (customClass.index === index || customClass.index === -1) {
-          let path = Helper.breakXPath(customClass.xpath);
+          let path = breakXPath(customClass.xpath);
           widgetLoad.getElementsByXPath(path, 0, [sezzle])
             .forEach(function (el) {
               el.className += ' ' + customClass.className;
@@ -238,9 +238,9 @@ const renderAwesomeSezzle = (element, renderelement, index = 0, configGroupIndex
     });
     // Adding sezzle to parent node
     if (state.configGroups[configGroupIndex].widgetIsFirstChild) {
-      Helper.insertAsFirstChild(sezzle, parent);
+      insertAsFirstChild(sezzle, parent);
     } else {
-      Helper.insertAfter(sezzle, parent);
+      insertAfter(sezzle, parent);
     }
     logEvent('onload', configGroupIndex);
     return sezzle;

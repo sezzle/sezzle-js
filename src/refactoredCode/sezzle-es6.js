@@ -21,6 +21,7 @@ export default class SezzleJS {
 		if (state.forcedShow) {
 			logEvent('request');
 			utils.loadCSS();
+			initWidget();
 			utils.getCountryCodeFromIP((countryCode) => {
 				// only inject Google tag manager for clients visiting from the United States or Canada
 				if (countryCode === 'US' || countryCode === 'CA') {
@@ -34,6 +35,7 @@ export default class SezzleJS {
 		} else {
 			const countryCode = await utils.getCountryCodeFromIP();
 			if (state.supportedCountryCodes.includes(countryCode)) {
+				console.log("in country code")
 				logEvent('request');
 				await utils.loadCSS();
 				initWidget();

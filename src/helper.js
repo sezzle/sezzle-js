@@ -1,4 +1,4 @@
-var cloneDeep = require('lodash.clonedeep');
+const cloneDeep = require('lodash.clonedeep');
 // properties that do not belong to a config group (must have been factorized before)
 const propsNotInConfigGroup = [
   "merchantID",
@@ -21,7 +21,7 @@ const propsNotInConfigGroup = [
  * @param {Number} numberOfPayments Set in sezzle.js
  * @returns {String} Default widget template
  */
-const widgetLanguageTranslation = function (language, numberOfPayments) {
+const widgetLanguageTranslation = (language, numberOfPayments) => {
   const translations = {
     'en': 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
     'fr': 'ou ' + numberOfPayments + ' paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
@@ -34,7 +34,7 @@ const widgetLanguageTranslation = function (language, numberOfPayments) {
  * @param options new config to validate
  * @return nothing. If config is invalid, error is thrown and program execution is stopped.
  */
-exports.validateConfig = function (options) {
+export const validateConfig = (options) => {
   if (!Array.isArray(options.configGroups)) {
     throw new Error("options.configGroups is not an array");
   } else {
@@ -80,22 +80,49 @@ exports.validateConfig = function (options) {
 };
 
 /**
- * This is a helper function to convert an old
- * config passed into SezzleJS' constructor to a
- * new one which is compatible with the current
- * SezzleJS version. In other words, this
- * function is used for backwards compatability
- * with older versions.
- * @param options old config passed into SezzleJS' constructor
- * @return compatible object with current SezzleJS version
+ * This is a helper function to move fields which do not belong to a
+ * config group outside of the group and also place them outside
+ * configGroups in order to be compatible with latest structure.
+ * @param options old sezzle config
+ * @return Factorized fields
  */
-exports.makeCompatible = function (options) {
-  // place fields which do not belong in a group outside of configGroups
-  var compatible = this.factorize(options);
-  // split the configs up if necessary
-  compatible.configGroups = this.splitConfig(options);
-  // should we factorize common field values and place in defaultConfig? I don't think so
-  return compatible;
+const factorize = (options) => {
+  let factorized = {};
+  // assumption is being made that all these fields are the same across all config groups
+  // it is a reasonable assumption to make as :
+  // - one config as a whole should only be assigned to one merchantID
+  // - forcedShow is only useful if the country in which the widget is served is not in the supported list
+  //   so it's reasonable to assume that forcedShow should be the same value for all configs
+  // - as the widget only supports one modal currently, there is no capability of loading multiple modals
+  propsNotInConfigGroup.forEach((field) => {
+    if (options[field] !== undefined) {
+      factorized[field] = options[field];
+      delete options[field];
+    }
+  });
+  return factorized;
+};
+
+/**
+ * Group customClasses by targetXPathIndex
+ * @param customClasses array of customClass objects
+ * @return groupedCustomClasses, an array of array of customClass objects
+ */
+const groupCustomClasses = (customClasses) => {
+  let result = [];
+  if (customClasses && Array.isArray(customClasses)) {
+    customClasses.forEach((customClass) => {
+      if (typeof (customClass.targetXPathIndex) === 'number') {
+        if (typeof (result[customClass.targetXPathIndex]) === 'undefined') {
+          result[customClass.targetXPathIndex] = [customClass];
+        } else {
+          result[customClass.targetXPathIndex].push(customClass);
+        }
+        delete customClass.targetXPathIndex;
+      }
+    });
+  }
+  return result;
 };
 
 /**
@@ -104,20 +131,20 @@ exports.makeCompatible = function (options) {
  * @param options Old config
  * @return split array of configs
  */
-exports.splitConfig = function (options) {
-  var res = [];
+const splitConfig = (options) => {
+  let res = [];
   if (typeof (options.targetXPath) !== 'undefined') {
     // everything revolves around an xpath
     if (Array.isArray(options.targetXPath)) {
       // group up custom classes according to index
-      var groupedCustomClasses = this.groupCustomClasses(options.customClasses);
+      let groupedCustomClasses = groupCustomClasses(options.customClasses);
       // need to ensure it's array and not string so that code doesnt mistakenly separate chars
-      var renderToPathIsArray = Array.isArray(options.renderToPath);
+      let renderToPathIsArray = Array.isArray(options.renderToPath);
       // a group should revolve around targetXPath
       // break up the array, starting from the first element
       options.targetXPath.forEach(function (xpath, inner) {
         // deep clone as config may have nested objects
-        var config = cloneDeep(options);
+        let config = cloneDeep(options);
         // overwrite targetXPath
         config.targetXPath = xpath;
         // sync up renderToPath array
@@ -153,50 +180,30 @@ exports.splitConfig = function (options) {
 };
 
 /**
- * Group customClasses by targetXPathIndex
- * @param customClasses array of customClass objects
- * @return groupedCustomClasses, an array of array of customClass objects
+ * This is a helper function to convert an old
+ * config passed into SezzleJS' constructor to a
+ * new one which is compatible with the current
+ * SezzleJS version. In other words, this
+ * function is used for backwards compatability
+ * with older versions.
+ * @param options old config passed into SezzleJS' constructor
+ * @return compatible object with current SezzleJS version
  */
-exports.groupCustomClasses = function (customClasses) {
-  var result = [];
-  if (customClasses && Array.isArray(customClasses)) {
-    customClasses.forEach(function (customClass) {
-      if (typeof (customClass.targetXPathIndex) === 'number') {
-        if (typeof (result[customClass.targetXPathIndex]) === 'undefined') {
-          result[customClass.targetXPathIndex] = [customClass];
-        } else {
-          result[customClass.targetXPathIndex].push(customClass);
-        }
-        delete customClass.targetXPathIndex;
-      }
-    });
-  }
-  return result;
+export const makeCompatible = (options) => {
+  // place fields which do not belong in a group outside of configGroups
+  let compatible = factorize(options);
+  // split the configs up if necessary
+  compatible.configGroups = splitConfig(options);
+  // should we factorize common field values and place in defaultConfig? I don't think so
+  return compatible;
 };
 
 /**
- * This is a helper function to move fields which do not belong to a
- * config group outside of the group and also place them outside
- * configGroups in order to be compatible with latest structure.
- * @param options old sezzle config
- * @return Factorized fields
+ * This is a helper function to break xpath into array
+ * @param xpath string Ex: './.class1/#id'
+ * @returns string[] Ex: ['.', '.class', '#id']
  */
-exports.factorize = function (options) {
-  var factorized = {};
-  // assumption is being made that all these fields are the same across all config groups
-  // it is a reasonable assumption to make as :
-  // - one config as a whole should only be assigned to one merchantID
-  // - forcedShow is only useful if the country in which the widget is served is not in the supported list
-  //   so it's reasonable to assume that forcedShow should be the same value for all configs
-  // - as the widget only supports one modal currently, there is no capability of loading multiple modals
-  propsNotInConfigGroup.forEach(function (field) {
-    if (options[field] !== undefined) {
-      factorized[field] = options[field];
-      delete options[field];
-    }
-  });
-  return factorized;
-};
+export const breakXPath = (xpath) => xpath.split('/').filter((subpath) => subpath !== '');
 
 /**
  * Maps the props of configGroups passed by input into a default configGroup object
@@ -206,11 +213,11 @@ exports.factorize = function (options) {
  * @param language this is the language which the widget  uses
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
-exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, language) {
-  var result = {};
+export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, language) => {
+  let result = {};
   // targetXPath SHOULD NOT be specified in defaultConfig since
   // it is like an ID for a configGroup (except if adding the price element class is used)
-  result.xpath = this.breakXPath(configGroup.targetXPath);
+  result.xpath = breakXPath(configGroup.targetXPath);
   result.rendertopath = configGroup.renderToPath || (defaultConfig && defaultConfig.renderToPath) || '..';
   // This array in which its elements are objects with two keys
   // relatedPath - this is a xpath of an element related to the price element
@@ -218,15 +225,15 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   // initialAction - this is a function to act upon a pre existing element's condition
   result.relatedElementActions = configGroup.relatedElementActions || (defaultConfig && defaultConfig.relatedElementActions) || [];
   result.ignoredPriceElements = configGroup.ignoredPriceElements || (defaultConfig && defaultConfig.ignoredPriceElements) || [];
+
   if (typeof (result.ignoredPriceElements) === 'string') {
     // Only one x-path is given
-    result.ignoredPriceElements = [this.breakXPath(result.ignoredPriceElements.trim())];
+    result.ignoredPriceElements = [breakXPath(result.ignoredPriceElements.trim())];
   } else {
     // result.ignoredPriceElements is an array of x-paths
-    result.ignoredPriceElements = result.ignoredPriceElements.map(function (path) {
-      return this.breakXPath(path.trim());
-    }.bind(this));
+    result.ignoredPriceElements = result.ignoredPriceElements.map((path) => breakXPath(path.trim()));
   }
+
   result.alignment = configGroup.alignment || (defaultConfig && defaultConfig.alignment) || 'auto';
   result.widgetType = configGroup.widgetType || (defaultConfig && defaultConfig.widgetType) || 'product-page';
   result.bannerURL = configGroup.bannerURL || (defaultConfig && defaultConfig.bannerURL) || '';
@@ -277,9 +284,7 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
   }
   if (result.splitPriceElementsOn) {
-    result.widgetTemplate = result.widgetTemplate.map(function (subtemplate) {
-      return subtemplate === 'price' ? 'price-split' : subtemplate;
-    });
+    result.widgetTemplate = result.widgetTemplate.map((subtemplate) => subtemplate === 'price' ? 'price-split' : subtemplate);
   }
   // Search for price elements. If found, assume there is only one in this page
   result.hasPriceClassElement = false;
@@ -326,12 +331,10 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
   result.hideClasses = configGroup.hideClasses || (defaultConfig && defaultConfig.hideClasses) || [];
   if (typeof (result.hideClasses) === 'string') {
     // Only one x-path is given
-    result.hideClasses = [this.breakXPath(result.hideClasses.trim())];
+    result.hideClasses = [breakXPath(result.hideClasses.trim())];
   } else {
     // result.hideClasses is an array of x-paths
-    result.hideClasses = result.hideClasses.map(function (path) {
-      return this.breakXPath(path.trim());
-    }.bind(this));
+    result.hideClasses = result.hideClasses.map((path) => breakXPath(path.trim()));
   }
   result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || (defaultConfig && defaultConfig.ignoredFormattedPriceText) || ['Subtotal', 'Total:', 'Sold Out'];
   if(!Array.isArray(result.ignoredFormattedPriceText)) {
@@ -348,30 +351,14 @@ exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayment
  * @param n char value
  * @return boolean [if it's numeric or not]
  */
-exports.isNumeric = function (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-};
-
-/**
- * This is a helper function to break xpath into array
- * @param xpath string Ex: './.class1/#id'
- * @returns string[] Ex: ['.', '.class', '#id']
- */
-exports.breakXPath = function (xpath) {
-  return xpath.split('/')
-    .filter(function (subpath) {
-      return subpath !== '';
-    });
-};
+export const isNumeric = (n) => !isNaN(parseFloat(n)) && isFinite(n);
 
 /**
  * This is helper function for formatPrice
  * @param n char value
  * @return boolean [if it's alphabet or not]
  */
-exports.isAlphabet = function (n) {
-  return /^[a-zA-Z()]+$/.test(n);
-};
+export const isAlphabet = (n) => /^[a-zA-Z()]+$/.test(n);
 
 /**
  * This function will return the price string
@@ -379,13 +366,13 @@ exports.isAlphabet = function (n) {
  * @param includeComma - comma should be added to the string or not
  * @return string
  */
-exports.parsePriceString = function (price, includeComma) {
-  var formattedPrice = '';
-  for (var i = 0; i < price.length; i++) {
-    if (this.isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
+export const parsePriceString = (price, includeComma) => {
+  let formattedPrice = '';
+  for (let i = 0; i < price.length; i++) {
+    if (isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
       // If current is a . and previous is a character, it can be something like Rs.
       // so ignore it
-      if (i > 0 && price[i] == '.' && this.isAlphabet(price[i - 1])) continue;
+      if (i > 0 && price[i] == '.' && isAlphabet(price[i - 1])) continue;
       formattedPrice += price[i];
     }
   }
@@ -397,25 +384,21 @@ exports.parsePriceString = function (price, includeComma) {
  * @param price - string value
  * @return float
  */
-exports.parsePrice = function (price) {
-  return parseFloat(this.parsePriceString(price, false));
-};
+export const parsePrice = (price) => parseFloat(parsePriceString(price, false));
 
 /**
  * Insert child after a given element
  * @param el Element to insert
  * @param referenceNode Element to insert after
  */
-exports.insertAfter = function (el, referenceNode) {
-  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
-};
+export const insertAfter = (el, referenceNode) => referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
 
 /**
  * Insert element as the first child of the parentElement of referenceElement
  * @param element Element to insert
  * @param referenceElement Element to grab parent element
  */
-exports.insertAsFirstChild = function (element, referenceElement) {
+export const insertAsFirstChild = (element, referenceElement) => {
   referenceElement.parentElement.insertBefore(element, referenceElement);
   //bump up element above nodes which are not element nodes (if any)
   while (element.previousSibling) {
@@ -433,7 +416,7 @@ exports.insertAsFirstChild = function (element, referenceElement) {
  * @param {Number} numberOfPayments
  * @returns String
  */
-function constructWidgetTemplate (widgetTemplate, language, numberOfPayments) {
+const constructWidgetTemplate = (widgetTemplate, language, numberOfPayments) => {
   if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
     if (!widgetTemplate.en && !widgetTemplate[language]) {
       console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.");
