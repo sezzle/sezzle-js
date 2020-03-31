@@ -1,12 +1,12 @@
-import Helper from '../helper';
+import { makeCompatible, validateConfig, mapGroupToDefault } from '../helper';
 
 export let state = {};
 
 export const constructConfig = (options) => {
 	if (!options) options = {};
-	if (typeof (options.configGroups) === 'undefined') options = Helper.makeCompatible(options);
+	if (typeof (options.configGroups) === 'undefined') options = makeCompatible(options);
 
-	Helper.validateConfig(options);
+	validateConfig(options);
 
 	// filter off config groups which do not match the current URL
 	// eslint-disable-next-line max-len
@@ -34,6 +34,7 @@ export const constructConfig = (options) => {
 		browserLanguage: (navigator.language || navigator.browserLanguage || 'en').substring(0, 2).toLowerCase(),
 		language: null,
 		apiEndpoints: {
+			sezzleAssetsCDN: 'https://media.sezzle.com/shopify-app/assets/',
 			countryFromIPRequestURL: 'https://geoip.sezzle.com/v1/geoip/ipdetails',
 			cssForMerchantURL: `https://widget.sezzle.com/v1/css/price-widget?uuid= + ${options.merchantID}`,
 		},
@@ -54,7 +55,7 @@ export const constructConfig = (options) => {
 
 	options.configGroups.forEach((configGroup) => {
 		variables.configGroups
-		.push(Helper.mapGroupToDefault(configGroup, options.defaultConfig, variables.numberOfPayments, variables.language));
+		.push(mapGroupToDefault(configGroup, options.defaultConfig, variables.numberOfPayments, variables.language));
 	});
 
 	// Save config into state

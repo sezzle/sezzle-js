@@ -32,7 +32,6 @@ module.exports = {
     "no-param-reassing": "off",
     "no-tabs": 0,
     "indent": [2, "tab", { "SwitchCase": 1}],
-    "max-length": [1, {"ignoreComments": true}],
     "no-cycle": "off",
     "no-param-reassign": "off"
   },

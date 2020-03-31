@@ -86,7 +86,7 @@ const renderSezzleModal = async () => {
 				} else {
 					modalLanguage = 'en';
 				}
-				const sezzleModalToGet = `https://media.sezzle.com/shopify-app/assets/${document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage)}`;
+				const sezzleModalToGet = `${state.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace("{%%s%%}", modalLanguage)}`;
 				
 				const response = await httpRequestWrapper("GET", sezzleModalToGet);
 				modalNode.innerHTML = response;

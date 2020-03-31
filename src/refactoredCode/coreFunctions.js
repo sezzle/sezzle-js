@@ -1,7 +1,7 @@
 import utils from './utils';
 import renderAwesomeSezzle from './renderSezzle';
 import { state } from './sezzleWidgetState';
-import Helper from '../helper';
+import { breakXPath } from '../helper';
 import { addClickEventForModal, renderModals } from './modalHandlers';
 
 const intervalInMs = 2000;
@@ -84,7 +84,7 @@ export const getElementsByXPath = function (xpath = [], xindex = 0, elements = n
 const getElementToRender = (element, index = 0) => {
 	let toRenderElement = null;
 	if (state.configGroups[index].rendertopath !== null) {
-		let path = Helper.breakXPath(state.configGroups[index].rendertopath);
+		let path = breakXPath(state.configGroups[index].rendertopath);
 		toRenderElement = element;
 		for (let i = 0; i < path.length; i++) {
 			let p = path[i];
@@ -141,7 +141,7 @@ const observeRelatedElements = (priceElement, sezzleElement, targets) => {
 			if (typeof (target.relatedPath) === 'string' &&
 				(typeof (target.action) === 'function' || typeof (target.initialAction) === 'function')) {
 				let elements = getElementsByXPath(
-					Helper.breakXPath(target.relatedPath),
+					breakXPath(target.relatedPath),
 					0,
 					[priceElement]
 				);
