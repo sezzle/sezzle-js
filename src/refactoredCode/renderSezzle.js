@@ -1,7 +1,10 @@
-import {state} from './sezzleWidgetState';
+/* eslint-disable import/no-cycle */
+/* eslint-disable max-len */
+import { state } from './sezzleWidgetState';
 import utils from './utils';
 import { breakXPath, insertAsFirstChild, insertAfter } from '../helper';
 import logEvent from './eventLogger';
+import { getElementsByXPath } from './coreFunctions';
 
 /**
  * This function will set Sezzle's elements with
@@ -13,81 +16,86 @@ import logEvent from './eventLogger';
  * @return void
  */
 const renderAwesomeSezzle = (element, renderelement, index = 0, configGroupIndex) => {
-    // Do not render this product if it is not eligible
-    let priceText = utils.getPriceText(element, configGroupIndex);
-    if (!utils.isProductEligible(priceText, configGroupIndex)) return false;
-    // Do not render if sezzle ignored price element
-    if (element.classList.contains('sezzle-ignored-price-element')) return false;
-    // Set data index to each price element for tracking
-    element.dataset.sezzleindex = index;
-    // Get element to be rendered with sezzle's widget
-    let parent = renderelement;
-    // get the alignment of the widget (if widgetAlignment is auto)
-    // the alignment, when set to auto follows the text-align property of the price element
-    if (state.configGroups[configGroupIndex].alignment === 'auto') {
-      state.configGroups[configGroupIndex].alignment = utils.guessWidgetAlignment(element);
+  // Do not render this product if it is not eligible
+  const priceText = utils.getPriceText(element, configGroupIndex);
+  if (!utils.isProductEligible(priceText, configGroupIndex)) return false;
+  // Do not render if sezzle ignored price element
+  if (element.classList.contains('sezzle-ignored-price-element')) return false;
+  // Set data index to each price element for tracking
+  element.dataset.sezzleindex = index;
+  // Get element to be rendered with sezzle's widget
+  const parent = renderelement;
+  // get the alignment of the widget (if widgetAlignment is auto)
+  // the alignment, when set to auto follows the text-align property of the price element
+  if (state.configGroups[configGroupIndex].alignment === 'auto') {
+    state.configGroups[configGroupIndex].alignment = utils.guessWidgetAlignment(element);
+  }
+  // root node for sezzle
+  const sezzle = document.createElement('div');
+  // TODO: why there is a shopify specific naming
+  sezzle.className = `sezzle-shopify-info-button sezzlewidgetindex-${index}`;
+  utils.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
+  utils.insertStoreCSSClassInElement(sezzle);
+  utils.setElementMargins(sezzle, configGroupIndex);
+  if (state.configGroups[configGroupIndex].scaleFactor) utils.setWidgetSize(sezzle, configGroupIndex);
+  const node = document.createElement('div');
+  node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
+  node.style.cursor = 'pointer';
+  utils.insertStoreCSSClassInElement(node);
+  utils.addCSSAlignment(node, configGroupIndex);
+  const sezzleButtonText = document.createElement('div');
+  sezzleButtonText.className = 'sezzle-button-text';
+  utils.addCSSCustomisation(sezzleButtonText, configGroupIndex);
+  state.configGroups[configGroupIndex].widgetTemplate.forEach((subtemplate) => {
+    switch (subtemplate) {
+    case 'price': {
+      const priceSpanNode = document.createElement('span');
+      priceSpanNode.className = `sezzle-payment-amount sezzle-button-text sezzleindex-${index}`;
+      const priceValueText = document.createTextNode(utils.getFormattedPrice(element, configGroupIndex, priceText));
+      priceSpanNode.appendChild(priceValueText);
+      sezzleButtonText.appendChild(priceSpanNode);
+      break;
     }
-    // root node for sezzle
-    let sezzle = document.createElement('div');
-    // TODO: why there is a shopify specific naming
-    sezzle.className = "sezzle-shopify-info-button sezzlewidgetindex-" + index;
-    utils.insertWidgetTypeCSSClassInElement(sezzle, configGroupIndex);
-    utils.insertStoreCSSClassInElement(sezzle);
-    utils.setElementMargins(sezzle, configGroupIndex);
-    if (state.configGroups[configGroupIndex].scaleFactor) utils.setWidgetSize(sezzle, configGroupIndex);
-    let node = document.createElement('div');
-    node.className = 'sezzle-checkout-button-wrapper sezzle-modal-link';
-    node.style.cursor = 'pointer';
-    utils.insertStoreCSSClassInElement(node);
-    utils.addCSSAlignment(node, configGroupIndex);
-    let sezzleButtonText = document.createElement('div');
-    sezzleButtonText.className = 'sezzle-button-text';
-    utils.addCSSCustomisation(sezzleButtonText, configGroupIndex);
-    state.configGroups[configGroupIndex].widgetTemplate.forEach(subtemplate => {
-      switch (subtemplate) {
-        case 'price':
-          let priceSpanNode = document.createElement('span');
-          priceSpanNode.className = 'sezzle-payment-amount sezzle-button-text sezzleindex-' + index;
-          let priceValueText = document.createTextNode(utils.getFormattedPrice(element, configGroupIndex, priceText));
-          priceSpanNode.appendChild(priceValueText);
-          sezzleButtonText.appendChild(priceSpanNode);
-          break;
-        case 'logo':
-          let logoNode = document.createElement('img');
-          logoNode.className = 'sezzle-logo ' + state.configGroups[configGroupIndex].imageClassName;
-          logoNode.src = state.configGroups[configGroupIndex].imageURL;
-          sezzleButtonText.appendChild(logoNode);
-          utils.setLogoSize(logoNode, configGroupIndex);
-          if(state.configGroups[configGroupIndex].logoStyle != {}) utils.setLogoStyle(logoNode, configGroupIndex);
-          break;
-        // changed from learn-more to link as that is what current altVersionTemplates use
-        case 'link':
-          let learnMoreNode = document.createElement('span');
-          learnMoreNode.className = 'sezzle-learn-more';
-          let learnMoreText = document.createTextNode('Learn more');
-          learnMoreNode.appendChild(learnMoreText);
-          sezzleButtonText.appendChild(learnMoreNode);
-          break;
-        case 'info':
-          let infoIconNode = document.createElement('code');
-          infoIconNode.className = 'sezzle-info-icon';
-          infoIconNode.innerHTML = '&#9432;';
-          sezzleButtonText.appendChild(infoIconNode);
-          break;
-        case 'question-mark':
-          let questionMarkIconNode = document.createElement('img');
-          questionMarkIconNode.className = 'sezzle-question-mark-icon';
-          questionMarkIconNode.src = 'https://d2uyik3j5wol98.cloudfront.net/images/question_mark_black.png';
-          sezzleButtonText.appendChild(questionMarkIconNode);
-          break;
-        case 'affirm-logo':
-          let affirmNode = document.createElementNS('http://www.w3.org/2000/svg','svg')
-          affirmNode.setAttribute('width','200.16');
-          affirmNode.setAttribute('height','199.56');
-          affirmNode.setAttribute('viewBox','0 0 400.16 199.56');
-          affirmNode.setAttribute('class',`sezzle-affirm-logo affirm-modal-info-link no-sezzle-info`);
-          affirmNode.setAttribute('style',`width:39px;height:21px;margin-bottom:5px !important; vertical-align:middle;`);
-          affirmNode.innerHTML = `<defs>
+    case 'logo': {
+      const logoNode = document.createElement('img');
+      logoNode.className = `sezzle-logo ${state.configGroups[configGroupIndex].imageClassName}`;
+      logoNode.src = state.configGroups[configGroupIndex].imageURL;
+      sezzleButtonText.appendChild(logoNode);
+      utils.setLogoSize(logoNode, configGroupIndex);
+      if (state.configGroups[configGroupIndex].logoStyle !== {}) utils.setLogoStyle(logoNode, configGroupIndex);
+      break;
+    }
+    // changed from learn-more to link as that is what current altVersionTemplates use
+    case 'link': {
+      const learnMoreNode = document.createElement('span');
+      learnMoreNode.className = 'sezzle-learn-more';
+      const learnMoreText = document.createTextNode('Learn more');
+      learnMoreNode.appendChild(learnMoreText);
+      sezzleButtonText.appendChild(learnMoreNode);
+      break;
+    }
+    case 'info': {
+      const infoIconNode = document.createElement('code');
+      infoIconNode.className = 'sezzle-info-icon';
+      infoIconNode.innerHTML = '&#9432;';
+      sezzleButtonText.appendChild(infoIconNode);
+      break;
+    }
+    case 'question-mark': {
+      const questionMarkIconNode = document.createElement('img');
+      questionMarkIconNode.className = 'sezzle-question-mark-icon';
+      questionMarkIconNode.src = 'https://d2uyik3j5wol98.cloudfront.net/images/question_mark_black.png';
+      sezzleButtonText.appendChild(questionMarkIconNode);
+      break;
+    }
+    case 'affirm-logo': {
+      const affirmNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      affirmNode.setAttribute('width', '200.16');
+      affirmNode.setAttribute('height', '199.56');
+      affirmNode.setAttribute('viewBox', '0 0 400.16 199.56');
+      affirmNode.setAttribute('class', 'sezzle-affirm-logo affirm-modal-info-link no-sezzle-info');
+      affirmNode.setAttribute('style', 'width:39px;height:21px;margin-bottom:5px !important; vertical-align:middle;');
+      affirmNode.innerHTML = `<defs>
             <polygon id="path-1" points="0.00278333333 0.357194444 63.9637833 0.357194444 63.9637833 73.2944444 0.00278333333 73.2944444"></polygon>
             <polygon id="path-3" points="0 167 418.529833 167 418.529833 0 0 0"></polygon>
           </defs>
@@ -112,138 +120,152 @@ const renderAwesomeSezzle = (element, renderelement, index = 0, configGroupIndex
                 <path d="M297.688633,0.00278333333 C244.508411,0.00278333333 197.108244,36.9190611 183.655467,84.3841722 L202.934689,84.3841722 C214.170078,49.0358389 252.311022,18.01095 297.688633,18.01095 C352.845022,18.01095 400.514244,60.0021722 400.514244,125.373394 C400.514244,140.050839 398.6123,153.28095 395.012522,164.97095 L413.716522,164.97095 L413.902078,164.330783 C416.963744,152.269672 418.522411,139.16945 418.522411,125.373394 C418.522411,52.4686167 365.397856,0.00278333333 297.688633,0.00278333333" id="Fill-12" fill="#0FA0EA" mask="url(#mask-4)"></path>
             </g>
           </g>`;
-            sezzleButtonText.appendChild(affirmNode)
-          break;
-        case 'affirm-info-icon':
-          let affirmInfoIconNode = document.createElement('code');
-          affirmInfoIconNode.className = 'affirm-modal-info-link no-sezzle-info';
-          affirmInfoIconNode.innerHTML = '&#9432;';
-          sezzleButtonText.appendChild(affirmInfoIconNode);
-          break;
-        case 'affirm-link-icon':
-          let affirmAnchor = document.createElement('a');
-          affirmAnchor.href = this.configGroups[configGroupIndex].affirmLink;
-          affirmAnchor.target = '_blank';
-          let affirmLinkIconNode = document.createElement('code');
-          affirmLinkIconNode.className = 'affirm-info-link';
-          affirmLinkIconNode.innerHTML = '&#9432;';
-          affirmAnchor.appendChild(affirmLinkIconNode);
-          sezzleButtonText.appendChild(affirmAnchor);
-          break;
-        case 'afterpay-logo':
-          let apNode = document.createElement('img');
-          apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
-          apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png';
-          sezzleButtonText.appendChild(apNode);
-          break;
-        case 'afterpay-logo-grey':
-          apNode = document.createElement('img');
-          apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
-          apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png';
-          sezzleButtonText.appendChild(apNode);
-          break;
-        case 'afterpay-info-icon':
-          let apInfoIconNode = document.createElement('code');
-          apInfoIconNode.className = 'ap-modal-info-link no-sezzle-info';
-          apInfoIconNode.innerHTML = '&#9432;';
-          sezzleButtonText.appendChild(apInfoIconNode);
-          break;
-        case 'afterpay-link-icon':
-          let apAnchor = document.createElement('a');
-          apAnchor.href = state.configGroups[configGroupIndex].apLink;
-          apAnchor.target = '_blank';
-          let apLinkIconNode = document.createElement('code');
-          apLinkIconNode.className = 'ap-info-link';
-          apLinkIconNode.innerHTML = '&#9432;';
-          apAnchor.appendChild(apLinkIconNode);
-          sezzleButtonText.appendChild(apAnchor);
-          break;
-        case 'quadpay-logo':
-          let qpNode = document.createElement('img');
-          qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
-          qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget.png';
-          sezzleButtonText.appendChild(qpNode);
-          break;
-        case 'quadpay-logo-grey':
-          qpNode = document.createElement('img');
-          qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
-          qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-grayscale.png';
-          sezzleButtonText.appendChild(qpNode);
-          break;
-        case 'quadpay-logo-white':
-          qpNode = document.createElement('img');
-          qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
-          qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-white.png';
-          sezzleButtonText.appendChild(qpNode);
-          break;
-        case 'quadpay-info-icon':
-          let quadpayInfoIconNode = document.createElement('code');
-          quadpayInfoIconNode.className = 'quadpay-modal-info-link no-sezzle-info';
-          quadpayInfoIconNode.innerHTML = '&#9432;';
-          sezzleButtonText.appendChild(quadpayInfoIconNode);
-          break;
-        case 'price-split':
-          let priceSplitNode = document.createElement('span');
-          priceSplitNode.className = 'sezzle-payment-amount sezzle-price-split sezzleindex-' + index;
-          let priceElemTexts = element.textContent.split(state.configGroups[configGroupIndex].splitPriceElementsOn);
-          let priceSplitText = '';
-          if (priceElemTexts.length == 1) { //if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
-            //give the original element in the case there might be some ignored elements present
-            priceSplitText = utils.getFormattedPrice(element, configGroupIndex, priceText);
-          } else {
-            let priceElems = [];
-            priceElemTexts.forEach(function (text) {
-              let priceElemSpan = document.createElement('span');
-              priceElemSpan.textContent = text;
-              priceElems.push(priceElemSpan);
-            });
-            priceElems.forEach((elem, index) => {
-              if (index == 0) {
-                priceSplitText = utils.getFormattedPrice(elem, configGroupIndex);
-              } else {
-                priceSplitText = priceSplitText + ' ' + state.configGroups[configGroupIndex].splitPriceElementsOn + ' ' + state.getFormattedPrice(elem, configGroupIndex);
-              }
-            });
-          }
-          let priceSplitTextNode = document.createTextNode(priceSplitText);
-          priceSplitNode.appendChild(priceSplitTextNode);
-          sezzleButtonText.appendChild(priceSplitNode);
-          break;
-        case 'line-break':
-          let lineBreakNode = document.createElement('br');
-          sezzleButtonText.appendChild(lineBreakNode);
-          break;
-        default:
-          let widgetTextNode = document.createTextNode(subtemplate);
-          sezzleButtonText.appendChild(widgetTextNode);
-          break;
-      }
-    });
-    node.appendChild(sezzleButtonText);
-    // Adding main node to sezzel node
-    sezzle.appendChild(node);
-    state.configGroups[configGroupIndex].customClasses.forEach(customClass => {
-      if (customClass.xpath && customClass.className) {
-        if (typeof (customClass.index) !== 'number') {
-          customClass.index = -1; // set the default value
-        }
-        if (customClass.index === index || customClass.index === -1) {
-          let path = breakXPath(customClass.xpath);
-          widgetLoad.getElementsByXPath(path, 0, [sezzle])
-            .forEach(function (el) {
-              el.className += ' ' + customClass.className;
-            });
-        }
-      }
-    });
-    // Adding sezzle to parent node
-    if (state.configGroups[configGroupIndex].widgetIsFirstChild) {
-      insertAsFirstChild(sezzle, parent);
-    } else {
-      insertAfter(sezzle, parent);
+      sezzleButtonText.appendChild(affirmNode);
+      break;
     }
-    logEvent('onload', configGroupIndex);
-    return sezzle;
-  };
+    case 'affirm-info-icon': {
+      const affirmInfoIconNode = document.createElement('code');
+      affirmInfoIconNode.className = 'affirm-modal-info-link no-sezzle-info';
+      affirmInfoIconNode.innerHTML = '&#9432;';
+      sezzleButtonText.appendChild(affirmInfoIconNode);
+      break;
+    }
+    case 'affirm-link-icon': {
+      const affirmAnchor = document.createElement('a');
+      affirmAnchor.href = this.configGroups[configGroupIndex].affirmLink;
+      affirmAnchor.target = '_blank';
+      const affirmLinkIconNode = document.createElement('code');
+      affirmLinkIconNode.className = 'affirm-info-link';
+      affirmLinkIconNode.innerHTML = '&#9432;';
+      affirmAnchor.appendChild(affirmLinkIconNode);
+      sezzleButtonText.appendChild(affirmAnchor);
+      break;
+    }
+    case 'afterpay-logo': {
+      const apNode = document.createElement('img');
+      apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
+      apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget.png';
+      sezzleButtonText.appendChild(apNode);
+      break;
+    }
+    case 'afterpay-logo-grey': {
+      const apNode = document.createElement('img');
+      apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
+      apNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/ap-logo-widget-grayscale.png';
+      sezzleButtonText.appendChild(apNode);
+      break;
+    }
+    case 'afterpay-info-icon': {
+      const apInfoIconNode = document.createElement('code');
+      apInfoIconNode.className = 'ap-modal-info-link no-sezzle-info';
+      apInfoIconNode.innerHTML = '&#9432;';
+      sezzleButtonText.appendChild(apInfoIconNode);
+      break;
+    }
+    case 'afterpay-link-icon': {
+      const apAnchor = document.createElement('a');
+      apAnchor.href = state.configGroups[configGroupIndex].apLink;
+      apAnchor.target = '_blank';
+      const apLinkIconNode = document.createElement('code');
+      apLinkIconNode.className = 'ap-info-link';
+      apLinkIconNode.innerHTML = '&#9432;';
+      apAnchor.appendChild(apLinkIconNode);
+      sezzleButtonText.appendChild(apAnchor);
+      break;
+    }
+    case 'quadpay-logo': {
+      const qpNode = document.createElement('img');
+      qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+      qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget.png';
+      sezzleButtonText.appendChild(qpNode);
+      break;
+    }
+    case 'quadpay-logo-grey': {
+      const qpNode = document.createElement('img');
+      qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+      qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-grayscale.png';
+      sezzleButtonText.appendChild(qpNode);
+      break;
+    }
+    case 'quadpay-logo-white': {
+      const qpNode = document.createElement('img');
+      qpNode.className = 'sezzle-quadpay-logo quadpay-modal-info-link no-sezzle-info';
+      qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-white.png';
+      sezzleButtonText.appendChild(qpNode);
+      break;
+    }
+    case 'quadpay-info-icon': {
+      const quadpayInfoIconNode = document.createElement('code');
+      quadpayInfoIconNode.className = 'quadpay-modal-info-link no-sezzle-info';
+      quadpayInfoIconNode.innerHTML = '&#9432;';
+      sezzleButtonText.appendChild(quadpayInfoIconNode);
+      break;
+    }
+    case 'price-split': {
+      const priceSplitNode = document.createElement('span');
+      priceSplitNode.className = `sezzle-payment-amount sezzle-price-split sezzleindex-${index}`;
+      const priceElemTexts = element.textContent.split(state.configGroups[configGroupIndex].splitPriceElementsOn);
+      let priceSplitText = '';
+      if (priceElemTexts.length === 1) { // if the text is not being splitted (this check is needed in order to support sites with multiple types of product pricing)
+        // give the original element in the case there might be some ignored elements present
+        priceSplitText = utils.getFormattedPrice(element, configGroupIndex, priceText);
+      } else {
+        const priceElems = [];
+        priceElemTexts.forEach((text) => {
+          const priceElemSpan = document.createElement('span');
+          priceElemSpan.textContent = text;
+          priceElems.push(priceElemSpan);
+        });
+        priceElems.forEach((elem, index) => {
+          if (index === 0) {
+            priceSplitText = utils.getFormattedPrice(elem, configGroupIndex);
+          } else {
+            priceSplitText = `${priceSplitText} ${state.configGroups[configGroupIndex].splitPriceElementsOn} ${state.getFormattedPrice(elem, configGroupIndex)}`;
+          }
+        });
+      }
+      const priceSplitTextNode = document.createTextNode(priceSplitText);
+      priceSplitNode.appendChild(priceSplitTextNode);
+      sezzleButtonText.appendChild(priceSplitNode);
+      break;
+    }
+    case 'line-break': {
+      const lineBreakNode = document.createElement('br');
+      sezzleButtonText.appendChild(lineBreakNode);
+      break;
+    }
+    default: {
+      const widgetTextNode = document.createTextNode(subtemplate);
+      sezzleButtonText.appendChild(widgetTextNode);
+      break;
+    }
+    }
+  });
+  node.appendChild(sezzleButtonText);
+  // Adding main node to sezzel node
+  sezzle.appendChild(node);
+  state.configGroups[configGroupIndex].customClasses.forEach((customClass) => {
+    if (customClass.xpath && customClass.className) {
+      if (typeof (customClass.index) !== 'number') {
+        customClass.index = -1; // set the default value
+      }
+      if (customClass.index === index || customClass.index === -1) {
+        const path = breakXPath(customClass.xpath);
+        getElementsByXPath(path, 0, [sezzle])
+          .forEach((el) => {
+            el.className += ` ${customClass.className}`;
+          });
+      }
+    }
+  });
+  // Adding sezzle to parent node
+  if (state.configGroups[configGroupIndex].widgetIsFirstChild) {
+    insertAsFirstChild(sezzle, parent);
+  } else {
+    insertAfter(sezzle, parent);
+  }
+  logEvent('onload', configGroupIndex);
+  return sezzle;
+};
 
 export default renderAwesomeSezzle;

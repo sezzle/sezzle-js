@@ -1,3 +1,4 @@
+/* eslint-disable */
 const SezzleJS = require('./sezzle');
 const Helper = require('./helper');
 const sezzleConfig = require('./sezzle.config.js');

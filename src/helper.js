@@ -1,18 +1,20 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable max-len */
 const cloneDeep = require('lodash.clonedeep');
 // properties that do not belong to a config group (must have been factorized before)
 const propsNotInConfigGroup = [
-  "merchantID",
-  "forcedShow",
-  "minPrice",
-  "maxPrice",
-  "numberOfPayments",
-  "altLightboxHTML",
-  "apModalHTML",
-  "qpModalHTML",
-  "noGtm",
-  "noTracking",
-  "testID",
-  "language"
+  'merchantID',
+  'forcedShow',
+  'minPrice',
+  'maxPrice',
+  'numberOfPayments',
+  'altLightboxHTML',
+  'apModalHTML',
+  'qpModalHTML',
+  'noGtm',
+  'noTracking',
+  'testID',
+  'language',
 ];
 
 /**
@@ -23,8 +25,8 @@ const propsNotInConfigGroup = [
  */
 const widgetLanguageTranslation = (language, numberOfPayments) => {
   const translations = {
-    'en': 'or ' + numberOfPayments + ' interest-free payments of %%price%% with %%logo%% %%info%%',
-    'fr': 'ou ' + numberOfPayments + ' paiements de %%price%% sans intérêts avec %%logo%% %%info%%'
+    en: `or ${numberOfPayments} interest-free payments of %%price%% with %%logo%% %%info%%`,
+    fr: `ou ${numberOfPayments} paiements de %%price%% sans intérêts avec %%logo%% %%info%%`,
   };
   return translations[language] || translations.en;
 };
@@ -36,18 +38,17 @@ const widgetLanguageTranslation = (language, numberOfPayments) => {
  */
 export const validateConfig = (options) => {
   if (!Array.isArray(options.configGroups)) {
-    throw new Error("options.configGroups is not an array");
-  } else {
-    if (!options.configGroups.length) {
-      throw new Error("options.configGroups must have at least one config object");
-    }
+    throw new Error('options.configGroups is not an array');
+  } else if (!options.configGroups.length) {
+    throw new Error('options.configGroups must have at least one config object');
   }
   // checking fields which MUST be specified in configGroups. (Only one as of now :D)
-  const mustInclude = ["targetXPath"];
-  options.configGroups.forEach(function (group) {
-    mustInclude.forEach(function (field) {
+  const mustInclude = ['targetXPath'];
+  options.configGroups.forEach((group) => {
+    mustInclude.forEach((field) => {
+      // eslint-disable-next-line no-prototype-builtins
       if (!group.hasOwnProperty(field)) {
-        throw new Error(field + " must be specified in all configs in options.configGroups");
+        throw new Error(`${field} must be specified in all configs in options.configGroups`);
       }
     });
   });
@@ -55,28 +56,28 @@ export const validateConfig = (options) => {
   // expected types for crucial fields in the config
   // may do type checking for all fields in the future but it's just not necessary as of now
   const expectedTypes = {
-    "targetXPath": "string",
-    "renderToPath": "string",
-    "urlMatch": "string"
+    targetXPath: 'string',
+    renderToPath: 'string',
+    urlMatch: 'string',
   };
-  options.configGroups.forEach(function (group) {
-    Object.keys(expectedTypes).forEach(function (key) {
-      if (group.hasOwnProperty(key) && typeof (group[key]) !== expectedTypes[key]) {
-        throw new Error(key + " must be of type " + expectedTypes[key]);
+  options.configGroups.forEach((group) => {
+    Object.keys(expectedTypes).forEach((key) => {
+      // eslint-disable-next-line no-prototype-builtins
+      if (group.hasOwnProperty(key) && (typeof group[key] !== typeof expectedTypes[key])) {
+        throw new Error(`${key} must be of type ${expectedTypes[key]}`);
       }
     });
   });
   // check correct factorization
-  options.configGroups.forEach(function (group) {
-    Object.keys(group).forEach(function (key) {
+  options.configGroups.forEach((group) => {
+    Object.keys(group).forEach((key) => {
       if (propsNotInConfigGroup.indexOf(key) >= 0) {
-        throw new Error(key + " is not a property of a configGroup. Specify this key at the outermost layer");
+        throw new Error(`${key} is not a property of a configGroup. Specify this key at the outermost layer`);
       }
     });
   });
   // if control reaches this point, the config is acceptable. It may not be perfect since the checks
   // are pretty loose, but at least the crucial parts of it are OK. May add more checks in the future.
-  return;
 };
 
 /**
@@ -87,7 +88,7 @@ export const validateConfig = (options) => {
  * @return Factorized fields
  */
 const factorize = (options) => {
-  let factorized = {};
+  const factorized = {};
   // assumption is being made that all these fields are the same across all config groups
   // it is a reasonable assumption to make as :
   // - one config as a whole should only be assigned to one merchantID
@@ -109,7 +110,7 @@ const factorize = (options) => {
  * @return groupedCustomClasses, an array of array of customClass objects
  */
 const groupCustomClasses = (customClasses) => {
-  let result = [];
+  const result = [];
   if (customClasses && Array.isArray(customClasses)) {
     customClasses.forEach((customClass) => {
       if (typeof (customClass.targetXPathIndex) === 'number') {
@@ -132,19 +133,19 @@ const groupCustomClasses = (customClasses) => {
  * @return split array of configs
  */
 const splitConfig = (options) => {
-  let res = [];
+  const res = [];
   if (typeof (options.targetXPath) !== 'undefined') {
     // everything revolves around an xpath
     if (Array.isArray(options.targetXPath)) {
       // group up custom classes according to index
-      let groupedCustomClasses = groupCustomClasses(options.customClasses);
+      const groupedCustomClasses = groupCustomClasses(options.customClasses);
       // need to ensure it's array and not string so that code doesnt mistakenly separate chars
-      let renderToPathIsArray = Array.isArray(options.renderToPath);
+      const renderToPathIsArray = Array.isArray(options.renderToPath);
       // a group should revolve around targetXPath
       // break up the array, starting from the first element
-      options.targetXPath.forEach(function (xpath, inner) {
+      options.targetXPath.forEach((xpath, inner) => {
         // deep clone as config may have nested objects
-        let config = cloneDeep(options);
+        const config = cloneDeep(options);
         // overwrite targetXPath
         config.targetXPath = xpath;
         // sync up renderToPath array
@@ -152,12 +153,12 @@ const splitConfig = (options) => {
           config.renderToPath = options.renderToPath[inner] ? options.renderToPath[inner] : null;
         } else {
           // by default, below parent of target
-          config.renderToPath = "..";
+          config.renderToPath = '..';
         }
         // sync up relatedElementActions array
-        if (options.relatedElementActions &&
-          typeof (options.relatedElementActions[inner]) !== 'undefined' &&
-          Array.isArray(options.relatedElementActions[inner])) {
+        if (options.relatedElementActions
+          && typeof (options.relatedElementActions[inner]) !== 'undefined'
+          && Array.isArray(options.relatedElementActions[inner])) {
           config.relatedElementActions = options.relatedElementActions[inner];
         }
         // sync up customClasses
@@ -191,7 +192,7 @@ const splitConfig = (options) => {
  */
 export const makeCompatible = (options) => {
   // place fields which do not belong in a group outside of configGroups
-  let compatible = factorize(options);
+  const compatible = factorize(options);
   // split the configs up if necessary
   compatible.configGroups = splitConfig(options);
   // should we factorize common field values and place in defaultConfig? I don't think so
@@ -214,7 +215,7 @@ export const breakXPath = (xpath) => xpath.split('/').filter((subpath) => subpat
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
 export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, language) => {
-  let result = {};
+  const result = {};
   // targetXPath SHOULD NOT be specified in defaultConfig since
   // it is like an ID for a configGroup (except if adding the price element class is used)
   result.xpath = breakXPath(configGroup.targetXPath);
@@ -240,25 +241,27 @@ export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, 
   result.bannerClass = configGroup.bannerClass || (defaultConfig && defaultConfig.bannerClass) || '';
   result.bannerLink = configGroup.bannerLink || (defaultConfig && defaultConfig.bannerLink) || '';
   result.fontWeight = configGroup.fontWeight || (defaultConfig && defaultConfig.fontWeight) || 300;
-  result.lineHeight = configGroup.lineHeight || (defaultConfig && defaultConfig.lineHeight) ||  '13px';
-  result.alignmentSwitchMinWidth = configGroup.alignmentSwitchMinWidth || (defaultConfig && defaultConfig.alignmentSwitchMinWidth); //pixels
+  result.lineHeight = configGroup.lineHeight || (defaultConfig && defaultConfig.lineHeight) || '13px';
+  result.alignmentSwitchMinWidth = configGroup.alignmentSwitchMinWidth || (defaultConfig && defaultConfig.alignmentSwitchMinWidth); // pixels
   result.alignmentSwitchType = configGroup.alignmentSwitchType || (defaultConfig && defaultConfig.alignmentSwitchType);
-  result.marginTop = configGroup.marginTop || (defaultConfig && defaultConfig.marginTop) || 0; //pixels
-  result.marginBottom = configGroup.marginBottom || (defaultConfig && defaultConfig.marginBottom) || 0; //pixels
-  result.marginLeft = configGroup.marginLeft || (defaultConfig && defaultConfig.marginLeft) || 0; //pixels
-  result.marginRight = configGroup.marginRight || (defaultConfig && defaultConfig.marginRight) || 0; //pixels
+  result.marginTop = configGroup.marginTop || (defaultConfig && defaultConfig.marginTop) || 0; // pixels
+  result.marginBottom = configGroup.marginBottom || (defaultConfig && defaultConfig.marginBottom) || 0; // pixels
+  result.marginLeft = configGroup.marginLeft || (defaultConfig && defaultConfig.marginLeft) || 0; // pixels
+  result.marginRight = configGroup.marginRight || (defaultConfig && defaultConfig.marginRight) || 0; // pixels
   result.scaleFactor = configGroup.scaleFactor || (defaultConfig && defaultConfig.scaleFactor);
   result.logoSize = configGroup.logoSize || (defaultConfig && defaultConfig.logoSize) || 1.0;
   result.logoStyle = configGroup.logoStyle || (defaultConfig && defaultConfig.logoStyle) || {};
   result.fontFamily = configGroup.fontFamily || (defaultConfig && defaultConfig.fontFamily) || 'inherit';
   result.textColor = configGroup.color || (defaultConfig && defaultConfig.color) || 'inherit';
   result.fontSize = configGroup.fontSize || (defaultConfig && defaultConfig.fontSize) || 12;
-  result.maxWidth = configGroup.maxWidth || (defaultConfig && defaultConfig.maxWidth) || 400; //pixels
-  result.fixedHeight = configGroup.fixedHeight || (defaultConfig && defaultConfig.fixedHeight) || 0; //pixels
+  result.maxWidth = configGroup.maxWidth || (defaultConfig && defaultConfig.maxWidth) || 400; // pixels
+  result.fixedHeight = configGroup.fixedHeight || (defaultConfig && defaultConfig.fixedHeight) || 0; // pixels
   // This is used to get price of element
   result.priceElementClass = configGroup.priceElementClass || (defaultConfig && defaultConfig.priceElementClass) || 'sezzle-price-element';
   // This is used to tell where to render sezzle element to
-  result.sezzleWidgetContainerClass = configGroup.sezzleWidgetContainerClass || (defaultConfig && defaultConfig.sezzleWidgetContainerClass) || 'sezzle-widget-container';
+  result.sezzleWidgetContainerClass = configGroup.sezzleWidgetContainerClass
+    || (defaultConfig && defaultConfig.sezzleWidgetContainerClass)
+    || 'sezzle-widget-container';
   // splitPriceElementsOn is used to deal with price ranges which are separated by arbitrary strings
   result.splitPriceElementsOn = configGroup.splitPriceElementsOn || (defaultConfig && defaultConfig.splitPriceElementsOn) || '';
   // after pay link
@@ -274,25 +277,25 @@ export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, 
   // Example : [
   // {xpath:'.', className: 'test-1', index: 0, configGroupIndex: 0},
   // {xpath: './.hello', className: 'test-2', index: 0, configGroupIndex: 0}
-  //]
+  // ]
   result.customClasses = Array.isArray(configGroup.customClasses) ? configGroup.customClasses : [];
   result.widgetTemplate = configGroup.altVersionTemplate || (defaultConfig && defaultConfig.altVersionTemplate);
   if (result.widgetTemplate) {
     result.widgetTemplate = (constructWidgetTemplate(result.widgetTemplate, language, numberOfPayments)).split('%%');
   } else {
-    var defaultWidgetTemplate = widgetLanguageTranslation(language, numberOfPayments);
+    const defaultWidgetTemplate = widgetLanguageTranslation(language, numberOfPayments);
     result.widgetTemplate = defaultWidgetTemplate.split('%%');
   }
   if (result.splitPriceElementsOn) {
-    result.widgetTemplate = result.widgetTemplate.map((subtemplate) => subtemplate === 'price' ? 'price-split' : subtemplate);
+    result.widgetTemplate = result.widgetTemplate.map((subtemplate) => (subtemplate === 'price' ? 'price-split' : subtemplate));
   }
   // Search for price elements. If found, assume there is only one in this page
   result.hasPriceClassElement = false;
-  result.priceElements = Array.prototype.slice.
-    call(document.getElementsByClassName(result.priceElementClass));
-  result.renderElements = Array.prototype.slice.
-    call(document.getElementsByClassName(result.sezzleWidgetContainerClass));
-  if (result.priceElements.length == 1) {
+  result.priceElements = Array.prototype.slice
+    .call(document.getElementsByClassName(result.priceElementClass));
+  result.renderElements = Array.prototype.slice
+    .call(document.getElementsByClassName(result.sezzleWidgetContainerClass));
+  if (result.priceElements.length === 1) {
     result.hasPriceClassElement = true;
   }
   result.theme = configGroup.theme || (defaultConfig && defaultConfig.theme) || 'light';
@@ -303,30 +306,30 @@ export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, 
     d) light (for light backgrounds)
   */
   switch (result.theme) {
-    case 'dark':
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor_WhiteWM.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case 'grayscale':
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_Black.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case 'white':
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_White.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case 'white-flat':
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_WhiteAlt.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case 'black-flat':
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_BlackAlt.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    default:
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor.svg';
-      result.imageClassName = 'szl-light-image';
-      break;
+  case 'dark':
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor_WhiteWM.svg';
+    result.imageClassName = 'szl-dark-image';
+    break;
+  case 'grayscale':
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_Black.svg';
+    result.imageClassName = 'szl-dark-image';
+    break;
+  case 'white':
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_White.svg';
+    result.imageClassName = 'szl-dark-image';
+    break;
+  case 'white-flat':
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_WhiteAlt.svg';
+    result.imageClassName = 'szl-dark-image';
+    break;
+  case 'black-flat':
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_BlackAlt.svg';
+    result.imageClassName = 'szl-dark-image';
+    break;
+  default:
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor.svg';
+    result.imageClassName = 'szl-light-image';
+    break;
   }
   result.hideClasses = configGroup.hideClasses || (defaultConfig && defaultConfig.hideClasses) || [];
   if (typeof (result.hideClasses) === 'string') {
@@ -337,12 +340,12 @@ export const mapGroupToDefault = (configGroup, defaultConfig, numberOfPayments, 
     result.hideClasses = result.hideClasses.map((path) => breakXPath(path.trim()));
   }
   result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || (defaultConfig && defaultConfig.ignoredFormattedPriceText) || ['Subtotal', 'Total:', 'Sold Out'];
-  if(!Array.isArray(result.ignoredFormattedPriceText)) {
+  if (!Array.isArray(result.ignoredFormattedPriceText)) {
     result.ignoredFormattedPriceText = [result.ignoredFormattedPriceText];
   }
   // variables set by the JS
   result.productPrice = null;
-  result.widgetIsFirstChild = false; //private boolean variable set to true if widget is to be rendered as first child of the parent
+  result.widgetIsFirstChild = false; // private boolean variable set to true if widget is to be rendered as first child of the parent
   return result;
 };
 
@@ -369,10 +372,11 @@ export const isAlphabet = (n) => /^[a-zA-Z()]+$/.test(n);
 export const parsePriceString = (price, includeComma) => {
   let formattedPrice = '';
   for (let i = 0; i < price.length; i++) {
-    if (isNumeric(price[i]) || price[i] == '.' || (includeComma && price[i] == ',')) {
+    if (isNumeric(price[i]) || price[i] === '.' || (includeComma && price[i] === ',')) {
       // If current is a . and previous is a character, it can be something like Rs.
       // so ignore it
-      if (i > 0 && price[i] == '.' && isAlphabet(price[i - 1])) continue;
+      // eslint-disable-next-line no-continue
+      if (i > 0 && price[i] === '.' && isAlphabet(price[i - 1])) continue;
       formattedPrice += price[i];
     }
   }
@@ -400,7 +404,7 @@ export const insertAfter = (el, referenceNode) => referenceNode.parentNode.inser
  */
 export const insertAsFirstChild = (element, referenceElement) => {
   referenceElement.parentElement.insertBefore(element, referenceElement);
-  //bump up element above nodes which are not element nodes (if any)
+  // bump up element above nodes which are not element nodes (if any)
   while (element.previousSibling) {
     element.parentElement.insertBefore(element, element.previousSibling);
   }
@@ -417,12 +421,12 @@ export const insertAsFirstChild = (element, referenceElement) => {
  * @returns String
  */
 const constructWidgetTemplate = (widgetTemplate, language, numberOfPayments) => {
-  if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
+  if (typeof (widgetTemplate) === 'object' && widgetTemplate != null) {
     if (!widgetTemplate.en && !widgetTemplate[language]) {
       console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.");
       return widgetLanguageTranslation(language, numberOfPayments); // return default widget template
     }
     return widgetTemplate[language] || widgetTemplate.en; // returns specific language if present else return en key
   }
-  return widgetTemplate; //if widgetTemplate is string
-}
+  return widgetTemplate; // if widgetTemplate is string
+};

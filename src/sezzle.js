@@ -1,3 +1,4 @@
+/* eslint-disable */
 const Helper = require('./helper');
 const SezzleJS = function (options) {
   if (!options) options = {};

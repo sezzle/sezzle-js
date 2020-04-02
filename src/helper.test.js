@@ -1,3 +1,4 @@
+/* eslint-disable */
 const Helper = require('./helper');
 var sezzleConfig = require('./sezzle.config.js');
 var cloneDeep = require('lodash.clonedeep');

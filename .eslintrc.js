@@ -31,8 +31,11 @@ module.exports = {
     "no-console": "off",
     "no-param-reassing": "off",
     "no-tabs": 0,
-    "indent": [2, "tab", { "SwitchCase": 1}],
+    "indent": ["error", 2],
+    "max-len": ["error", { "code": 150 }],
     "no-cycle": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "func-names": ["error", "never"],
+    "no-cycle": "off"
   },
 };
