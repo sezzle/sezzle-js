@@ -132,7 +132,7 @@ const renderAwesomeSezzle = (element, renderelement, index = 0, configGroupIndex
     }
     case 'affirm-link-icon': {
       const affirmAnchor = document.createElement('a');
-      affirmAnchor.href = this.configGroups[configGroupIndex].affirmLink;
+      affirmAnchor.href = state.configGroups[configGroupIndex].affirmLink;
       affirmAnchor.target = '_blank';
       const affirmLinkIconNode = document.createElement('code');
       affirmLinkIconNode.className = 'affirm-info-link';
