@@ -241,7 +241,7 @@ class renderAwesomeSezzle {
       }
       case 'affirm-link-icon': {
         const affirmAnchor = document.createElement('a');
-        affirmAnchor.href = this._config.configGroups[configGroupIndex].affirmLink;
+        affirmAnchor.href = this._config.affirmLink;
         affirmAnchor.target = '_blank';
         const affirmLinkIconNode = document.createElement('code');
         affirmLinkIconNode.title = 'Open Affirm in a new tab';
@@ -254,9 +254,10 @@ class renderAwesomeSezzle {
       case 'afterpay-logo': {
         const apNode = document.createElement('img');
         apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
-        apNode.style.maxHeight = '30px';
-        apNode.style.verticalAlign = 'middle';
-        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-logo-widget.png';
+        apNode.style.maxHeight = '27px';
+        apNode.style.maxWidth = '60px';
+        apNode.style.verticalAlign = 'bottom';
+        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-badge-black-on-mint.svg';
         apNode.alt = 'Afterpay';
         sezzleButtonText.appendChild(apNode);
         break;
@@ -264,9 +265,10 @@ class renderAwesomeSezzle {
       case 'afterpay-logo-white': {
         const apNode = document.createElement('img');
         apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
-        apNode.style.maxHeight = '16px';
-        apNode.style.verticalAlign = 'middle';
-        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-logo-widget-white.png';
+        apNode.style.maxHeight = '27px';
+        apNode.style.maxWidth = '60px';
+        apNode.style.verticalAlign = 'bottom';
+        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-badge-black-on-white.svg';
         apNode.alt = 'Afterpay';
         sezzleButtonText.appendChild(apNode);
         break;
@@ -274,9 +276,10 @@ class renderAwesomeSezzle {
       case 'afterpay-logo-grey': {
         const apNode = document.createElement('img');
         apNode.className = 'sezzle-afterpay-logo ap-modal-info-link no-sezzle-info';
-        apNode.style.maxHeight = '16px';
-        apNode.style.verticalAlign = 'middle';
-        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-logo-widget-grayscale.png';
+        apNode.style.maxHeight = '27px';
+        apNode.style.maxWidth = '60px';
+        apNode.style.verticalAlign = 'bottom';
+        apNode.src = 'https://media.sezzle.com/sezzle-credit-website-assets/ap-badge-white-on-black.svg';
         apNode.alt = 'Afterpay';
         sezzleButtonText.appendChild(apNode);
         break;
@@ -350,7 +353,9 @@ class renderAwesomeSezzle {
         qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget.png';
         qpNode.alt = 'Quadpay';
-        qpNode.style.verticalAlign = 'middle';
+        qpNode.style.maxHeight = '17px';
+        qpNode.style.maxWidth = '65px';
+        qpNode.style.verticalAlign = 'text-bottom';
         sezzleButtonText.appendChild(qpNode);
         break;
       }
@@ -359,7 +364,9 @@ class renderAwesomeSezzle {
         qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-grayscale.png';
         qpNode.alt = 'Quadpay';
-        qpNode.style.verticalAlign = 'middle';
+        qpNode.style.maxHeight = '17px';
+        qpNode.style.maxWidth = '65px';
+        qpNode.style.verticalAlign = 'text-bottom';
         sezzleButtonText.appendChild(qpNode);
         break;
       }
@@ -368,7 +375,9 @@ class renderAwesomeSezzle {
         qpNode.className = 'sezzle-quadpay-logo qp-modal-info-link no-sezzle-info';
         qpNode.src = 'https://d34uoa9py2cgca.cloudfront.net/sezzle-credit-website-assets/qp-logo-widget-white.png';
         qpNode.alt = 'Quadpay';
-        qpNode.style.verticalAlign = 'middle';
+        qpNode.style.maxHeight = '17px';
+        qpNode.style.maxWidth = '65px';
+        qpNode.style.verticalAlign = 'text-bottom';
         sezzleButtonText.appendChild(qpNode);
         break;
       }
@@ -617,6 +626,7 @@ class renderAwesomeSezzle {
     case 'dark':
     case 'white':
     case 'white-flat':
+    case 'white-pill':
       element.className += ' szl-dark';
       break;
     default:

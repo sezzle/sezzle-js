@@ -326,7 +326,7 @@ SezzleJS.prototype.embedButtonFont = function () {
 }
 
 /**
- * This function will parse template buttonnConfig to generate inner html of the button
+ * This function will parse template buttonConfig to generate inner html of the button
  * @param template - Template of the newly created button
  * @param theme -  Theme of the button supplied in the config
  * @return templateString  -  Inner Html of the button

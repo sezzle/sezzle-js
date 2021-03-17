@@ -82,7 +82,7 @@ As with targetXPath, prepend IDs with '#', classes with '.', and append tag name
 
 **Purpose**: Updates the logo color to coordinate and contrast with different background colors of websites.<br/>
 **Type**: string<br/>
-**Options**: dark, light, grayscale, black-flat, white, white-flat<br/>
+**Options**: dark, light, grayscale, black-flat, white, white-flat, white-pill, purple-pill<br/>
 **Default**: 'light'
 
 `scaleFactor` (optional) **obsolete**
@@ -195,7 +195,7 @@ As with targetXPath, prepend IDs with '#', classes with '.', and append tag name
 
 **Purpose**: Font size of the widget text in pixels.<br/>
 **Type**: number<br/>
-**Default**: 12<br/>
+**Default**: 14<br/>
 **Additional Details**: Enter numbers only. Do not enter the unit (e.g. *px*)!
 
 `fontWeight` (optional)
@@ -428,6 +428,14 @@ As with targetXPath, prepend IDs with '#', classes with '.', and append tag name
 **Options**: 'en', 'fr', 'de', 'es'<br/>
 **Default**: navigator.language<br/>
 **Additional Details**: To match the selected language in the window instead of the user's default browser language, use document.querySelector('html').lang. Currently, SezzleJS only supports 'en', 'fr', 'de', and 'es', but additional languages can be added through `altVersionTemplate` and `altLightboxHTML`
+
+`parseMode` (optional)
+
+**Purpose**: Indicates whether price separates dollars and cents with a comma or period.<br/>
+**Type**: string<br/>
+**Options**: 'comma','period'<br/>
+**Default**: ''<br/>
+**Additional Details**: When parseMode is unset, it will auto-detect. If both comma and period are present, it will take the one that appears last. If only one is present, it will take it if it is the third character from the end. In all other circumstances, it will default to period. `parseMode` will allow for overriding when neither character is present.
 
 `forcedShow` (optional)
 
