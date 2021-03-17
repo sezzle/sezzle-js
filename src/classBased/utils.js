@@ -47,7 +47,6 @@ class Utils {
    */
   static _checkForWidgetDuplicacy() {
     return document.getElementsByClassName(sezzleWidgetWrapperClass).length > 1 
-
   }
 
   /**

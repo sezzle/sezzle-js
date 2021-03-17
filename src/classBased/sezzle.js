@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime';
 import SezzleConfig from './sezzleConfig';
 import Utils from './utils';
 import RenderAwesomeSezzle from './renderAwesomeSezzle';
+import Modal from './modal';
 
 class SezzleJS {
   constructor(options) {
@@ -33,12 +34,10 @@ class SezzleJS {
     Utils.logEvent('request', this._configInst);
     await this._loadCSS();
     this._renderAwesomeSezzle.initializeRendering();
-    // if (this._countryCode === 'US' || this._countryCode === 'CA') {
-    //   const win = window.frames.szl;
-    //   if (win && !this._configInst.noGtm) {
-    //     setTimeout(() => win.postMessage('initGTMScript', 'https://tracking.sezzle.com'), 100);
-    //   }
-    // }
+    if(document.sezzleDefaultModalVersion === "sezzle-modal-3.0.0-{%%s%%}.html"){
+      var modal = new Modal
+      modal.changeInnerHTML()
+    }
   }
 
   /**

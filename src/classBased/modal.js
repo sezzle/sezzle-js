@@ -1,6 +1,8 @@
 /* eslint-disable prefer-destructuring */
 import Utils from './utils';
 
+
+
 class Modal {
   constructor(config) {
     this._config = config;
@@ -9,7 +11,72 @@ class Modal {
     this._sezzleElement = null;
     this._configGroupIndex = null;
     this._vendorsSupportedForDualInstall = ['ap', 'qp', 'affirm', 'klarna'];
-  }
+    this._translations = {
+      en: [
+          {id: "sezzle-header", text: "Sezzle it now."},
+          {id: "desktop-header", text: "Pay us back later."},
+          {id: "mobile-header", text: "Pay us back later."},
+          {id: "desktop-main-1", text: "Check out with Sezzle and split your entire order into "},
+          {id: "desktop-main-2", text: "4 interest-free payments over 6 weeks."},
+          {id: "mobile-main", text: "Check out with Sezzle and split your entire order into 4 interest-free payments over 6 weeks."},
+          {id: "pie", text: "25% today, 25% week 2, 25% week 4, 25% week 6"},
+          {id: "single-feature-1", text: "No Interest, Ever"},
+          {id: "single-feature-2", text: "Plus no fees if you pay on time"},
+          {id: "single-feature-3", text: "No Impact to Your"},
+          {id: "single-feature-4", text: "Credit Score"},
+          {id: "single-feature-5", text: "Instant Approval"},
+          {id: "single-feature-6", text: "Decisions"},
+          {id: "desktop-footer-1", text: "Just select"},
+          {id: "desktop-footer-2", text: "Sezzle"},
+          {id: "desktop-footer-3", text: "at checkout!"},
+          {id: "mobile-footer-1", text: "Just select Sezzle"},
+          {id: "mobile-footer-2", text: "at checkout!"},
+          {id: "terms", text: "Subject to approval."},
+      ],
+      fr: [
+          {id: "sezzle-header", text: "Sezzlez maintenant."},
+          {id: "desktop-header", text: "Payez-nous plus tard."},
+          {id: "mobile-header", text: "Payez-nous plus tard."},
+          {id: "desktop-main-1", text: "Payez avec Sezzle pour répartir le montant de votre commande en 4 versements sans intérêts"},
+          {id: "desktop-main-2", text: "étalés sur 6 semaines."},
+          {id: "mobile-main", text: "Payez avec Sezzle pour répartir le montant de votre commande en 4 versements sans intérêts étalés sur 6 semaines."},
+          {id: "pie", text: "25% aujourd'hui, 25% semaine 2, 25% semaine 4, 25% semaine 6"},
+          {id: "single-feature-1", text: "Pas d'intérêts, jamais."},
+          {id: "single-feature-2", text: "Pas de frais non plus si vous payez aux dates prévues"},
+          {id: "single-feature-3", text: "Pas d'impact sur"},
+          {id: "single-feature-4", text: "votre cote de crédit"},
+          {id: "single-feature-5", text: "Décisions d'approbation"},
+          {id: "single-feature-6", text: "instantanées"},
+          {id: "desktop-footer-1", text: "Vous n'avez qu'à choisir"},
+          {id: "desktop-footer-2", text: "Sezzle"},
+          {id: "desktop-footer-3", text: "au moment de régler"},
+          {id: "mobile-footer-1", text: "Vous n'avez qu'à choisir Sezzle"},
+          {id: "mobile-footer-2", text: "au moment de régler"},
+          {id: "terms", text: "Sous réserve d'approbation."}, 
+      ],
+      de:[
+          {id: "sezzle-header", text: "Jetzt Sezzlen."},
+          {id: "desktop-header", text: "Später zahlen."},
+          {id: "mobile-header", text: "Später zahlen."},
+          {id: "desktop-main-1", text: "Checke einfach mit Sezzle aus und zahle deine gesamte Bestellung in"},
+          {id: "desktop-main-2", text: "4 zinslosen Raten über 3 Monate."},
+          {id: "mobile-main", text: "Checke einfach mit Sezzle aus und zahle deine gesamte Bestellung in 4 zinslosen Raten über 3 Monate."},
+          {id: "pie", text: "25% heute, 25% 30 Tage, 25% 60 Tage, 25% 90 Tage"},
+          {id: "single-feature-1", text: "Keine Zinsen. Punkt."},
+          {id: "single-feature-2", text: "Zudem keine Gebühren, wenn du pünktlich zahlst"},
+          {id: "single-feature-3", text: "Keine Auswirkungen auf deine"},
+          {id: "single-feature-4", text: "Schufa-Score"},
+          {id: "single-feature-5", text: "Sofortige"},
+          {id: "single-feature-6", text: "Decisions"},
+          {id: "desktop-footer-1", text: "Kreditentscheidung"},
+          {id: "desktop-footer-2", text: "Einfach Sezzle"},
+          {id: "desktop-footer-3", text: "beim Checkout wählen"},
+          {id: "mobile-footer-1", text: "Einfach Sezzle"},
+          {id: "mobile-footer-2", text: "beim Checkout wählen!"},
+          {id: "terms", text: "Vorbehaltlich unserer Zustimmung."},
+      ]
+    }  
+  }  
 
   /**
    * ************* PUBLIC FUNCTIONS ***************
@@ -58,6 +125,37 @@ class Modal {
         }
       });
     });
+  }
+
+  changeInnerHTML() {
+   if(document.sezzleLanguage !== "en"){
+     window.setTimeout(()=>{
+      let toBeEditedNodes  = document.getElementsByClassName('sezzle-fill');
+      Array.prototype.forEach.call(toBeEditedNodes, (el, i) => {
+      let translatedArray = this._translations[document.sezzleLanguage]
+      if(translatedArray[i].id ===  "pie") {
+        el.title = translatedArray[i].text
+        el.classList.remove('sezzle-payment-pie');
+        el.classList.add(`sezzle-payment-pie-${document.sezzleLanguage}`);
+        if (document.sezzleLanguage  === "de") {
+          let wrapperElement  = document.createElement('div')
+          wrapperElement.className  = "sezzle-hiw-pie-bg";
+          el.parentNode.insertBefore(wrapperElement, el);
+          wrapperElement.appendChild(el);
+          let extraNodeInnerHTML = `<div class="sezzle-row breakdown-row">
+          <p class="breakdown">25%<br /><span>heute</span></p>
+          <p class="breakdown">25%<br /><span>30 Tage</span></p>
+          <p class="breakdown">25%<br /><span>60 Tage</span></p>
+          <p class="breakdown">25%<br /><span>90 Tage</span></p>
+          </div>`
+          el.insertAdjacentHTML('afterend', extraNodeInnerHTML);
+        }
+      } else {
+        el.innerText =  translatedArray[i].text
+      }
+      })
+     },100)
+    }
   }
 
   _addClickEventForOtherVendors() {
@@ -127,7 +225,13 @@ class Modal {
       } else {
         modalLanguage = 'en';
       }
-      const sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', modalLanguage)}`;
+      let sezzleModalToGet;
+      if(document.sezzleDefaultModalVersion === "sezzle-modal-3.0.0-{%%s%%}.html"){
+        sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', "en")}`;
+      } else {
+        sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', modalLanguage)}`;
+      }
+     
       const response = await Utils.httpRequestWrapper('GET', sezzleModalToGet);
       this._modalNode.innerHTML = response;
     }
