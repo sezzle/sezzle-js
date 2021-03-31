@@ -9,7 +9,7 @@ class Utils {
    * @param {string} method
    * @param {string} url
   */
-  
+
   static httpRequestWrapper(method, url, body = null) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -27,6 +27,7 @@ class Utils {
       xhr.onerror = function () {
         reject(new Error('Something went wrong, contact the Sezzle team!'));
       };
+      // eslint-disable-next-line no-unused-expressions
       body === null ? xhr.send() : xhr.send(JSON.stringify(body));
     });
   }
@@ -53,9 +54,9 @@ class Utils {
 
 
   static checkForCompetitorWidget() {
-    var count = 0;
+    let count = 0;
     Array.prototype.forEach.call(competitorClasses, (el) => {
-        if(document.getElementsByClassName(el)) count++;
+      if (document.getElementsByClassName(el)) count++;
     });
     return count > 0;
   }

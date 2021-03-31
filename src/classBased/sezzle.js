@@ -34,14 +34,14 @@ class SezzleJS {
     Utils.logEvent('sezzle-widget-request', this._configInst);
     await this._loadCSS();
     this._renderAwesomeSezzle.initializeRendering();
-    if(document.sezzleDefaultModalVersion === "sezzle-modal-3.0.0-{%%s%%}.html"){
-      var modal = new Modal
-      modal.changeInnerHTML()
+    if (document.sezzleDefaultModalVersion === 'sezzle-modal-3.0.0-{%%s%%}.html') {
+      const modal = new Modal();
+      modal.changeInnerHTML();
     }
-    if(Utils.checkForWidgetDuplicacy()){
+    if (Utils.checkForWidgetDuplicacy()) {
       Utils.logEvent('duplicate-widget', this._configInst);
     }
-    if(Utils.checkForCompetitorWidget()) {
+    if (Utils.checkForCompetitorWidget()) {
       Utils.logEvent('competitor-widget', this._configInst);
     }
   }

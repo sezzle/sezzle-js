@@ -63,16 +63,16 @@ class Modal {
   }
 
   changeInnerHTML() {
-    if(document.sezzleLanguage !== "en"){
+    if (document.sezzleLanguage !== 'en') {
       window.setTimeout(()=>{
-       let toBeEditedNodes  = document.getElementsByClassName('sezzle-fill');
-       Array.prototype.forEach.call(toBeEditedNodes, (el, i) => {
-        let translatedArray = Translations[document.sezzleLanguage]
-        el.innerText =  translatedArray[i].text
-       })
+				let toBeEditedNodes  = document.getElementsByClassName('sezzle-fill');
+				Array.prototype.forEach.call(toBeEditedNodes, (el, i) => {
+					let translatedArray = Translations[document.sezzleLanguage];
+					el.innerText =  translatedArray[i].text;
+				})
       },100)
-     }
-   }
+		}
+  }
 
   _addClickEventForOtherVendors() {
     this._vendorsSupportedForDualInstall.forEach((vendor) => {
@@ -140,8 +140,8 @@ class Modal {
         modalLanguage = 'en';
       }
       let sezzleModalToGet;
-      if(document.sezzleDefaultModalVersion === "sezzle-modal-3.0.0-{%%s%%}.html"){
-        sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', "en")}`;
+      if (document.sezzleDefaultModalVersion === 'sezzle-modal-3.0.0-{%%s%%}.html') {
+        sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', 'en')}`;
       } else {
         sezzleModalToGet = `${this._config.apiEndpoints.sezzleAssetsCDN}${document.sezzleDefaultModalVersion.replace('{%%s%%}', modalLanguage)}`;
       }
