@@ -206,7 +206,7 @@ exports.factorize = function (options) {
  * @param language this is the language which the widget  uses
  * @return default configGroup object, specifying all fields and taking into account overrides by input
  */
-exports.mapGroupToDefault = function (configGroup, defaultConfig, numberOfPayments, language) {
+exports.mapGroupToDefault = function(configGroup, defaultConfig, numberOfPayments, language) {
   var result = {};
   // targetXPath SHOULD NOT be specified in defaultConfig since
   // it is like an ID for a configGroup (except if adding the price element class is used)
@@ -218,14 +218,6 @@ exports.mapGroupToDefault = function (configGroup, defaultConfig, numberOfPaymen
   // initialAction - this is a function to act upon a pre existing element's condition
   result.relatedElementActions = configGroup.relatedElementActions || (defaultConfig && defaultConfig.relatedElementActions) || [];
   result.ignoredPriceElements = configGroup.ignoredPriceElements || (defaultConfig && defaultConfig.ignoredPriceElements) || [];
-  // Below is for sezzle checkout button
-  result.sezzleCheckoutButton = configGroup.sezzleCheckoutButton;
-  if (result.sezzleCheckoutButton) {
-    result.sezzleCheckoutButton.theme  = result.sezzleCheckoutButton.theme || "light";
-    result.sezzleCheckoutButton.paddingX  = result.sezzleCheckoutButton.paddingX || "13px";
-    result.sezzleCheckoutButton.template  = result.sezzleCheckoutButton.template || "Checkout with %%logo%%";
-    result.sezzleCheckoutButton.borderType  = result.sezzleCheckoutButton.borderType || "rounded";
-  }
   if (typeof (result.ignoredPriceElements) === 'string') {
     // Only one x-path is given
     result.ignoredPriceElements = [this.breakXPath(result.ignoredPriceElements.trim())];
@@ -241,7 +233,6 @@ exports.mapGroupToDefault = function (configGroup, defaultConfig, numberOfPaymen
   result.bannerClass = configGroup.bannerClass || (defaultConfig && defaultConfig.bannerClass) || '';
   result.bannerLink = configGroup.bannerLink || (defaultConfig && defaultConfig.bannerLink) || '';
   result.fontWeight = configGroup.fontWeight || (defaultConfig && defaultConfig.fontWeight) || 300;
-  result.lineHeight = configGroup.lineHeight || (defaultConfig && defaultConfig.lineHeight) || '13px';
   result.alignmentSwitchMinWidth = configGroup.alignmentSwitchMinWidth || (defaultConfig && defaultConfig.alignmentSwitchMinWidth); //pixels
   result.alignmentSwitchType = configGroup.alignmentSwitchType || (defaultConfig && defaultConfig.alignmentSwitchType);
   result.marginTop = configGroup.marginTop || (defaultConfig && defaultConfig.marginTop) || 0; //pixels
@@ -299,36 +290,12 @@ exports.mapGroupToDefault = function (configGroup, defaultConfig, numberOfPaymen
     result.hasPriceClassElement = true;
   }
   result.theme = configGroup.theme || (defaultConfig && defaultConfig.theme) || 'light';
-  /* Theme can now be
-    a) dark (for dark backgrounds)
-    b) greyscale
-    c) white
-    d) light (for light backgrounds)
-  */
-  switch (result.theme) {
-    case "dark":
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor_WhiteWM.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case "grayscale":
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_Black.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case "white":
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_White.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case "white-flat":
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_WhiteAlt.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    case "black-flat":
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_BlackAlt.svg';
-      result.imageClassName = 'szl-dark-image';
-      break;
-    default:
-      result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://media.sezzle.com/branding/2.0/Sezzle_Logo_FullColor.svg';
-      result.imageClassName = 'szl-light-image';
+  if (result.theme == 'dark') {
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://d34uoa9py2cgca.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-white-sm-100w.png';
+    result.imageClassName = 'szl-dark-image';
+  } else {
+    result.imageURL = configGroup.imageUrl || (defaultConfig && defaultConfig.imageUrl) || 'https://d3svog4tlx445w.cloudfront.net/branding/sezzle-logos/png/sezzle-logo-sm-100w.png';
+    result.imageClassName = 'szl-light-image';
   }
   result.hideClasses = configGroup.hideClasses || (defaultConfig && defaultConfig.hideClasses) || [];
   if (typeof (result.hideClasses) === 'string') {
@@ -341,7 +308,7 @@ exports.mapGroupToDefault = function (configGroup, defaultConfig, numberOfPaymen
     }.bind(this));
   }
   result.ignoredFormattedPriceText = configGroup.ignoredFormattedPriceText || (defaultConfig && defaultConfig.ignoredFormattedPriceText) || ['Subtotal', 'Total:', 'Sold Out'];
-  if (!Array.isArray(result.ignoredFormattedPriceText)) {
+  if(!Array.isArray(result.ignoredFormattedPriceText)) {
     result.ignoredFormattedPriceText = [result.ignoredFormattedPriceText];
   }
   // variables set by the JS
@@ -440,8 +407,8 @@ exports.insertAsFirstChild = function (element, referenceElement) {
  * @param {Number} numberOfPayments
  * @returns String
  */
-function constructWidgetTemplate(widgetTemplate, language, numberOfPayments) {
-  if (typeof (widgetTemplate) === 'object' && widgetTemplate != null) {
+function constructWidgetTemplate (widgetTemplate, language, numberOfPayments) {
+  if (typeof(widgetTemplate) === 'object' && widgetTemplate != null) {
     if (!widgetTemplate.en && !widgetTemplate[language]) {
       console.warn("Please specify atleast 'en' key in altVersionTemplate, rendering default widget template.");
       return widgetLanguageTranslation(language, numberOfPayments); // return default widget template
@@ -450,4 +417,3 @@ function constructWidgetTemplate(widgetTemplate, language, numberOfPayments) {
   }
   return widgetTemplate; //if widgetTemplate is string
 }
-

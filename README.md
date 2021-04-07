@@ -1,82 +1,91 @@
 
-## Description
-This javascript can be used for adding Sezzle's widget into websites.
+### Description
+This javascript can be used for putting Sezzle's widget in websites.
 
-### Getting Started
+#### Getting Started
 
-1. You will need Admin access to edit your website's code.
-2. Open up the code in your Admin platform (or your preferred code editor).
-3. In another tab, open your website.
-4. In another tab, sign in to your Sezzle Merchant Dashboard.
-5. Keep your Sezzle merchant ID handy. Your Sezzle merchant ID can be found in your Sezzle Merchant Dashboard under Settings > Business.
+1. You will need edit access to your website's code.
+2. Open up your preferred code editor (or through your admin platform).
+3. Open your site in another tab.
+4. Open up and sign in to your Sezzle Merchant Dashboard.
+5. Have your Sezzle merchant ID handy. Your Sezzle merchant ID can be found in your Sezzle Merchant Dashboard under Settings > Business.
 
-### Integration
-To integrate Sezzle's widget, follow the below steps. 
+#### Integration
+To integrate Sezzle's widget - follow the below steps. You can also request Sezzle integrates the widget for you at no charge through the Merchant Dashboard Setup Checklist. Setup Checklist > Add Widgets to Product Pages. Current turnaround time is 7 business days.
 
-Alternatively, you can request Sezzle integrates the widget for you at no charge.
-  * Login to your Sezzle Merchant Dashboard
-  * Go to Setup Checklist > Add Widgets to Product Pages. 
-  * Click the Request Addition of Widgets button
-
-Current turnaround time is 7 business days.
-
-1. Add the below script to the very bottom of your cart and product files, replacing [INSERT merchantID HERE], including the brackets, with your own merchantID.
-
-```
-<script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=[INSERT merchantID HERE]"></script>
-```
+1. Add this to the header (`<head>`) of your website OR at the bottom of your cart and product files - replacing the <your-sezzle-merchant-id-here> with your Sezzle merchant ID.
+```<script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>```
 
 2. Identify your `targetXPath` and `renderToPath` using the guide below.
 
-`targetXPath` is the path to the element in your webpage where the product price will be detected.
+`targetXPath` is the path to the element in your webpage from where the product price would be picked up from.
 
-`renderToPath` is the path to the element in your webpage relative to targetXPath where the Sezzle widget will be rendered.
+`renderToPath` is the path to the element in your webpage where the Sezzle widget will be rendered to. This is relative to targetXPath.
 
-#### What is a path?
+`What is a path?`
 A path is used to reach an element in the document. A path has the following rules:
-
-Each element can be accessed by classname, id, tag, or pseudo-element.
-1. An ID is prepended with '#'.
-2. A class is prepended with '.'.
-3. A tag is appended with the applicable zero-based index (Ex: SPAN-1 is the second span within the parent element)
-4. A pseudo-element indicates a relative property of an element (Ex: ::first-child is the first child element of the parent, regardless of the tag)
-5. Parent and child elements are separated by '/'.
-6. Current path is accessed by '.'.
-7. Going up a parent is by '..'.
+1. Each element can be accessed by `classname`, `id` or `tag`.
+2. Parent and child elements are separated by `/`.
+3. Current path is accessed by `.`.
+4. Going up a parent is by `..`.
 
 Example:
-If targetXPath is #foo/.bar - This will look for an element with id 'foo' and then an element with class 'bar' inside that element's children.
-If renderToPath is '.' - This will render the widget in the same element as the price element.
-If renderToPath is '..' - This will render the widget one parent above the price element.
-If renderToPath is '../..' - This will render the widget two parents above the price element.
-If renderToPath is '../../.my-render-element' - This will render the widget two parents above the price element within an element with the class 'my-render-element'. 
+If `targetXPath` is `#foo/.bar` - This will look for an element with id `foo` and then an element with class `bar` inside that element's children.
+If `renderToPath` is `.` - This will render the widget in the same element as the price element.
+If `renderToPath` is `..` - This will render the widget one parent above the price element.
+If `renderToPath` is `../..` - This will render the widget two parents above the price element.
+If `renderToPath` is `../../.my-render-element` - This will render the widget two parents above the price element in an element with the class `my-render-element`.
 
-To determine your targetXPath, open a product page on the website. Right-click on the price, then select Inspect. Start by targeting the element that contains the price using the ID or class. If there are multiple occurrences of this identifier, the widget will appear at every occurrence. To be more specific, prepend the parent element's ID or class to the targetXPath.
-
-Example: For the below code snippet, the following would all be valid as a targetXPath: ".amount", ".price/.amount", "#price-container/.price/.amount, or "#price-container/SPAN-0/::first-child"
-
+3. Add the following code at the end of your product and cart files, replacing the `<path-to-price-element>` and `<relative-path-to-element-to-which-to-render-this-widget>` with your chosen path.
 ```
-<span id="price-container">
-  <span class="price">
-    <span class="amount">$12</span>
-    <del class="was-price">$15</del>
-  </span>
-</span>
-```
-
-* **Note:** Sometimes the price element may look like `<span id="money">$ 120.00 <del>$ 200.00</del></span>`. In this case we can point to the first child like this: `#money/child-1`. If the child is a text type element, which is true in this case, the text will be wrapped within a span that will then be considered the targeted price element. 
-
-3. Add the following script at the end of your product and cart files, directly above the widget.sezzle script added earlier, replacing the `targetXPath` and `renderToPath` values with the applicable paths, as determined in the previous step.
-
-```
-<script type="text/javascript">
+<script>
   document.sezzleConfig = {
-	targetXPath: '.money',
-    renderToPath: '..'
+		targetXPath: '<path-to-price-element>',
+    renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
   }
 </script>
+<script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
 ```
 
-For further customization, please check out the available options [here](/widget-options.md)
+4. Usinig the language feature is pretty simple. You can pass either a string or a function (which returns a string).
+    Right now we support only english ('en') or french ('fr').
+    An example would help you understand this better.
+
+    Using as String:
+  ```
+    <script>
+      document.sezzleConfig = {
+        targetXPath: '<path-to-price-element>',
+        renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
+        language:'fr'
+      }
+    </script>
+    <script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
+  ```
+
+     Using as function:
+  ```
+    <script>
+      document.sezzleConfig = {
+        targetXPath: '<path-to-price-element>',
+        renderToPath: '<relative-path-to-element-to-which-to-render-this-widget>',
+        language:function(){
+          if (<your-logic>){
+            return 'en'
+          }
+          return 'fr'
+
+        }
+      }
+    </script>
+    <script src="https://widget.sezzle.com/v1/javascript/price-widget?uuid=<your-sezzle-merchant-id-here>"></script>
+  ```
+For further customization and more details, please check the options at [click here](/widget-options.md)
+
+Note that if you want to use a grayscale Sezzle logo put
+```
+https://d3svog4tlx445w.cloudfront.net/branding/Sezzle-logos/png/Sezzle-logo-all-black-sm-100w.png
+```
+into the `imageUrl` to override the default color logo.
 
 If you run into any issues please contact merchantsupport@sezzle.com, or request Sezzle to add the widgets for you through your Merchant Dashboard > Setup Checklist > Add Widgets to Product Pages.

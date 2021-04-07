@@ -135,7 +135,9 @@
   text-align: center;
 }
 @media (max-width: 450px) {
-  .sezzle-checkout-modal-lightbox .sezzle-modal-title .sezzle-title-text-center {
+  .sezzle-checkout-modal-lightbox
+    .sezzle-modal-title
+    .sezzle-title-text-center {
     padding-top: 6px;
     padding-right: 2px;
     text-align: center;
@@ -272,13 +274,15 @@
   padding-right: 6px;
 }
 
-.sezzle-checkout-modal-lightbox .sezzle-simply-select .sezzle-inline-text-right {
+.sezzle-checkout-modal-lightbox
+  .sezzle-simply-select
+  .sezzle-inline-text-right {
   padding-top: 3px;
 }
 
 .sezzle-checkout-modal-lightbox .sezzle-checkout-modal-hidden {
   transition: all 0.4s ease;
-  margin-top: 0;
+  margin-top: -1500vh;
 }
 
 .sezzle-checkout-modal-lightbox .sezzle-checkout-modal {
@@ -342,7 +346,11 @@
   margin: 0 auto;
 }
 @media (max-width: 450px) {
-  .sezzle-checkout-modal-lightbox .sezzle-checkout-modal h1 .sezzle-checkout-modal h1 {
+  .sezzle-checkout-modal-lightbox
+    .sezzle-checkout-modal
+    h1
+    .sezzle-checkout-modal
+    h1 {
     font-size: 16px;
   }
 }
@@ -471,7 +479,9 @@
   right: 50px;
 }
 
-.sezzle-checkout-modal-lightbox .sezzle-checkout-modal div.sezzle-no-thanks:hover {
+.sezzle-checkout-modal-lightbox
+  .sezzle-checkout-modal
+  div.sezzle-no-thanks:hover {
   transition: 0.15s;
   opacity: 1;
   cursor: pointer;
@@ -583,7 +593,6 @@
 
     .sezzle-payment-amount {
       font-weight: 900;
-      font-size: 1.2em;
     }
 
     .szl-light-image,
@@ -601,17 +610,12 @@
       text-decoration: underline;
       cursor: pointer;
       font-size: 8.5px;
-      background:none;
-      border: none;
-      padding: 0px;
     }
 
     .sezzle-info-icon {
       color: inherit;
       background-color: inherit;
       cursor: pointer;
-      border: none;
-      padding: 0px;
     }
 
     .sezzle-question-mark-icon {
@@ -619,9 +623,6 @@
       width: auto;
       margin-bottom: -0.5px;
       cursor: pointer;
-      background:none;
-      border: none;
-      padding: 0px;
     }
   }
 
@@ -752,96 +753,32 @@
     margin: 0;
   }
 }
-.sezzle-payment-amount {
-	zoom: 1;
-	float: none;
-	font-size: inherit;
-	font-weight: inherit;
-}
-
-.sezzle-logo {
-	opacity: 1;
-	float: none;
-	background: none;
-	vertical-align:baseline;
-}
-
-.sezzle-info-icon, .ap-modal-info-link, .qp-modal-info-link, .quadpay-modal-info-link, .affirm-modal-info-link, .klarna-modal-info-link {
-	font-size: inherit;
-	margin: unset;
-	padding: unset;
-	max-height: unset;
-	max-width: unset;
-	min-height: unset;
-	min-width: unset;
-	height: unset;
-	width: unset;
-	background: none;
-	border: none;
-	box-shadow: none;
-}
 
 .sezzle-afterpay-logo {
-  vertical-align: baseline;
-  max-height: 18px;
-  margin-bottom: -1px;
+  vertical-align: middle !important;
+  max-height: 14px;
+  margin-bottom: -1px !important;
 }
 
 .ap-modal-info-link {
   cursor: pointer;
   margin-left: 3px !important;
   color: inherit;
-  background:none;
-  border: none;
-  padding: 0px;
+  background-color: inherit;
 }
 
 .sezzle-quadpay-logo {
-  vertical-align: baseline;
+  vertical-align: middle !important;
   max-height: 10px;
   margin-bottom: -1px !important;
   margin-right: 2px;
 }
 
-.quadpay-modal-info-link, .qp-modal-info-link {
+.quadpay-modal-info-link {
   cursor: pointer;
   margin-left: 3px !important;
   color: inherit;
-  background:none;
-  border: none;
-  padding: 0px;
-}
-
-.sezzle-affirm-logo {
-  vertical-align: baseline;
-  max-height: 20px;
-  margin-bottom: 12px !important;
-  margin-left: -7px;
-}
-
-button.affirm-modal-info-link {
-  cursor: pointer;
-  margin-left: -5px !important;
-  color: inherit;
-  background:none;
-  border: none;
-  padding: 0px;
-}
-
-.sezzle-klarna-logo {
-  vertical-align: baseline;
-  max-height: 30px;
-  margin-bottom: 3px !important;
-  margin-left: 0px;
-}
-
-.klarna-modal-info-link {
-  cursor: pointer;
-  margin-left: 3px !important;
-  color: inherit;
-  background:none;
-  border: none;
-  padding: 0px;
+  background-color: inherit;
 }
 
 // Magento styles
@@ -6760,60 +6697,5 @@ button.affirm-modal-info-link {
     .sezzle-know-more {
       font-size: 8px !important;
     }
-  }
-}
-
-// Sezzle checkout button
-.sezzle-checkout-button {
-  width: auto;
-  height: 40px;
-  cursor: pointer;
-  outline: none;
-  border: transparent;
-  font-family: "Comfortaa", cursive;
-  margin-bottom: 10px;
-  font-size: 0.8125em;
-  letter-spacing: 0.15em;
-  background-position: center;
-  transition: background 0.8s;
-}
-
-.sezzle-button-logo-img {
-  position: relative;
-  width: 50px;
-  top: 3px;
-}
-
-.sezzle-button-dark {
-  background: #fff;
-  color: #392558;
-
-  &:hover {
-    background: #eee radial-gradient(circle, transparent 70%, #eee 70%) center/15000%;
-    color: #392558;
-  }
-
-  &:active {
-    background-color: #ccc;
-    background-size: 100%;
-    color: #392558;
-    transition: background 0s;
-  }
-}
-
-.sezzle-button-light {
-  background: #392558;
-  color: white;
-
-  &:hover {
-    background: #d784ff radial-gradient(circle, transparent 1%, #d784ff 1%) center/15000%;
-    color: white;
-  }
-
-  &:active {
-    background-color: purple;
-    background-size: 100%;
-    color: white;
-    transition: background 0s;
   }
 }
