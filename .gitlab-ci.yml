@@ -30,3 +30,5 @@ deploy:
   script:
    - gem install sass
    - npm run deploy
+  tags:
+   - deploy

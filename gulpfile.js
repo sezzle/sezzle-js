@@ -1,4 +1,10 @@
+const config = {
+  useIAM: true,
+};
+
+/* eslint-disable */
 var gulp = require('gulp'),
+  // dotenv = require('dotenv').config(),
   sass = require('gulp-ruby-sass'),
   autoprefixer = require('gulp-autoprefixer'),
   cssnano = require('cssnano'),
@@ -7,7 +13,6 @@ var gulp = require('gulp'),
   del = require('del'),
   s3 = require('gulp-s3-upload')(config),
   rp = require('request-promise'),
-  config = { useIAM: true },
   webpack = require('webpack-stream'),
   pjson = require('./package.json'),
   uh = require('./update_history.json'),
@@ -28,6 +33,9 @@ var gulp = require('gulp'),
 
 var buttonUploadName = `sezzle-widget${pjson.version}.js`;
 var globalCssUploadName = `sezzle-styles-global${pjson.cssversion}.css`;
+
+const widgetServerUS = argv.local ? 'http://localhost:12121' : 'https://widget.sezzle.com';
+const widgetServerEU = argv.local ? 'http://localhost:12121' : 'https://widget.eu.sezzle.com';
 
 /**
  * Tasks for the CSS
@@ -66,11 +74,25 @@ gulp.task('cssupload', function () {
       }))
 });
 
-gulp.task('post-button-css-to-wrapper', function () {
+gulp.task('cssuploadupdate', function () {
+  // bucket base url https://d3svog4tlx445w.cloudfront.net/
+  const cssUpdateName = `sezzle-styles-global${uh.css}.css`;
+  const indexPath = './dist/global-css/global.min.css'
+  return gulp.src(indexPath)
+    .pipe(rename(`shopify-app/assets/${cssUpdateName}`))
+    .pipe(s3({
+      Bucket: 'sezzlemedia', //  Required
+      ACL: 'public-read'       //  Needs to be user-defined
+    }, {
+        maxRetries: 5
+      }))
+});
+
+function postButtonCssToWrapper(url, done) {
   console.log('Posting css version to shopify gateway')
   var options = {
     method: 'POST',
-    uri: 'https://widget.sezzle.com/v1/css/price-widget/version',
+    uri: url,
     body: {
       'version_name': globalCssUploadName
     },
@@ -79,11 +101,20 @@ gulp.task('post-button-css-to-wrapper', function () {
   return rp(options)
     .then(function (body) {
       console.log('Posted new version to shopify wrapper')
+      done();
     })
     .catch(function (err) {
       console.log('Post failed with sezzle pay, ')
       console.log(err);
+      done(err);
     })
+}
+
+gulp.task('post-button-css-to-wrapper', function(done){
+  postButtonCssToWrapper(`${widgetServerUS}/v1/css/price-widget/version`, done);
+});
+gulp.task('post-button-css-to-wrapper-eu', function(done){
+  postButtonCssToWrapper(`${widgetServerEU}/v1/css/price-widget/version`, done);
 });
 
 /**
@@ -199,11 +230,11 @@ gulp.task('modalupload-update', function () {
   return merge(steams);
 });
 
-gulp.task('post-modal-to-wrapper', function () {
+function postModalToWrapper(url, done) {
   console.log('Posting modal version to shopify gateway')
-  var options = {
+  const options = {
     method: 'POST',
-    uri: 'https://widget.sezzle.com/v1/modal/price-widget/version',
+    uri: url,
     body: {
       'version': `sezzle-modal-${pjson.modalversion}-{%%s%%}.html`,
       'languages': language[pjson.modalversion]
@@ -213,11 +244,20 @@ gulp.task('post-modal-to-wrapper', function () {
   return rp(options)
     .then(function (body) {
       console.log('Posted new modal version to shopify wrapper')
+      done();
     })
     .catch(function (err) {
       console.log('Post failed with sezzle pay, ')
       console.log(err);
+      done(err);
     })
+}
+
+gulp.task('post-modal-to-wrapper', function(done){
+  postModalToWrapper(`${widgetServerUS}/v1/modal/price-widget/version`, done);
+});
+gulp.task('post-modal-to-wrapper-eu', function(done){
+  postModalToWrapper(`${widgetServerEU}/v1/modal/price-widget/version`, done);
 });
 
 /**
@@ -225,7 +265,7 @@ gulp.task('post-modal-to-wrapper', function () {
  */
 
 gulp.task('bundlejs', function () {
-  return gulp.src('src/sezzle-init.js')
+  return gulp.src('src/classBased/sezzle-init.js')
     .pipe(webpack({
       module: {
         rules: [
@@ -264,10 +304,10 @@ gulp.task('upload-widget', function (done) {
       }));
 });
 
-gulp.task('post-button-to-widget-server', function () {
+function postButtonToWidgetServer(url, done) {
   var options = {
     method: 'POST',
-    uri: 'https://widget.sezzle.com/v1/javascript/price-widget/version',
+    uri: url,
     body: {
       'version_name': buttonUploadName
     },
@@ -276,11 +316,20 @@ gulp.task('post-button-to-widget-server', function () {
   return rp(options)
     .then(function (body) {
       console.log('Posted new version to shopify wrapper')
+      done();
     })
     .catch(function (err) {
       console.log('Post failed with shopify, ')
       console.log(err);
+      done(err);
     })
+}
+
+gulp.task('post-button-to-widget-server', function(done){
+  postButtonToWidgetServer(`${widgetServerUS}/v1/javascript/price-widget/version`, done);
+});
+gulp.task('post-button-to-widget-server-eu', function(done){
+  postButtonToWidgetServer(`${widgetServerEU}/v1/javascript/price-widget/version`, done);
 });
 
 function versionCheck(oldVersion) {
@@ -491,9 +540,9 @@ gulp.task('uploadtracker', function () {
     }))
 });
 
-gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', 'post-button-to-widget-server'));
-gulp.task('deploycss', gulp.series('styles', 'cssupload', 'post-button-css-to-wrapper'));
-gulp.task('deploymodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-modal', 'modalupload', 'post-modal-to-wrapper'));
+gulp.task('deploywidget', gulp.series('bundlejs', 'upload-widget', gulp.parallel('post-button-to-widget-server', 'post-button-to-widget-server-eu')));
+gulp.task('deploycss', gulp.series('styles', 'cssupload', gulp.parallel('post-button-css-to-wrapper', 'post-button-css-to-wrapper-eu')));
+gulp.task('deploymodal', gulp.series('cleanmodal', 'csscompile-modal', 'minify-modal', 'modalupload', gulp.parallel('post-modal-to-wrapper', 'post-modal-to-wrapper-eu')));
 gulp.task('deploytracker', gulp.series('bundletracker', 'uploadtracker'));
 
 // local processes
@@ -523,7 +572,7 @@ function versionCheckForUpdate(oldVersion) {
     !(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/.test(update_version)) ||
     compareVersions(oldVersion, update_version) === -1
   ) {
-    throw 'Invalid value for updateversion';
+    throw 'Invalid value for updateversion' + update_version + ', ' + oldVersion + ', ' + compareVersions(oldVersion, update_version);
   };
 }
 
@@ -574,6 +623,34 @@ gulp.task('pushversionmodal-modal', function (done) {
 gulp.task('update-modal', gulp.series('modal-version-check-for-update', 'branchupdate-modal', 'logupdate-modal', 'commitupdate-modal', 'pushversionmodal-modal'));
 gulp.task('deployupdatemodal', gulp.series('cleanmodal', 'csscompile-modal-update', 'minify-modal-update', 'modalupload-update'));
 
+// Update existing css version
+gulp.task('css-version-check-for-update', function(done) {
+  versionCheckForUpdate(pjson.cssversion);
+  done();
+});
+
+gulp.task('branchupdate-css', function(done) {
+  createBranch(getUpdateBranchName('css'), done);
+})
+
+gulp.task('logupdate-css', function() {
+  let param = {};
+  param[`css-${argv.updateversion}`] = (new Date()).toUTCString();
+  param['css'] = argv.updateversion;
+  return logUpdateHistory(param);
+});
+
+gulp.task('commitupdate-css', function() {
+  return commitUpdateVersion('css', argv.updateversion);
+});
+
+gulp.task('pushversioncss-css', function (done) {
+  pushBranch(getUpdateBranchName('css'), done);
+});
+
+gulp.task('update-css', gulp.series('css-version-check-for-update', 'branchupdate-css', 'logupdate-css', 'commitupdate-css', 'pushversioncss-css'));
+gulp.task('deployupdatecss', gulp.series('styles', 'cssuploadupdate'));
+
 // CI processes
 gulp.task('deploy', function (done) {
   // Check if there is any version commit
@@ -617,6 +694,13 @@ gulp.task('deploy', function (done) {
       } else if (versionCommit.indexOf('updated modal version:') > -1) {
         console.log('Updating Modal');
         exec('npx gulp deployupdatemodal', function (err, stdout, stderr) {
+          if (err) throw err;
+          console.log(stdout);
+          done();
+        })
+      } else if (versionCommit.indexOf('updated css version:') > -1) {
+        console.log('Updating CSS');
+        exec('npx gulp deployupdatecss', function (err, stdout, stderr) {
           if (err) throw err;
           console.log(stdout);
           done();

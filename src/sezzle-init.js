@@ -1,3 +1,4 @@
+/* eslint-disable */
 var SezzleJS = require('./sezzle');
 
 // Assumes document.sezzleConfig is present

@@ -1,3 +1,4 @@
+/* eslint-disable */
 exports.oldConfig = {
   "targetXPath": [
     "#id-1/.class-1",
