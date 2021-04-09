@@ -29,22 +29,30 @@ class language {
   }
 
   setLanguage(lang) {
-    const langCode = lang.substring(0, 2).toLowerCase();
-    const locale = lang.split('-')[1];
-    if (Utils.getWidgetBaseUrl() === 'https://widget.eu.sezzle.com') {
-      if (locale && this._checkIfLanguageIsValid(lang)) {
-        this._language = lang;
-      } else if (this._checkIfLanguageIsValid(`${langCode}-${langCode.toUpperCase()}`)) {
-        this._language = `${langCode}-${langCode.toUpperCase()}`;
-      } else {
+    if (!lang) {
+      if (Utils.getWidgetBaseUrl() === 'https://widget.eu.sezzle.com') {
         this._language = 'en-GB';
+      } else {
+        this._language = this._defaultLanguage;
       }
-    } else if (this._checkIfLanguageIsValid(langCode)) {
-      this._language = langCode;
     } else {
-      this._language = this._defaultLanguage;
+      const langCode = lang.substring(0, 2).toLowerCase();
+      const locale = lang.split('-')[1];
+      if (Utils.getWidgetBaseUrl() === 'https://widget.eu.sezzle.com') {
+        if (locale && this._checkIfLanguageIsValid(lang)) {
+          this._language = lang;
+        } else if (this._checkIfLanguageIsValid(`${langCode}-${langCode.toUpperCase()}`)) {
+          this._language = `${langCode}-${langCode.toUpperCase()}`;
+        } else {
+          this._language = 'en-GB';
+        }
+      } else if (this._checkIfLanguageIsValid(langCode)) {
+        this._language = langCode;
+      } else {
+        this._language = this._defaultLanguage;
+      }
+      document.sezzleLanguage = this._language;
     }
-    document.sezzleLanguage = this._language;
   }
 
   _checkIfLanguageIsValid(lang) {
