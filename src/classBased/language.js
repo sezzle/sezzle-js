@@ -1,3 +1,5 @@
+import Utils from './utils';
+
 class language {
   constructor(numberOfPayments) {
     this._numberOfPayments = numberOfPayments;
@@ -27,33 +29,20 @@ class language {
   }
 
   setLanguage(lang) {
-    const typeOfLanguageOption = typeof (lang);
-    if (!this._checkIfLanguageIsValid(lang)) {
-      this._language = this._browserLanguage;
-    } else {
-      switch (typeOfLanguageOption) {
-      case 'string':
-        this._language = lang;
-        break;
-      case 'function':
-        this._language = lang();
-        break;
-      default:
-        this._language = this._browserLanguage;
-        break;
-      }
-    }
-    const northAmerica = ['US', 'CA', 'MX', 'IN', 'GU', 'PR', 'AS', 'MP', 'VI', '', null, undefined];
     const langCode = lang.substring(0, 2).toLowerCase();
     const locale = lang.split('-')[1];
-    if (northAmerica.indexOf(this._countryCode) > -1) {
-      // eslint-disable-next-line no-unused-expressions
-      this._checkIfLanguageIsValid(langCode) ? this._language = langCode : this._language = 'en';
+    if (Utils.getWidgetBaseUrl() === 'https://widget.eu.sezzle.com') {
+      if (locale && this._checkIfLanguageIsValid(lang)) {
+        this._language = lang;
+      } else if (this._checkIfLanguageIsValid(`${langCode}-${langCode.toUpperCase()}`)) {
+        this._language = `${langCode}-${langCode.toUpperCase()}`;
+      } else {
+        this._language = 'en-GB';
+      }
     } else if (this._checkIfLanguageIsValid(langCode)) {
-      this._language = `${langCode}-${locale}`;
+      this._language = langCode;
     } else {
-      // eslint-disable-next-line no-unused-expressions
-      this._checkIfLanguageIsValid(`${langCode}-${langCode.toUpperCase()}`) ? this._language = `${langCode}-${langCode.toUpperCase()}` : this._language = 'en-GB';
+      this._language = this._defaultLanguage;
     }
     document.sezzleLanguage = this._language;
   }
