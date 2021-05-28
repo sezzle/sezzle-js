@@ -176,7 +176,39 @@ $font-family: Comfortaa, "Helvetica Neue", Helvetica, Arial, sans-serif;
             width: 80%;
         }
     }
+    .sezzlespend-row {
+        width: 70%;
+        margin: 10px auto 0;
+        font-size: 14px;
+        line-height: 28px;
 
+        @media screen and (max-width: 844px) {
+            width: 85%;
+            font-size: 16px;
+        }
+
+        .desktop {
+            line-height: 1.2;
+
+            @media screen and (max-width: $breakpoint-small) {
+                display: none;
+            }
+        }
+
+        .mobile {
+            display: none;
+            line-height: 1.2;
+
+            @media screen and (max-width: $breakpoint-small) {
+                display: block;
+            }
+        }
+
+        @media screen and (max-width: $breakpoint-small ){
+            font-size: 12px;
+            width: 80%;
+        }
+    }
     .sezzle-payment-pie {
         width: 50%;
         margin: 30px auto 0;
