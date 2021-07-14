@@ -764,6 +764,7 @@
 	float: none;
 	background: none;
 	vertical-align:baseline;
+    border: none;
 }
 
 .sezzle-info-icon, .ap-modal-info-link, .qp-modal-info-link, .quadpay-modal-info-link, .affirm-modal-info-link, .klarna-modal-info-link {
@@ -779,6 +780,9 @@
 	background: none;
 	border: none;
 	box-shadow: none;
+    color: inherit;
+    vertical-align: initial;
+    line-height: inherit;
 }
 
 .sezzle-afterpay-logo {
